@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Skarte</title>
+</head>
+
+<body>
+	<div class="users-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row p-form-top d-none d-lg-block d-xl-block d-xxl-block"></div>
+			<div class="row">
+				<main class="col-md-4 mx-auto">
+					<h1 class="text-center text-white">新規登録</h1>
+					<form method="post" th:action="@{/user}" th:object="${form}">
+						<div layout:replace="~{layouts/common::messages}"></div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_id">ID</label>
+							<input type="text" class="form-control" th:field="*{id}" />
+							<p th:if="${#fields.hasErrors('id')}" class="error-message" th:errors="*{id}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_password">Password</label>
+							<input class="form-control" type="password" th:field="*{password}" />
+							<p th:if="${#fields.hasErrors('password')}" class="error-message" th:errors="*{password}">
+							</p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_password_confirmation">Password
+								confirmation</label>
+							<input type="password" class="form-control" th:field="*{passwordConfirmation}" />
+							<p th:if="${#fields.hasErrors('passwordConfirmation')}" class="error-message"
+								th:errors="*{passwordConfirmation}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_sei">姓</label>
+							<input type="text" class="form-control" th:field="*{sei}" />
+							<p th:if="${#fields.hasErrors('sei')}" class="error-message" th:errors="*{sei}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_mei">名</label>
+							<input type="text" class="form-control" th:field="*{mei}" />
+							<p th:if="${#fields.hasErrors('mei')}" class="error-message" th:errors="*{mei}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_sei_kana">せい</label>
+							<input type="text" class="form-control" th:field="*{seiKana}" />
+							<p th:if="${#fields.hasErrors('seiKana')}" class="error-message" th:errors="*{seiKana}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_mei_kana">めい</label>
+							<input type="text" class="form-control" th:field="*{meiKana}" />
+							<p th:if="${#fields.hasErrors('meiKana')}" class="error-message" th:errors="*{meiKana}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="user_email">Email</label>
+							<input type="text" class="form-control" th:field="*{email}" />
+							<p th:if="${#fields.hasErrors('email')}" class="error-message" th:errors="*{email}"></p>
+						</div>
+						<input type="submit" value="登録" class="btn w-100 btn-outline-light" />
+					</form>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
