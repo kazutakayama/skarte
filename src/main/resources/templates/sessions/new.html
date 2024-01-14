@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Skarte</title>
+</head>
+
+<body>
+	<div class="users-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row p-form-top d-none d-lg-block d-xl-block d-xxl-block"></div>
+			<div class="row">
+				<main class="col-md-4 mx-auto">
+					<h1 class="text-center text-white">ログイン</h1>
+					<form method="post" th:action="@{/login}">
+						<div class="mb-3">
+							<label class="form-label text-white" for="session_id">ID</label>
+							<input class="form-control" type="id" name="id" id="session_id" />
+						</div>
+						<div class="mb-3">
+							<label class="form-label text-white" for="session_password">Password</label>
+							<input class="form-control" type="password" name="password" id="session_password" />
+						</div>
+						<input type="submit" value="ログイン" class="btn w-100 btn-outline-light" />
+						<div class="col-3">
+							<a class="btn w-100 btn-outline-light" href="/users/new">新規登録</a>
+						</div>
+					</form>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
