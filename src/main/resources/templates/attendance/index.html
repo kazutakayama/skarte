@@ -1,24 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
-<head>
-	<meta charset="UTF-8">
-	<title>Skarte</title>
-</head>
 
 <body>
-	<header>
-		<h1>Skarte</h1>
-		<a href="/students">生徒一覧</a>
-		<a href="/attendance">出席簿一覧</a>
-		<a href="/grades">成績一覧</a>
-		<a href="/notices">お知らせ</a>
-		<a href="/setting">設定</a>
-		<a href="/logout">ログアウト</a>
-	</header>
-	<h1>出席簿一覧</h1>
-	
-	
+	<div layout:fragment="content">
+		<h1>出席簿一覧</h1>
+	</div>
 </body>
 
 </html>

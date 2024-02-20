@@ -8,6 +8,10 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
+/**
+ * データベースの作成日時・更新日時共通設定
+ */
+
 @MappedSuperclass
 @Data
 public class AbstractEntity {

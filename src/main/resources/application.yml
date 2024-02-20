@@ -3,3 +3,13 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  jpa:
+    database: POSTGRESQL
+  sql:
+    init:
+      platform: postgres
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/skarte
+    username: ${psql.user}
+    password: ${psql.password}    
