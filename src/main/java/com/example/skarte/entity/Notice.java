@@ -10,26 +10,33 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 /**
  * お知らせ
  */
 @Entity
 @Table(name = "notices")
 @Data
-@EqualsAndHashCode(callSuper = false) //AbstractEntityから
-public class Notice extends AbstractEntity { //AbstractEntityから
+@EqualsAndHashCode(callSuper = false) // AbstractEntity
+public class Notice extends AbstractEntity { // AbstractEntity
+//public class Notice extends AbstractEntity implements Serializable {
+//    private static final long serialVersionUID = 1L;
 
     /** ID */
+//    @Id
+//    @SequenceGenerator(name = "notice_id_seq")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
     @Id
     @Column
-    @SequenceGenerator(name = "notices_notice_id_seq", sequenceName = "notices_notice_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notices_notice_id_seq")
+    @SequenceGenerator(name = "notices_noticeId_seq", sequenceName = "notices_noticeId_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notices_noticeId_seq")
     private Long noticeId = null;
 
     public void setId(Long noticeId) {
         this.noticeId = null;
     }
-    
+
     /** タイトル */
     @Column(length = 20, nullable = false)
     private String title = null;
@@ -45,7 +52,6 @@ public class Notice extends AbstractEntity { //AbstractEntityから
     /** 更新者 */
     @Transient
     private String updatedBy = null;
-
 
     /** 削除済 */
     private boolean deleted = false;

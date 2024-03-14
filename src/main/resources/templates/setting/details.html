@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<h1>生徒詳細</h1>
+
+		<table>
+			<thead>
+				<tr>
+					<th>生徒番号</th>
+					<th>姓</th>
+					<th>名</th>
+					<th>せい</th>
+					<th>めい</th>
+					<th>生徒編集</th>
+					<th>生徒削除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="student : ${students}">
+					<td th:text="${student.studentId}"></td>
+					<td th:text="${student.lastName}"></td>
+					<td th:text="${student.firstName}"></td>
+					<td th:text="${student.lastNameKana}"></td>
+					<td th:text="${student.firstNameKana}"></td>
+					<td><a class="buttons clearfix"
+							th:href="@{/setting/students/{id}/editstudent (id=${student.studentId})}">
+							生徒編集
+						</a></td>
+					<td><a class="buttons clearfix"
+							th:href="@{/setting/students/{id}/deletestudent (id=${student.studentId})}">
+							生徒削除
+						</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h1>クラス新規登録</h1>
+		<form th:action="@{/setting/students/addclass}" th:method="post" 　th:object="${students}">
+			<div class="form-group">
+				<label class="control-label">生徒番号</label>
+				<input class="form-control" type="number" th:field="*{studentId}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">年度</label>
+				<select name="year">
+					<option value="2024">2024</option>
+					<option value="2025">2025</option>
+					<option value="2026">2026</option>
+					<option value="2027">2027</option>
+					<option value="2028">2028</option>
+					<option value="2029">2029</option>
+					<option value="2030">2030</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">年</label>
+				<select name="nen">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">組</label>
+				<select name="kumi">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">番</label>
+				<input class="form-control" type="number" name="ban" />
+			</div>
+			<button class="btn btn-default" type="submit">登録</button>
+		</form>
+
+		<h1>登録クラス</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>年度</th>
+					<th>年</th>
+					<th>組</th>
+					<th>番</th>
+					<th>編集</th>
+					<th>編集</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="studentYear : ${studentsYear}">
+					<td th:text="${studentYear.year}"></td>
+					<td th:text="${studentYear.nen}"></td>
+					<td th:text="${studentYear.kumi}"></td>
+					<td th:text="${studentYear.ban}"></td>
+					<td><a class="buttons clearfix"
+						th:href="@{/setting/students/{id}/editclass (id=${studentYear.studentYearId})}">
+						編集
+					</a></td>
+					<td><a class="buttons clearfix"
+						th:href="@{/setting/students/{id}/deleteclass (id=${studentYear.studentYearId})}">
+						削除
+					</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<a href="/setting/students">一覧にもどる</a>
+	</div>
+</body>
+
+</html>

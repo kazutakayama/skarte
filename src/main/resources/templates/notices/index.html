@@ -7,29 +7,26 @@
 	<div layout:fragment="content">
 		<h1>お知らせ一覧</h1>
 
-		<a href="/notices/new">新規登録</a>
+		<a href="/notices/new">新規登録</a><br>
 
 		お知らせが<span th:text="${#lists.size(notices)}" />件あります
 
-		<section>
-			<ul>
+		<table>
+			<thead>
+				<tr>
+					<th>タイトル</th>
+					<th>更新日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="notice : ${notices}">
+					<td><a th:href="@{/notices/contents/{id}(id=${notice.noticeId})}" 　th:text="${notice.title}"></a>
+					</td>
+					<td th:text="${notice.updatedAt}"></td>
+				</tr>
+			</tbody>
+		</table>
 
-				<li th:each="notice : ${notices}">
-				<!--<li th:each="notice : ${notices}" th:unless="${notices.deleted}">-->
-
-					<article class="notice">
-						<ul>
-								<a class="buttons clearfix" th:href="@{/notices/contents/{id}(id=${notice.noticeId})}">
-									<h2 th:text="${notice.title}" />
-								</a>
-						</ul>
-						
-						<h2 th:text="${notice.updatedAt}" />
-						
-					</article>
-				</li>
-			</ul>
-		</section>
 	</div>
 </body>
 

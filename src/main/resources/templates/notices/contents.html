@@ -5,20 +5,24 @@
 <body>
 	<div layout:fragment="content">
 		<h1>お知らせ詳細</h1>
+
 		<section>
 			<ul>
 				<li th:each="notice : ${notices}">
 					<article class="notice">
 						<ul>
 							<li>
-								タイトル：<h2 th:text="${notice.title}" />
-								内容：<h2 th:text="${notice.contents}" />
-								更新日時：<h2 th:text="${notice.updatedAt}" />
+								タイトル：
+								<h2 th:text="${notice.title}" />
+								内容：
+								<h2 th:text="${notice.contents}" />
+								更新日時：
+								<h2 th:text="${notice.updatedAt}" />
 								<a class="buttons clearfix"
 									th:href="@{/notices/contents/{id}/edit (id=${notice.noticeId})}">
 									編集
 								</a><br>
-								
+
 								<a class="buttons clearfix"
 									th:href="@{/notices/contents/{id}/delete (id=${notice.noticeId})}">
 									削除

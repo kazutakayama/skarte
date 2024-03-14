@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<h1>クラス編集</h1>
+		<li th:each="studentYear : ${studentsYear}">
+			<article class="studentYear">
+				生徒番号：
+				<h2 th:text="${studentYear.studentId}" />
+				<form th:action="@{/setting/students/{id}/updateclass (id=${studentYear.studentYearId})}"
+					th:method="post" th:object="${studentsYear}">
+					<div class="form-group">
+						<label class="control-label">年度</label>
+						<select th:field="*{year}">
+							<option value="2024">2024</option>
+							<option value="2025">2025</option>
+							<option value="2026">2026</option>
+							<option value="2027">2027</option>
+							<option value="2028">2028</option>
+							<option value="2029">2029</option>
+							<option value="2030">2030</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">年</label>
+						<select th:field="*{nen}">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">組</label>
+						<select th:field="*{kumi}">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">番</label>
+						<input class="form-control" type="number" th:field="*{ban}" />
+					</div>
+					<button class="btn btn-default" type="submit">更新</button>
+				</form>
+			</article>
+		</li>
+
+		<a href="#" onclick="history.back()">生徒詳細にもどる</a>
+		<a href="/setting/students">生徒管理にもどる</a>
+
+	</div>
+</body>
+
+</html>

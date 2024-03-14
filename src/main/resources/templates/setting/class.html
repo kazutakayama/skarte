@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<h1>クラス管理</h1>
+
+		<table>
+			<thead>
+				<tr>
+					<th>生徒番号</th>
+					<th>姓</th>
+					<th>名</th>
+					<th>せい</th>
+					<th>めい</th>
+					<th>年度</th>
+					<th>年</th>
+					<th>組</th>
+					<th>番</th>
+					<th>編集</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="student : ${students}">	
+									
+					<td th:text="${student.studentId}"></td>
+					<td th:text="${student.lastName}"></td>
+					<td th:text="${student.firstName}"></td>
+					<td th:text="${student.lastNameKana}"></td>
+					<td th:text="${student.firstNameKana}"></td>
+				<tr th:each="studentYear : ${studentsYear}">
+					<td th:text="${studentYear.year}"></td>
+					<td th:text="${studentYear.nen}"></td>
+					<td th:text="${studentYear.kumi}"></td>
+					<td th:text="${studentYear.ban}"></td>
+					<td><a class="buttons clearfix" th:href="@{/setting/class/{id}/edit (id=${studentYear.studentId})}">
+							編集
+						</a></td>
+					<!--<td><a class="buttons clearfix"
+							th:href="@{/setting/students/{id}/delete (id=${setting.studentId})}">
+							削除
+						</a></td>-->
+				</tr>
+			</tbody>
+		</table>
+
+		<a href="/setting">もどる</a>
+	</div>
+</body>
+
+</html>
