@@ -6,12 +6,6 @@
 	<div layout:fragment="content">
 		<h1>お知らせ新規登録</h1>
 
-		<!--<form method="post" action="/notices/add">
-			タイトル<input type="text" name="title" /><br>
-			内容<input type="text" name="contents" />
-			<input type="submit" value="登録">
-		</form>-->
-
 		<form th:action="@{/notices/add}" th:method="post">
 			<div class="form-group">
 				<label class="control-label">タイトル</label>
