@@ -1,12 +1,12 @@
 package com.example.skarte.enums;
 
-public enum GenderType {
-    MALE(1, "男"), FEMALE(2, "女"), OTHERS(3, "他");
+public enum Chikoku {
+    NULL(0, ""), CHIKOKU(1, "遅刻");
 
     private int code;
     private String name;
 
-    private GenderType(int code, String name) {
+    private Chikoku(int code, String name) {
         this.code = code;
         this.name = name;
     }

@@ -43,7 +43,7 @@ public class StudentsYearServiceImpl implements StudentsYearService {
     /**
      * クラス追加
      * 
-     * @param student
+     * @param studentYear
      * @return
      */
     @Override
@@ -55,7 +55,7 @@ public class StudentsYearServiceImpl implements StudentsYearService {
     /**
      * クラス編集
      * 
-     * @param student
+     * @param studentYear
      * @return
      */
     @Override
@@ -72,9 +72,9 @@ public class StudentsYearServiceImpl implements StudentsYearService {
     }
 
     /**
-     * 生徒CSVダウンロード用
+     * クラスCSVダウンロード用
      * 
-     * @param student
+     * @param studentYear
      */
     @Override
     @Transactional
@@ -85,7 +85,7 @@ public class StudentsYearServiceImpl implements StudentsYearService {
     /**
      * 生徒削除（理論削除）
      * 
-     * @param student
+     * @param studentYear
      */
     @Override
     @Transactional

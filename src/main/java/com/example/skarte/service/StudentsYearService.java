@@ -8,14 +8,14 @@ import com.example.skarte.entity.StudentYear;
 public interface StudentsYearService {
 
     /**
-     * 生徒全取得
+     * クラス全取得
      * 
      * @return
      */
     public List<StudentYear> findAll();
 
     /**
-     * 生徒1件取得
+     * クラス1件取得
      * 
      * @param id
      * @return

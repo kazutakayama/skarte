@@ -6,6 +6,30 @@
 <body>
 	<div layout:fragment="content">
 		<h1>生徒一覧</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>年度</th>
+					<th>年</th>
+					<th>組</th>
+					<th>番</th>
+					<th>生徒番号</th>
+					<th>生徒詳細</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="studentYear : ${studentsYear}">
+					<td th:text="${studentYear.year}"></td>
+					<td th:text="${studentYear.nen}"></td>
+					<td th:text="${studentYear.kumi}"></td>
+					<td th:text="${studentYear.ban}"></td>
+					<td th:text="${studentYear.studentId}"></td>
+					<td><a class="buttons clearfix" th:href="@{/students/{id} (id=${studentYear.studentId})}">
+							生徒詳細
+						</a></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </body>
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.skarte.entity.StudentYear;
 
-
 @Repository
 public interface StudentYearRepository extends JpaRepository<StudentYear, Long> {
     //更新日時の降順（削除済みは表示しない）　

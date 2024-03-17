@@ -118,6 +118,18 @@ public class Student extends AbstractEntity { // AbstractEntity
     
     @OneToMany
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
-    private List<StudentYear> students_year;    
+    private List<StudentYear> studentsYear;
+    
+    @OneToMany
+    @JoinColumn(name = "studentId", insertable = false, updatable = false)
+    private List<Karte> karte;
+    
+    @OneToMany
+    @JoinColumn(name = "studentId", insertable = false, updatable = false)
+    private List<Attendance> attendance;
+    
+    @OneToMany
+    @JoinColumn(name = "studentId", insertable = false, updatable = false)
+    private List<Grade> grades;
 
 }
