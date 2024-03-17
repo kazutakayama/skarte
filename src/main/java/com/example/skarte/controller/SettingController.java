@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,13 +75,14 @@ public class SettingController {
         return "setting/students";
     }
 
-    // path: /setting/students/{id}/details
+    // path: /setting/students/{id}
     // 生徒詳細画面を表示
-    @GetMapping("/students/{id}/details")
+    @GetMapping("/students/{id}")
     public String details(@PathVariable Long id, Model model) {
         Student students = studentsService.findById(id);
         model.addAttribute("students", students);
         List<StudentYear> studentsYear = studentsYearService.findAll();
+//        List<StudentYear> studentsYear = new ArrayList<StudentYear>();
         model.addAttribute("studentsYear", studentsYear);
         return "setting/details";
     }
@@ -99,7 +101,7 @@ public class SettingController {
     @PostMapping("/students/{id}/updatestudent")
     public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
         Student result = studentsService.updateStudent(id, student);
-        return "redirect:/setting/students/" + result.getStudentId() + "/details";
+        return "redirect:/setting/students/" + result.getStudentId();
     }
 
 

@@ -6,6 +6,84 @@
 <body>
 	<div layout:fragment="content">
 		<h1>出席簿一覧</h1>
+
+		<form th:action="@{/students/attendance/add}" th:method="post">
+			<div class="form-group">
+				<label class="control-label">生徒番号</label>
+				<input class="form-control" type="number" name="studentId" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">日付</label>
+				<input class="form-control" type="date" name="date" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">遅刻</label>
+				<select name="chikoku">
+					<option value="0"> </option>
+					<option value="1">遅刻</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">早退</label>
+				<select name="soutai">
+					<option value="0"> </option>
+					<option value="1">早退</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">欠席</label>
+				<select name="kesseki">
+					<option value="0"> </option>
+					<option value="1">欠席</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">出停</label>
+				<select name="syuttei">
+					<option value="0"> </option>
+					<option value="1">出停</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">忌引</label>
+				<select name="kibiki">
+					<option value="0"> </option>
+					<option value="1">忌引</option>
+				</select>
+			</div>
+			<button class="btn btn-default" type="submit">登録</button>
+		</form>
+
+		<table>
+			<thead>
+				<tr>
+					<th>生徒番号</th>
+					<th>日付</th>
+					<th>遅刻</th>
+					<th>早退</th>
+					<th>欠席</th>
+					<th>出停</th>
+					<th>忌引</th>
+					<th>編集</th>
+					<th>削除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="attendance : ${attendance}">
+					<td th:text="${attendance.studentId}"></td>
+					<td th:text="${attendance.date}"></td>
+					<td th:text="${attendance.chikoku}"></td>
+					<td th:text="${attendance.soutai}"></td>
+					<td th:text="${attendance.kesseki}"></td>
+					<td th:text="${attendance.syuttei}"></td>
+					<td th:text="${attendance.kibiki}"></td>
+					<td><a th:href="@{/students/attendance/{id}/edit(id=${attendance.attendanceId})}"
+							class="edit">編集</a></td>
+					<td><a th:href="@{/students/attendance/{id}/delete(id=${attendance.attendanceId})}"
+							class="delete">削除</a></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </body>
 

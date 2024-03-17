@@ -10,10 +10,6 @@
 			<thead>
 				<tr>
 					<th>生徒番号</th>
-					<th>姓</th>
-					<th>名</th>
-					<th>せい</th>
-					<th>めい</th>
 					<th>年度</th>
 					<th>年</th>
 					<th>組</th>
@@ -22,19 +18,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="student : ${students}">	
-									
-					<td th:text="${student.studentId}"></td>
-					<td th:text="${student.lastName}"></td>
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastNameKana}"></td>
-					<td th:text="${student.firstNameKana}"></td>
-				<tr th:each="studentYear : ${studentsYear}">
+				<tr th:each="studentYear : ${studentsYear}">										
+					<td th:text="${studentYear.studentId}"></td>
 					<td th:text="${studentYear.year}"></td>
 					<td th:text="${studentYear.nen}"></td>
 					<td th:text="${studentYear.kumi}"></td>
 					<td th:text="${studentYear.ban}"></td>
-					<td><a class="buttons clearfix" th:href="@{/setting/class/{id}/edit (id=${studentYear.studentId})}">
+					<td><a class="buttons clearfix" th:href="@{/setting/students/{id}/editclass (id=${studentYear.studentYearId})}">
 							編集
 						</a></td>
 					<!--<td><a class="buttons clearfix"

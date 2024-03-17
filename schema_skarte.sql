@@ -79,47 +79,49 @@ CREATE TABLE IF NOT EXISTS karte (
  karte_id SERIAL NOT NULL,
  student_id INT NOT NULL,
  --important CHAR(1) NOT NULL,
- date VARCHAR(255) NOT NULL,
+ date DATE NOT NULL,
  contents TEXT NOT NULL,
  --created_by INT NOT NULL,
  --updated_by INT NOT NULL,
  created_at TIMESTAMP NOT NULL,
  updated_at TIMESTAMP NOT NULL,
- deleted CHAR(1) NOT NULL
+ deleted bool NOT NULL
 );
+ALTER TABLE karte ADD CONSTRAINT FK_karte_students FOREIGN KEY (student_id) REFERENCES students;
 
 DROP TABLE IF EXISTS attendance;
 CREATE TABLE IF NOT EXISTS attendance (
  attendance_id SERIAL NOT NULL,
- student_id CHAR(8) NOT NULL,
- date CHAR(8) NOT NULL,
- syusseki CHAR(1) NOT NULL,
- chikoku CHAR(1) NOT NULL,
- soutai CHAR(1) NOT NULL,
- kesseki CHAR(1) NOT NULL,
- syuttei CHAR(1) NOT NULL,
- kibiki CHAR(1) NOT NULL,
- confirmed CHAR(1) NOT NULL,
- contents TEXT NOT NULL,
+ student_id INT NOT NULL,
+ date DATE NOT NULL,
+ chikoku INT,
+ soutai INT,
+ kesseki INT,
+ syuttei INT,
+ kibiki INT,
+ --confirmed CHAR(1) NOT NULL,
+ --contents TEXT NOT NULL,
  --created_by CHAR(8) NOT NULL,
  --updated_by CHAR(8) NOT NULL,
  created_at TIMESTAMP NOT NULL,
  updated_at TIMESTAMP NOT NULL,
- deleted CHAR(1) NOT NULL
+ deleted bool NOT NULL
 );
+ALTER TABLE attendance ADD CONSTRAINT FK_attendance_students FOREIGN KEY (student_id) REFERENCES students;
 
 DROP TABLE IF EXISTS grades;
 CREATE TABLE IF NOT EXISTS grades (
- grades_id SERIAL NOT NULL,
- student_id CHAR(8) NOT NULL,
- year CHAR(4) NOT NULL,
- term CHAR(1) NOT NULL,
- subject CHAR(2) NOT NULL,
- grades CHAR(1) NOT NULL,
- confirmed CHAR(8) NOT NULL,
+ grade_id SERIAL NOT NULL,
+ student_id INT NOT NULL,
+ year INT NOT NULL,
+ term INT NOT NULL,
+ subject INT NOT NULL,
+ grade INT,
+ --confirmed CHAR(8) NOT NULL,
  --created_by CHAR(8) NOT NULL,
  --updated_by CHAR(8) NOT NULL,
  created_at TIMESTAMP NOT NULL,
  updated_at TIMESTAMP NOT NULL,
- deleted CHAR(1) NOT NULL
+ deleted bool NOT NULL
 );
+ALTER TABLE grades ADD CONSTRAINT FK_grades_students FOREIGN KEY (student_id) REFERENCES students;

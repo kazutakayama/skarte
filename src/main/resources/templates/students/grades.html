@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<header　th:each="student : ${students}">
+			<table>
+				<thead>
+					<tr>
+						<th>生徒番号</th>
+						<th>姓</th>
+						<th>名</th>
+						<th>せい</th>
+						<th>めい</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td th:text="${student.studentId}"></td>
+						<td th:text="${student.lastName}"></td>
+						<td th:text="${student.firstName}"></td>
+						<td th:text="${student.lastNameKana}"></td>
+						<td th:text="${student.firstNameKana}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+			<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+			<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
+			<a th:href="@{/students/{id}/grades (id=${student.studentId})}">成績</a>
+			<h2>成績</h2>
+		</header>
+
+
+		<form th:action="@{/students/grades/add}" th:method="post" th:object="${students}">
+			<div class="form-group">
+				<input class="form-control" type="hidden" th:field="*{studentId}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">年度</label>
+				<select name="year">
+					<option value="2024">2024</option>
+					<option value="2025">2025</option>
+					<option value="2026">2026</option>
+					<option value="2027">2027</option>
+					<option value="2028">2028</option>
+					<option value="2029">2029</option>
+					<option value="2030">2030</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">学期</label>
+				<select name="term">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">教科</label>
+				<select name="subject">
+					<option value="1">国語</option>
+					<option value="2">数学</option>
+					<option value="3">英語</option>
+					<option value="4">社会</option>
+					<option value="5">理科</option>
+					<option value="6">保健体育</option>
+					<option value="7">音楽</option>
+					<option value="8">美術</option>
+					<option value="9">技術家庭</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">評定</label>
+				<select name="grade">
+					<option value=""></option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+			<button class="btn btn-default" type="submit">登録</button>
+		</form>
+				
+		<section id="grade">
+			<ul>
+				<li th:each="grade : ${grades}">
+					<article class="post">
+						<ul>
+							<li>
+								<pre class="year" th:text="${grade.year}"></pre>
+							</li>
+							<li>
+								<pre class="term" th:text="${grade.term}"></pre>
+							</li>
+							<li>
+								<pre class="subject" th:text="${grade.subject}"></pre>
+							</li>
+							<li>
+								<pre class="grade" th:text="${grade.grade}"></pre>
+							</li>
+							<li>
+								<div class="buttons clearfix">
+									<a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}"
+										class="edit">編集</a>
+									<a th:href="@{/students/grades/{id}/delete(id=${grade.gradeId})}"
+										class="delete">削除</a>
+								</div>
+							</li>
+						</ul>
+					</article>
+				</li>
+			</ul>
+		</section>
+
+
+		<a href="/students">生徒一覧にもどる</a>
+	</div>
+</body>
+
+</html>
