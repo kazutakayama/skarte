@@ -1,17 +1,17 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
- user_id CHAR(8) NOT NULL,
- password VARCHAR(255) NOT NULL,
- last_name VARCHAR(40) NOT NULL,
- first_name VARCHAR(40) NOT NULL,
- last_name_kana VARCHAR(40) NOT NULL,
- first_name_kana VARCHAR(40) NOT NULL,
- mail VARCHAR(255) NOT NULL, 
+ user_id INT NOT NULL,
+ authority VARCHAR(255),
+ password VARCHAR(255),
+ last_name VARCHAR(255),
+ first_name VARCHAR(255),
+ --last_name_kana VARCHAR(255),
+ --first_name_kana VARCHAR(255), 
  --created_by CHAR(8) NOT NULL,
  --updated_by CHAR(8) NOT NULL,
- --created_at TIMESTAMP NOT NULL,
- --updated_at TIMESTAMP NOT NULL,
- --deleted bool NOT NULL,
+ created_at TIMESTAMP NOT NULL,
+ updated_at TIMESTAMP NOT NULL,
+ deleted bool NOT NULL,
  PRIMARY KEY (user_id)
 );
 

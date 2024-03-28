@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,10 +78,9 @@ public class SettingController {
     // 生徒詳細画面を表示
     @GetMapping("/students/{id}")
     public String details(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
-        List<StudentYear> studentsYear = studentsYearService.findAll();
-//        List<StudentYear> studentsYear = new ArrayList<StudentYear>();
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
+        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
         model.addAttribute("studentsYear", studentsYear);
         return "setting/details";
     }
@@ -91,19 +89,18 @@ public class SettingController {
     // 生徒情報編集画面を表示
     @GetMapping("/students/{id}/editstudent")
     public String editStudent(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
         return "setting/editstudent";
     }
-        
-     // path: /setting/students/{id}/updatestudent
-        // 生徒情報編集画面から投稿を更新する
+
+    // path: /setting/students/{id}/updatestudent
+    // 生徒情報編集画面から投稿を更新する
     @PostMapping("/students/{id}/updatestudent")
     public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
         Student result = studentsService.updateStudent(id, student);
         return "redirect:/setting/students/" + result.getStudentId();
     }
-
 
     // path: /setting/students/download.csv
     // 生徒をcsvでダウンロードする
@@ -168,14 +165,15 @@ public class SettingController {
     public String addClass(@ModelAttribute StudentYear studentYear) {
         studentsYearService.addClass(studentYear);
         return "redirect:/setting/students";
+//        return "redirect:/setting/students/" + result.getStudentId();
     }
 
     // path: /setting/students/{id}/editclass
     // クラス編集画面を表示
     @GetMapping("/students/{id}/editclass")
     public String editClass(@PathVariable Long id, Model model) {
-        StudentYear studentsYear = studentsYearService.findById(id);
-        model.addAttribute("studentsYear", studentsYear);
+        StudentYear studentYear = studentsYearService.findById(id);
+        model.addAttribute("studentsYear", studentYear);
 //        List<StudentYear> studentsYear = studentsYearService.findAll();
 //        model.addAttribute("studentsYear", studentsYear);
         return "setting/editclass";
@@ -186,7 +184,8 @@ public class SettingController {
     @PostMapping("/students/{id}/updateclass")
     public String updateClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear) {
         StudentYear result = studentsYearService.updateClass(id, studentYear);
-        return "redirect:/setting/students/" + result.getStudentId() + "/details";
+        return "redirect:/setting/students";
+//        return "redirect:/setting/students/" + result.getStudentId() + "/details";
     }
 
     // path: /setting/students/{id}/deletestudent

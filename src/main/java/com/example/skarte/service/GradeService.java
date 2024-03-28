@@ -13,6 +13,13 @@ public interface GradeService {
    * @return
    */
   public List<Grade> findAll();
+  
+  /**
+   * 生徒IDでリストを取得
+   * 
+   * @return
+   */
+  public List<Grade> findAllByStudentId(Long studentId);
 
   /**
    * 成績1件取得

@@ -1,8 +1,6 @@
 package com.example.skarte.controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,8 +49,8 @@ public class StudentsController {
     // 生徒詳細画面を表示
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
         List<StudentYear> studentsYear = studentsYearService.findAll();
         model.addAttribute("studentsYear", studentsYear);
         return "students/details";
@@ -62,8 +60,8 @@ public class StudentsController {
     // 生徒情報編集画面を表示
     @GetMapping("/{id}/edit")
     public String editStudent(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
         List<StudentYear> studentsYear = studentsYearService.findAll();
         model.addAttribute("studentsYear", studentsYear);
         return "students/edit";
@@ -81,9 +79,9 @@ public class StudentsController {
     // カルテを表示
     @GetMapping("/{id}/karte")
     public String karte(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
-        List<Karte> karte = karteService.findAll();
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
+        List<Karte> karte = karteService.findAllByStudentId(id);
         model.addAttribute("karte", karte);
         return "students/karte";
     }
@@ -131,9 +129,9 @@ public class StudentsController {
     // 出欠を表示
     @GetMapping("/{id}/attendance")
     public String attendance(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
-        List<Attendance> attendance = attendanceService.findAll();
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
+        List<Attendance> attendance = attendanceService.findAllByStudentId(id);
         model.addAttribute("attendance", attendance);
         return "students/attendance";
     }
@@ -158,9 +156,9 @@ public class StudentsController {
     // 成績を表示
     @GetMapping("/{id}/grades")
     public String grades(@PathVariable Long id, Model model) {
-        Student students = studentsService.findById(id);
-        model.addAttribute("students", students);
-        List<Grade> grades = gradeService.findAll();
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);      
+        List<Grade> grades = gradeService.findAllByStudentId(id);
         model.addAttribute("grades", grades);
         return "students/grades";
     }

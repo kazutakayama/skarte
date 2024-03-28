@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.skarte.entity.Attendance;
+import com.example.skarte.entity.StudentYear;
 import com.example.skarte.repository.AttendanceRepository;
 import com.example.skarte.service.AttendanceService;
 
@@ -27,6 +28,18 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<Attendance> findAll() {
         return attendanceRepository.findByDeletedFalseOrderByUpdatedAtDesc();
     }
+    
+    /**
+     * 生徒IDでリストを取得
+     * 
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Attendance> findAllByStudentId(Long studentId) {
+        return attendanceRepository.findAllByStudentId(studentId);
+    }
+
 
     /**
      * 出欠1件取得

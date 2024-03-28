@@ -3,6 +3,7 @@ package com.example.skarte.service;
 import java.util.List;
 
 import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.StudentYear;
 
 //インターフェイス
 public interface KarteService {
@@ -13,6 +14,13 @@ public interface KarteService {
    * @return
    */
   public List<Karte> findAll();
+  
+  /**
+   * 生徒IDでリストを取得
+   * 
+   * @return
+   */
+  public List<Karte> findAllByStudentId(Long studentId);
 
   /**
    * カルテ1件取得
