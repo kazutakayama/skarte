@@ -27,6 +27,17 @@ public class StudentsYearServiceImpl implements StudentsYearService {
     public List<StudentYear> findAll() {
         return studentYearRepository.findByDeletedFalseOrderByUpdatedAtDesc();
     }
+    
+    /**
+     * 生徒IDでリストを取得
+     * 
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentYear> findAllByStudentId(Long studentId) {
+        return studentYearRepository.findAllByStudentId(studentId);
+    }
 
     /**
      * クラス1件取得

@@ -13,6 +13,14 @@ public interface StudentsYearService {
      * @return
      */
     public List<StudentYear> findAll();
+    
+    /**
+     * 生徒IDでリストを取得
+     * 
+     * @return
+     */
+    public List<StudentYear> findAllByStudentId(Long studentId);
+
 
     /**
      * クラス1件取得
@@ -22,6 +30,7 @@ public interface StudentsYearService {
      */
     public StudentYear findById(Long id);
 
+    
     /**
      * クラス追加
      * 

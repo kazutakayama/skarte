@@ -3,6 +3,7 @@ package com.example.skarte.service;
 import java.util.List;
 
 import com.example.skarte.entity.Attendance;
+import com.example.skarte.entity.StudentYear;
 
 //インターフェイス
 public interface AttendanceService {
@@ -13,6 +14,13 @@ public interface AttendanceService {
      * @return
      */
     public List<Attendance> findAll();
+    
+    /**
+     * 生徒IDでリストを取得
+     * 
+     * @return
+     */
+    public List<Attendance> findAllByStudentId(Long studentId);
 
     /**
      * 出欠1件取得

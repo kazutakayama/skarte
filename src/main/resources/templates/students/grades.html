@@ -85,6 +85,37 @@
 			<button class="btn btn-default" type="submit">登録</button>
 		</form>
 				
+		<!--<section id="grade">
+			<ul>
+				<li th:each="grade : ${grades}">
+					<article class="post">
+						<ul>
+							<li>
+								<pre class="year" th:text="${grade.year}"></pre>
+							</li>
+							<li>
+								<pre class="term" th:text="${grade.term}"></pre>
+							</li>
+							<li>
+								<pre class="subject" th:text="${grade.subject}"></pre>
+							</li>
+							<li>
+								<pre class="grade" th:text="${grade.grade}"></pre>
+							</li>
+							<li>
+								<div class="buttons clearfix">
+									<a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}"
+										class="edit">編集</a>
+									<a th:href="@{/students/grades/{id}/delete(id=${grade.gradeId})}"
+										class="delete">削除</a>
+								</div>
+							</li>
+						</ul>
+					</article>
+				</li>
+			</ul>
+		</section>-->
+		
 		<section id="grade">
 			<ul>
 				<li th:each="grade : ${grades}">
@@ -115,6 +146,7 @@
 				</li>
 			</ul>
 		</section>
+
 
 
 		<a href="/students">生徒一覧にもどる</a>

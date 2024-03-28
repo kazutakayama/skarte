@@ -55,8 +55,8 @@ public class NoticesController {
     // お知らせ一覧からお知らせ詳細へのリンク
     @GetMapping("/contents/{id}")
     public String contents(@PathVariable Long id, Model model) {
-        Notice notices = noticesService.findById(id);
-        model.addAttribute("notices", notices);
+        Notice notice = noticesService.findById(id);
+        model.addAttribute("notices", notice);
         return "notices/contents";
     }
 
@@ -64,8 +64,8 @@ public class NoticesController {
     // お知らせ編集画面を表示
     @GetMapping("/contents/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
-        Notice notices = noticesService.findById(id);
-        model.addAttribute("notices", notices);
+        Notice notice = noticesService.findById(id);
+        model.addAttribute("notices", notice);
         return "notices/edit";
     }
 

@@ -27,6 +27,18 @@ public class GradeServiceImpl implements GradeService {
     public List<Grade> findAll() {
         return gradeRepository.findByDeletedFalseOrderByUpdatedAtDesc();
     }
+    
+    /**
+     * 生徒IDでリストを取得
+     * 
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Grade> findAllByStudentId(Long studentId) {
+        return gradeRepository.findAllByStudentId(studentId);
+    }
+
 
     /**
      * 成績1件取得

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.StudentYear;
 import com.example.skarte.repository.KarteRepository;
 import com.example.skarte.service.KarteService;
 
@@ -27,6 +28,18 @@ public class KarteServiceImpl implements KarteService {
     public List<Karte> findAll() {
         return karteRepository.findByDeletedFalseOrderByUpdatedAtDesc();
     }
+    
+    /**
+     * 生徒IDでリストを取得
+     * 
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Karte> findAllByStudentId(Long studentId) {
+        return karteRepository.findAllByStudentId(studentId);
+    }
+
 
     /**
      * カルテ1件取得

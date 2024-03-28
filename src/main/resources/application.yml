@@ -12,4 +12,4 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/skarte
     username: ${psql.user}
-    password: ${psql.password}    
+    password: ${psql.password}   
