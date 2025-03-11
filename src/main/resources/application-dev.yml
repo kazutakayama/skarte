@@ -1,10 +1,21 @@
 spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/skarte
+#    username: skarte
+#    password: password
+#  h2:
+#    console:
+#      enabled: true
+#debug: true
+
+  jpa:
+    database: POSTGRESQL 
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/skarte
-    username: skarte
-    password: password
-  h2:
-    console:
-      enabled: true
+     driverClassName: org.postgresql.Driver
+     url: jdbc:postgresql://localhost:5432/skarte
+     username: skarte
+     password: skarte
 debug: true
+image:
+  local: true  

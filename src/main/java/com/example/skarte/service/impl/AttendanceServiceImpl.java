@@ -26,7 +26,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional(readOnly = true)
     public List<Attendance> findAll() {
-        return attendanceRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+//        return attendanceRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+        return attendanceRepository.findByOrderByUpdatedAtDesc();
     }
     
     /**
@@ -96,16 +97,16 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceRepository.save(attendance);
     }
 
-    /**
-     * 出欠削除（理論削除）
-     * 
-     * @param attendance
-     */
-    @Override
-    @Transactional
-    public void deleteAttendance(Long attendanceId, Attendance attendance) {
-        Attendance targetAttendance = attendanceRepository.findById(attendanceId).orElseThrow();
-        targetAttendance.setDeleted(Boolean.TRUE);
-        attendanceRepository.save(targetAttendance);
-    }
+//    /**
+//     * 出欠削除（理論削除）
+//     * 
+//     * @param attendance
+//     */
+//    @Override
+//    @Transactional
+//    public void deleteAttendance(Long attendanceId, Attendance attendance) {
+//        Attendance targetAttendance = attendanceRepository.findById(attendanceId).orElseThrow();
+//        targetAttendance.setDeleted(Boolean.TRUE);
+//        attendanceRepository.save(targetAttendance);
+//    }
 }

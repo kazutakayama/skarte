@@ -13,7 +13,8 @@ import com.example.skarte.entity.StudentYear;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     // 更新日時の降順で未削除の投稿（削除済みは表示しない）
-    List<Attendance> findByDeletedFalseOrderByUpdatedAtDesc();
+//    List<Attendance> findByDeletedFalseOrderByUpdatedAtDesc();
+    List<Attendance> findByOrderByUpdatedAtDesc();
 
     // 生徒IDでリストを取得
     List<Attendance> findAllByStudentId(Long studentId);

@@ -34,10 +34,11 @@ public interface StudentsYearService {
     /**
      * クラス追加
      * 
+     * @param userId
      * @param student
      * @return
      */
-    public void addClass(StudentYear studentYear);
+    public void addClass(Long userId, StudentYear studentYear);
 
     /**
      * クラス編集
@@ -54,11 +55,11 @@ public interface StudentsYearService {
      */
     public void insert(StudentYear studentYear);
 
-    /**
-     * クラス削除（理論削除）
-     * 
-     * @param student
-     */
-    public void deleteClass(Long studentYearId, StudentYear studentYear);
+//    /**
+//     * クラス削除（理論削除）
+//     * 
+//     * @param student
+//     */
+//    public void deleteClass(Long studentYearId, StudentYear studentYear);
 
 }

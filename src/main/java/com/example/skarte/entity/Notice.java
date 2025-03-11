@@ -17,8 +17,8 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "notices")
 @Data
-@EqualsAndHashCode(callSuper = false) // AbstractEntity
-public class Notice extends AbstractEntity { // AbstractEntity
+@EqualsAndHashCode(callSuper = false) // EntityBase
+public class Notice extends EntityBase { // EntityBase
 //public class Notice extends AbstractEntity implements Serializable {
 //    private static final long serialVersionUID = 1L;
 
@@ -44,16 +44,5 @@ public class Notice extends AbstractEntity { // AbstractEntity
     /** 内容 */
     @Column(length = 1000, nullable = false)
     private String contents = null;
-
-    /** 作成者 */
-    @Transient
-    private String createdBy = null;
-
-    /** 更新者 */
-    @Transient
-    private String updatedBy = null;
-
-    /** 削除済 */
-    private boolean deleted = false;
 
 }

@@ -53,11 +53,11 @@ public interface KarteService {
    */
   public void insertKarte(Karte karte);
 
-  /**
-   * カルテ削除（理論削除）
-   * 
-   * @param karte
-   */
-  public void deleteKarte(Long karteId, Karte karte);
+//  /**
+//   * カルテ削除（理論削除）
+//   * 
+//   * @param karte
+//   */
+//  public void deleteKarte(Long karteId, Karte karte);
 
 }

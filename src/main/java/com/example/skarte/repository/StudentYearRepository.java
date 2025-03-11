@@ -10,7 +10,9 @@ import com.example.skarte.entity.StudentYear;
 @Repository
 public interface StudentYearRepository extends JpaRepository<StudentYear, Long> {
     //更新日時の降順（削除済みは表示しない）　
-    List<StudentYear> findByDeletedFalseOrderByUpdatedAtDesc();
+//    List<StudentYear> findByDeletedFalseOrderByUpdatedAtDesc();
+    
+    List<StudentYear> findByOrderByUpdatedAtDesc();
     
     //生徒IDでリストを取得
     List<StudentYear> findAllByStudentId(Long studentId);

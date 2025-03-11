@@ -22,12 +22,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "attendance")
 @Data
-@EqualsAndHashCode(callSuper = false) // AbstractEntity
+@EqualsAndHashCode(callSuper = false) // EntityBase
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
 
-public class Attendance extends AbstractEntity { // AbstractEntity
+public class Attendance extends EntityBase { // EntityBase
 
     /** ID */
     @Id
@@ -70,8 +70,5 @@ public class Attendance extends AbstractEntity { // AbstractEntity
     /** 忌引 */
     @Column
     private Integer kibiki = null;
-
-    /** 削除済 */
-    private boolean deleted = false;
 
 }

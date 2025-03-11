@@ -26,7 +26,8 @@ public class KarteServiceImpl implements KarteService {
     @Override
     @Transactional(readOnly = true)
     public List<Karte> findAll() {
-        return karteRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+//        return karteRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+        return karteRepository.findByOrderByUpdatedAtDesc();
     }
     
     /**
@@ -92,16 +93,16 @@ public class KarteServiceImpl implements KarteService {
         karteRepository.save(karte);
     }
 
-    /**
-     * カルテ削除（理論削除）
-     * 
-     * @param karte
-     */
-    @Override
-    @Transactional
-    public void deleteKarte(Long karteId, Karte karte) {
-        Karte targetKarte = karteRepository.findById(karteId).orElseThrow();
-        targetKarte.setDeleted(Boolean.TRUE);
-        karteRepository.save(targetKarte);
-    }
+//    /**
+//     * カルテ削除（理論削除）
+//     * 
+//     * @param karte
+//     */
+//    @Override
+//    @Transactional
+//    public void deleteKarte(Long karteId, Karte karte) {
+//        Karte targetKarte = karteRepository.findById(karteId).orElseThrow();
+//        targetKarte.setDeleted(Boolean.TRUE);
+//        karteRepository.save(targetKarte);
+//    }
 }

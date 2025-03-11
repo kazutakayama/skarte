@@ -25,7 +25,8 @@ public class NoticesServiceImpl implements NoticesService {
     @Override
     @Transactional(readOnly = true)
     public List<Notice> findAll() {
-        return noticeRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+//        return noticeRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+        return noticeRepository.findByOrderByUpdatedAtDesc();
     }
 
     /**
@@ -43,14 +44,45 @@ public class NoticesServiceImpl implements NoticesService {
     /**
      * お知らせ追加
      * 
+     * @param userId
      * @param notice
      * @return
      */
     @Override
     @Transactional
-    public void add(Notice notice) {
+    public void add(Long userId, Notice notice) {
+        notice.setCreatedBy(userId);
+        notice.setUpdatedBy(userId);
         noticeRepository.save(notice);
     }
+
+//    /**
+//     * お知らせ追加
+//     * 
+//     * @param notice
+//     * @return
+//     */
+//    @Override
+//    @Transactional
+//    public void add(Notice notice) {
+//        noticeRepository.save(notice);
+//    }
+
+//    /**
+//     * お知らせ編集
+//     * @param userId
+//     * @param notice
+//     * @return
+//     */
+//    @Override
+//    @Transactional
+//    public void update(Long userId, Long noticeId, Notice notice) {
+//        Notice targetNotice = noticeRepository.findById(noticeId).orElseThrow();
+//        targetNotice.setTitle(notice.getTitle());
+//        targetNotice.setContents(notice.getContents());
+//        targetNotice.setUpdatedBy(notice.getUpdatedBy());
+//        noticeRepository.save(targetNotice);
+//    }
 
     /**
      * お知らせ編集
@@ -64,19 +96,21 @@ public class NoticesServiceImpl implements NoticesService {
         Notice targetNotice = noticeRepository.findById(noticeId).orElseThrow();
         targetNotice.setTitle(notice.getTitle());
         targetNotice.setContents(notice.getContents());
+        targetNotice.setUpdatedBy(notice.getUpdatedBy());
         noticeRepository.save(targetNotice);
     }
 
-    /**
-     * お知らせ削除（理論削除）
-     * 
-     * @param notice
-     */
-    @Override
-    @Transactional
-    public void delete(Long noticeId, Notice notice) {
-        Notice targetNotice = noticeRepository.findById(noticeId).orElseThrow();
-        targetNotice.setDeleted(Boolean.TRUE);
-        noticeRepository.save(targetNotice);
-    }
+//    /**
+//     * お知らせ削除（理論削除）
+//     * 
+//     * @param notice
+//     */
+//    @Override
+//    @Transactional
+//    public void delete(Long noticeId, Notice notice) {
+//        Notice targetNotice = noticeRepository.findById(noticeId).orElseThrow();
+//        targetNotice.setUpdatedBy(notice.getUpdatedBy());
+//        targetNotice.setDeleted(Boolean.TRUE);
+//        noticeRepository.save(targetNotice);
+//    }
 }

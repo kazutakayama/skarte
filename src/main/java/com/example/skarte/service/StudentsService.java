@@ -6,6 +6,7 @@ import java.util.List;
 //import org.springframework.stereotype.Service;
 
 import com.example.skarte.entity.Student;
+import com.example.skarte.form.StudentForm;
 
 //@Service
 //public class StudentsService {
@@ -31,10 +32,11 @@ public interface StudentsService {
     /**
      * 生徒追加
      * 
+     * @param userId
      * @param student
      * @return
      */
-    public void addStudent(Student student);
+    public void addStudent(Long userId, StudentForm form);
 
     /**
      * 生徒編集
@@ -43,21 +45,22 @@ public interface StudentsService {
      * @return
      */
 //    public void updateStudent(Long studentId, Student student);
-    public Student updateStudent(Long studentId, Student student);
+    public Student updateStudent(Long studentId, StudentForm student);
 
     /**
-     * 生徒CSVダウンロード用
+     * 生徒CSVアップロード用
      * 
+     * @param userId
      * @param student
      */
-    public void insertStudent(Student student);
+    public void addStudentByCSV(Long userId, Student student);
 
-    /**
-     * 生徒削除（理論削除）
-     * 
-     * @param student
-     */
-    public void deleteStudent(Long studentId, Student student);
+//    /**
+//     * 生徒削除（理論削除）
+//     * 
+//     * @param student
+//     */
+//    public void deleteStudent(Long studentId, Student student);
 
 }
 

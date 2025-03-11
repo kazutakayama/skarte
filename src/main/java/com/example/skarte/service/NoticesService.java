@@ -32,11 +32,29 @@ public interface NoticesService {
     /**
      * お知らせ追加
      * 
+     * @param userId
      * @param notice
      * @return
      */
-    public void add(Notice notice);
+    public void add(Long userId, Notice notice);
+    
+//    /**
+//     * お知らせ追加
+//     * 
+//     * @param notice
+//     * @return
+//     */
+//    public void add(Notice notice);
 
+//    /**
+//     * お知らせ編集
+//     * 
+//     * @param userId
+//     * @param notice
+//     * @return
+//     */
+//    public void update(Long userId, Long noticeId, Notice notice);
+    
     /**
      * お知らせ編集
      * 
@@ -45,12 +63,12 @@ public interface NoticesService {
      */
     public void update(Long noticeId, Notice notice);
 
-    /**
-     * お知らせ削除
-     * 
-     * @param notice
-     */
-    public void delete(Long noticeId, Notice notice);
+//    /**
+//     * お知らせ削除
+//     * 
+//     * @param notice
+//     */
+//    public void delete(Long noticeId, Notice notice);
 }
 
 // 【余裕があったら】コンストラクタインジェクションに修正しましょう

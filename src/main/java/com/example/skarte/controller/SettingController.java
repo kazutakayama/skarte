@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.skarte.bean.StudentsCsv;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
+import com.example.skarte.entity.User;
+import com.example.skarte.form.StudentForm;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -68,10 +74,12 @@ public class SettingController {
     // path: /setting/students/addstudent
     // 画面で入力された生徒情報を取得して、dbに登録をする
     @PostMapping("/students/addstudent")
-    public String addStudent(@ModelAttribute Student student) {
-        studentsService.addStudent(student);
-//        studentsService.save(student);
-        return "setting/students";
+//    public String addStudent(@ModelAttribute Student student, @AuthenticationPrincipal User user) {
+    public String addStudent(@Validated @ModelAttribute StudentForm form, @AuthenticationPrincipal User user, BindingResult bindingResult,
+            Model model) {
+        //Student student = new student();
+        studentsService.addStudent(user.getUserId(),form);
+        return "redirect:/setting/students";
     }
 
     // path: /setting/students/{id}
@@ -95,10 +103,12 @@ public class SettingController {
     }
 
     // path: /setting/students/{id}/updatestudent
-    // 生徒情報編集画面から投稿を更新する
+    // 生徒情報編集画面から生徒情報を更新する
     @PostMapping("/students/{id}/updatestudent")
-    public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
-        Student result = studentsService.updateStudent(id, student);
+//    public String updateStudent(@PathVariable Long id, @ModelAttribute Student student, @AuthenticationPrincipal User user) {
+    public String updateStudent(@PathVariable Long id, @Validated @ModelAttribute StudentForm form, @AuthenticationPrincipal User user) {
+        form.setUpdatedBy(user.getUserId());
+        Student result = studentsService.updateStudent(id, form);
         return "redirect:/setting/students/" + result.getStudentId();
     }
 
@@ -113,7 +123,7 @@ public class SettingController {
         // CSVファイル用のDTOに詰め直す
         List<StudentsCsv> csvs = students.stream()
                 .map(e -> new StudentsCsv(e.getStudentId(), e.getLastName(), e.getFirstName(), e.getLastNameKana(),
-                        e.getFirstNameKana(), e.getFamily1(), e.getTel1(), e.getPostalCode(), e.getAdress(),
+                        e.getFirstNameKana(), e.getBirth(), e.getGender(), e.getFamily1(), e.getFamily2(), e.getTel1(), e.getTel2(), e.getTel3(), e.getTel4(), e.getPostalCode(), e.getAdress(),
                         e.getMemo()))
                 .collect(Collectors.toList());
         // ファイルをダウンロードさせる
@@ -125,7 +135,7 @@ public class SettingController {
     // path: /setting/students/upload.csv
     // 生徒をcsvでアップロードする
     @PostMapping(value = "/students/upload.csv", params = "upload_file")
-    public String uploadFile(@RequestParam("file") MultipartFile uploadFile) {
+    public String uploadFile(@RequestParam("file") MultipartFile uploadFile, @AuthenticationPrincipal User user) {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(uploadFile.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
@@ -133,9 +143,10 @@ public class SettingController {
                 final String[] split = line.split(",");
                 final Student student = Student.builder().studentId((long) Integer.parseInt(split[0]))
                         .lastName(split[1]).firstName(split[2]).lastNameKana(split[3]).firstNameKana(split[4])
-                        .family1(split[5]).tel1((long) Integer.parseInt(split[6]))
-                        .postalCode((long) Integer.parseInt(split[7])).adress(split[8]).memo(split[9]).build();
-                studentsService.insertStudent(student);
+                        .birth(Date.valueOf(split[5])).gender((int) Integer.parseInt(split[6]))
+                        .family1(split[7]).family2(split[8]).tel1((long) Integer.parseInt(split[9])).tel2((long) Integer.parseInt(split[10])).tel3((long) Integer.parseInt(split[11])).tel4((long) Integer.parseInt(split[12]))
+                        .postalCode((long) Integer.parseInt(split[13])).adress(split[14]).memo(split[15]).build();
+                studentsService.addStudentByCSV(user.getUserId(), student);
             }
         } catch (IOException e) {
             throw new RuntimeException("ファイルが読み込めません", e);
@@ -143,13 +154,14 @@ public class SettingController {
         return "redirect:/setting/students";
     }
 
-    // path: /setting/students/{id}/deletestudent
-    // 生徒を削除（論理削除）
-    @GetMapping("/students/{id}/deletestudent")
-    public String delete(@PathVariable Long id, @ModelAttribute Student student) {
-        studentsService.deleteStudent(id, student);
-        return "redirect:/setting/students";
-    }
+//    // path: /setting/students/{id}/deletestudent
+//    // 生徒を削除（論理削除）
+//    @GetMapping("/students/{id}/deletestudent")
+//    public String delete(@PathVariable Long id, @ModelAttribute Student student, @AuthenticationPrincipal User user) {
+//        student.setUpdatedBy(user.getUserId());
+//        studentsService.deleteStudent(id, student);
+//        return "redirect:/setting/students";
+//    }
 
     // path: /setting/students/{id}/delete
     // 設定/生徒を削除（物理削除）
@@ -162,8 +174,8 @@ public class SettingController {
     // path: /setting/students/addclass
     // 画面で入力されたクラス情報を取得して、dbに登録をする
     @PostMapping("/students/addclass")
-    public String addClass(@ModelAttribute StudentYear studentYear) {
-        studentsYearService.addClass(studentYear);
+    public String addClass(@ModelAttribute StudentYear studentYear, @AuthenticationPrincipal User user) {
+        studentsYearService.addClass(user.getUserId(), studentYear);
         return "redirect:/setting/students";
 //        return "redirect:/setting/students/" + result.getStudentId();
     }
@@ -182,19 +194,21 @@ public class SettingController {
     // path: /setting/students/{id}/updateclass
     // クラス情報を更新する
     @PostMapping("/students/{id}/updateclass")
-    public String updateClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear) {
+    public String updateClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear, @AuthenticationPrincipal User user) {
+        studentYear.setUpdatedBy(user.getUserId());
         StudentYear result = studentsYearService.updateClass(id, studentYear);
         return "redirect:/setting/students";
 //        return "redirect:/setting/students/" + result.getStudentId() + "/details";
     }
 
-    // path: /setting/students/{id}/deletestudent
-    // クラスを削除（論理削除）
-    @GetMapping("/students/{id}/deleteclass")
-    public String deleteClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear) {
-        studentsYearService.deleteClass(id, studentYear);
-        return "redirect:/setting/students";
-    }
+//    // path: /setting/students/{id}/deletestudent
+//    // クラスを削除（論理削除）
+//    @GetMapping("/students/{id}/deleteclass")
+//    public String deleteClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear, @AuthenticationPrincipal User user) {
+//        studentYear.setUpdatedBy(user.getUserId());
+//        studentsYearService.deleteClass(id, studentYear);
+//        return "redirect:/setting/students";
+//    }
 
     // path: /setting/class
     // クラス管理ページを表示

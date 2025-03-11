@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "grades")
 @Data
-@EqualsAndHashCode(callSuper = false) // AbstractEntity
+@EqualsAndHashCode(callSuper = false) // EntityBase
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
 
-public class Grade extends AbstractEntity { // AbstractEntity
+public class Grade extends EntityBase { // EntityBase
 
     /** ID */
     @Id
@@ -57,8 +57,5 @@ public class Grade extends AbstractEntity { // AbstractEntity
     /** 評定 */
     @Column
     private Long grade = null;
-
-    /** 削除済 */
-    private boolean deleted = false;
 
 }

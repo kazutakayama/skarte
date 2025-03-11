@@ -25,7 +25,8 @@ public class StudentsYearServiceImpl implements StudentsYearService {
     @Override
     @Transactional(readOnly = true)
     public List<StudentYear> findAll() {
-        return studentYearRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+//        return studentYearRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+        return studentYearRepository.findByOrderByUpdatedAtDesc();
     }
     
     /**
@@ -59,7 +60,9 @@ public class StudentsYearServiceImpl implements StudentsYearService {
      */
     @Override
     @Transactional
-    public void addClass(StudentYear studentYear) {
+    public void addClass(Long userId, StudentYear studentYear) {
+        studentYear.setCreatedBy(userId);
+        studentYear.setUpdatedBy(userId);
         studentYearRepository.save(studentYear);
     }
 
@@ -77,6 +80,7 @@ public class StudentsYearServiceImpl implements StudentsYearService {
         targetStudentYear.setNen(studentYear.getNen());
         targetStudentYear.setKumi(studentYear.getKumi());
         targetStudentYear.setBan(studentYear.getBan());
+        targetStudentYear.setUpdatedBy(studentYear.getUpdatedBy());
         studentYearRepository.save(targetStudentYear);
         return targetStudentYear;
 //        studentRepository.save(student);
@@ -93,16 +97,17 @@ public class StudentsYearServiceImpl implements StudentsYearService {
         studentYearRepository.save(studentYear);
     }
 
-    /**
-     * 生徒削除（理論削除）
-     * 
-     * @param studentYear
-     */
-    @Override
-    @Transactional
-    public void deleteClass(Long studentYearId, StudentYear studentYear) {
-        StudentYear targetStudentYear = studentYearRepository.findById(studentYearId).orElseThrow();
-        targetStudentYear.setDeleted(Boolean.TRUE);
-        studentYearRepository.save(targetStudentYear);
-    }
+//    /**
+//     * 生徒削除（理論削除）　→　転出に変更
+//     * 
+//     * @param studentYear
+//     */
+//    @Override
+//    @Transactional
+//    public void deleteClass(Long studentYearId, StudentYear studentYear) {
+//        StudentYear targetStudentYear = studentYearRepository.findById(studentYearId).orElseThrow();
+//        targetStudentYear.setUpdatedBy(studentYear.getUpdatedBy());
+//        targetStudentYear.setDeleted(Boolean.TRUE);
+//        studentYearRepository.save(targetStudentYear);
+//    }
 }

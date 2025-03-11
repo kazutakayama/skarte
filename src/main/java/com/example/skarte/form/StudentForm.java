@@ -1,119 +1,99 @@
-package com.example.skarte.entity;
+package com.example.skarte.form;
 
 import java.util.Date;
 import java.util.List;
 
-import jakarta.validation.constraints.NotEmpty;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.example.skarte.entity.Attendance;
+import com.example.skarte.entity.EntityBase;
+import com.example.skarte.entity.Grade;
+import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.Student;
+import com.example.skarte.entity.StudentYear;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "students")
 @Data
-@EqualsAndHashCode(callSuper = false) // EntityBase
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
-
-public class Student extends EntityBase { // EntityBase
+@EqualsAndHashCode(callSuper = false) // EntityBase
+public class StudentForm extends EntityBase { // EntityBase
 
     /** ID */
-    @Id
-    @Column
+//    @NotEmpty
     private Long studentId = null;
 
     /** 姓 */
-    @Column(length = 20, nullable = false)
+    @NotEmpty
     private String lastName = null;
 
     /** 名 */
-    @Column(length = 20, nullable = false)
+    @NotEmpty
     private String firstName = null;
 
     /** せい */
-    @Column(length = 20, nullable = false)
+    @NotEmpty
     private String lastNameKana = null;
 
     /** めい */
-    @Column(length = 20, nullable = false)
+    @NotEmpty
     private String firstNameKana = null;
 
     /** 生年月日 */
-    @Column
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth = null;
 
     /** 性別 */
-    @Column
+    @NotNull
     private Integer gender = null;
 
-    /** 保護者1 */
-    @Column
+    /** 家族1 */
+    @NotEmpty
     private String family1 = null;
 
-    /** 保護者2 */
-    @Column
+    /** 家族2 */
     private String family2 = null;
 
+    /** 家族3 */
+    private String family3 = null;
+
+    /** 家族4 */
+    private String family4 = null;
+
     /** 電話1 */
-    @Column
+    @NotNull
     private Long tel1 = null;
 
     /** 電話2 */
-    @Column
     private Long tel2 = null;
 
     /** 電話3 */
-    @Column
     private Long tel3 = null;
 
     /** 電話4 */
-    @Column
     private Long tel4 = null;
 
     /** 郵便番号 */
-    @Column
+    @NotNull
     private Long postalCode = null;
 
     /** 住所 */
-    @Column
+    @NotEmpty
     private String adress = null;
 
     /** メモ */
-    @Column
     private String memo = null;
-
-    /** 転出済 */
-    private boolean transferred = false;
-    
-    @OneToMany
-    @JoinColumn(name = "studentId", insertable = false, updatable = false)
-    private List<StudentYear> studentsYear;
-    
-    @OneToMany
-    @JoinColumn(name = "studentId", insertable = false, updatable = false)
-    private List<Karte> karte;
-    
-    @OneToMany
-    @JoinColumn(name = "studentId", insertable = false, updatable = false)
-    private List<Attendance> attendance;
-    
-    @OneToMany
-    @JoinColumn(name = "studentId", insertable = false, updatable = false)
-    private List<Grade> grades;
-
 }

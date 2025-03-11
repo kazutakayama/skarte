@@ -6,6 +6,9 @@
 </head>
 
 <body>
+	<div th:if="${hasMessage}" class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
+		<span th:text="${message}"></span>
+	</div>
 	<div class="users-new-wrapper">
 		<main>
 			<h1>ログイン</h1>

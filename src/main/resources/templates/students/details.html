@@ -54,18 +54,14 @@
 		<table>
 			<thead>
 				<tr>
-					<th>家族1</th>
-					<th>家族2</th>
-					<th>家族3</th>
-					<th>家族4</th>
+					<th>保護者1</th>
+					<th>保護者2</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="student : ${students}">
 					<td th:text="${student.family1}"></td>
 					<td th:text="${student.family2}"></td>
-					<td th:text="${student.family3}"></td>
-					<td th:text="${student.family4}"></td>
 				</tr>
 			</tbody>
 		</table>
