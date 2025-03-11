@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.User;
 import com.example.skarte.entity.User.Authority;
 import com.example.skarte.form.UserForm;
@@ -58,6 +57,8 @@ public class UsersController {
         }
 
         User entity = new User(userId, lastName, firstName, passwordEncoder.encode(password), Authority.ROLE_USER);
+        entity.setCreatedBy(userId);
+        entity.setUpdatedBy(userId);
         repository.saveAndFlush(entity);
 
         model.addAttribute("hasMessage", true);

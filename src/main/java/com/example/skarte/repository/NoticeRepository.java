@@ -12,5 +12,6 @@ import com.example.skarte.entity.Notice;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 //    更新日時の降順（削除済みは表示しない）　
-    List<Notice> findByDeletedFalseOrderByUpdatedAtDesc();
+//    List<Notice> findByDeletedFalseOrderByUpdatedAtDesc();
+    List<Notice> findByOrderByUpdatedAtDesc();
 }

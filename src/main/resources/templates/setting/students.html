@@ -3,7 +3,9 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
+
 	<div layout:fragment="content">
+
 		<h1>生徒管理</h1>
 
 		<a href="/setting/students/newstudent">生徒新規登録</a>
@@ -11,12 +13,12 @@
 		<form method="post" action="/setting/students/upload.csv" enctype="multipart/form-data">
 			<input type="file" name="file">
 			<input type="submit" name="upload_file" value="CSVアップロード">
-			<!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		</form>
 
 		<form method="get" action="/setting/students/download.csv">
 			<input type="submit" name="download_file" value="CSVダウンロード">
-			<!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		</form>
 
 		<table>
@@ -39,7 +41,7 @@
 					<td th:text="${student.firstNameKana}"></td>
 					<td><a class="buttons clearfix" th:href="@{/setting/students/{id} (id=${student.studentId})}">
 							生徒詳細
-						</a></td>	
+						</a></td>
 				</tr>
 			</tbody>
 		</table>

@@ -53,11 +53,11 @@ public interface AttendanceService {
      */
     public void insertAttendance(Attendance attendance);
 
-    /**
-     * 出欠削除（理論削除）
-     * 
-     * @param attendance
-     */
-    public void deleteAttendance(Long attendanceId, Attendance attendance);
+//    /**
+//     * 出欠削除（理論削除）
+//     * 
+//     * @param attendance
+//     */
+//    public void deleteAttendance(Long attendanceId, Attendance attendance);
 
 }

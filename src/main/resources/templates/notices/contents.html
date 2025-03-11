@@ -16,8 +16,10 @@
 								<h2 th:text="${notice.title}" />
 								内容：
 								<h2 th:text="${notice.contents}" />
+								更新者：
+								<h2 th:text="${notice.updatedBy}" />
 								更新日時：
-								<h2 th:text="${notice.updatedAt}" />
+								<h2 th:text="${notice.updatedAt}" />								
 								<a class="buttons clearfix"
 									th:href="@{/notices/contents/{id}/edit (id=${notice.noticeId})}">
 									編集

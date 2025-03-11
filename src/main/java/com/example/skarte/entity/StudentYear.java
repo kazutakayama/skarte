@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "students_year")
 @Data
-@EqualsAndHashCode(callSuper = false) // AbstractEntity
+@EqualsAndHashCode(callSuper = false) // EntityBase
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
 
-public class StudentYear extends AbstractEntity { // AbstractEntity
+public class StudentYear extends EntityBase { // EntityBase
 
     /** ID */
     @Id
@@ -61,8 +61,8 @@ public class StudentYear extends AbstractEntity { // AbstractEntity
     /** 画像 */
     @Column
     private String path = null;
-
-    /** 削除済 */
-    private boolean deleted = false;
+    
+    /** 転出済 */
+    private boolean transferred = false;
     
 }

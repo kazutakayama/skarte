@@ -67,13 +67,13 @@ public class StudentsController {
         return "students/edit";
     }
 
-    // path: /students/{id}/update
-    // 生徒情報編集画面から投稿を更新する
-    @PostMapping("/{id}/update")
-    public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
-        Student result = studentsService.updateStudent(id, student);
-        return "redirect:/students/" + result.getStudentId();
-    }
+//    // path: /students/{id}/update
+//    // 生徒情報編集画面から生徒情報を更新する
+//    @PostMapping("/{id}/update")
+//    public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
+//        Student result = studentsService.updateStudent(id, student);
+//        return "redirect:/students/" + result.getStudentId();
+//    }
 
     // path: /students/{id}/karte
     // カルテを表示
@@ -117,13 +117,13 @@ public class StudentsController {
 //        return "layout";
 //    }
 
-    // path: /students/karte/{id}/delete
-    // カルテを削除（論理削除）
-    @GetMapping("/karte/{id}/delete")
-    public String deleteKarte(@PathVariable Long id, @ModelAttribute Karte karte) {
-        karteService.deleteKarte(id, karte);
-        return "redirect:/students";
-    }
+//    // path: /students/karte/{id}/delete
+//    // カルテを削除（論理削除）
+//    @GetMapping("/karte/{id}/delete")
+//    public String deleteKarte(@PathVariable Long id, @ModelAttribute Karte karte) {
+//        karteService.deleteKarte(id, karte);
+//        return "redirect:/students";
+//    }
 
     // path: /students/{id}/attendance
     // 出欠を表示
@@ -144,13 +144,13 @@ public class StudentsController {
         return "redirect:/students";
     }
 
-    // path: /students/attendance/{id}/delete
-    // 出欠を削除（論理削除）
-    @GetMapping("/attendance/{id}/delete")
-    public String deleteAttendance(@PathVariable Long id, @ModelAttribute Attendance attendance) {
-        attendanceService.deleteAttendance(id, attendance);
-        return "redirect:/students";
-    }
+//    // path: /students/attendance/{id}/delete
+//    // 出欠を削除（論理削除）
+//    @GetMapping("/attendance/{id}/delete")
+//    public String deleteAttendance(@PathVariable Long id, @ModelAttribute Attendance attendance) {
+//        attendanceService.deleteAttendance(id, attendance);
+//        return "redirect:/students";
+//    }
 
     // path: /students/{id}/grades
     // 成績を表示
@@ -171,12 +171,12 @@ public class StudentsController {
         return "redirect:/students";
     }
 
-    // path: /students/grades/{id}/delete
-    // 成績を削除（論理削除）
-    @GetMapping("/grades/{id}/delete")
-    public String deleteGrade(@PathVariable Long id, @ModelAttribute Grade grade) {
-        gradeService.deleteGrade(id, grade);
-        return "redirect:/students";
-    }
+//    // path: /students/grades/{id}/delete
+//    // 成績を削除（論理削除）
+//    @GetMapping("/grades/{id}/delete")
+//    public String deleteGrade(@PathVariable Long id, @ModelAttribute Grade grade) {
+//        gradeService.deleteGrade(id, grade);
+//        return "redirect:/students";
+//    }
 
 }

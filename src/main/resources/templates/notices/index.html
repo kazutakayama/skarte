@@ -15,6 +15,7 @@
 			<thead>
 				<tr>
 					<th>タイトル</th>
+					<th>更新者</th>
 					<th>更新日時</th>
 				</tr>
 			</thead>
@@ -22,6 +23,7 @@
 				<tr th:each="notice : ${notices}">
 					<td><a th:href="@{/notices/contents/{id}(id=${notice.noticeId})}" 　th:text="${notice.title}"></a>
 					</td>
+					<td th:text="${notice.updatedBy}"></td>
 					<td th:text="${notice.updatedAt}"></td>
 				</tr>
 			</tbody>

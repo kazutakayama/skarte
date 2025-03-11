@@ -12,7 +12,8 @@ import com.example.skarte.entity.Grade;
 public interface GradeRepository extends JpaRepository<Grade, Long> {
 
     // 更新日時の降順で未削除の投稿（削除済みは表示しない）
-    List<Grade> findByDeletedFalseOrderByUpdatedAtDesc();
+//    List<Grade> findByDeletedFalseOrderByUpdatedAtDesc();
+    List<Grade> findByOrderByUpdatedAtDesc();
 
     // 生徒IDでリストを取得
     List<Grade> findAllByStudentId(Long studentId);

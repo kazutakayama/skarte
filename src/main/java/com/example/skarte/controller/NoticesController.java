@@ -1,6 +1,8 @@
 package com.example.skarte.controller;
 
 import java.util.List;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.skarte.entity.Notice;
+import com.example.skarte.entity.User;
 import com.example.skarte.service.NoticesService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 //コンストラタ生成アノテーション
 @RequiredArgsConstructor
 public class NoticesController {
-    
+
     // コンストラクタインジェクション
     private final NoticesService noticesService;
 
@@ -45,11 +48,20 @@ public class NoticesController {
     // path: /notices/add
     // 画面で入力された「タイトル」「内容」を取得して、dbに登録をする
     @PostMapping("/add")
-    public String add(@ModelAttribute Notice notice) {
-        noticesService.add(notice);
-//        noticesService.save(notice);
+    public String add(@ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
+        noticesService.add(user.getUserId(), notice);
         return "redirect:/notices";
     }
+
+    // path: /notices/add
+    // 画面で入力された「タイトル」「内容」を取得して、dbに登録をする
+//    @PostMapping("/add")
+//    public String add(@ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
+//        notice.setCreatedBy(user.getUserId());
+//        notice.setUpdatedBy(user.getUserId());
+//        noticesService.add(notice);
+//        return "redirect:/notices";
+//    }
 
     // path: /notices/contents/{id}
     // お知らせ一覧からお知らせ詳細へのリンク
@@ -71,15 +83,19 @@ public class NoticesController {
 
     // path: /notices/contents/{id}/update
     // 編集画面から投稿を更新する
+//    @PostMapping("/contents/{id}/update")
+//    public String update(@PathVariable Long id, @ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
+//        noticesService.update(user.getUserId(), id, notice);
+//        return "redirect:/notices";
+//    }
+
+    // path: /notices/contents/{id}/update
+    // 編集画面から投稿を更新する
     @PostMapping("/contents/{id}/update")
-    public String update(@PathVariable Long id, @ModelAttribute Notice notice) {
+    public String update(@PathVariable Long id, @ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
+        notice.setUpdatedBy(user.getUserId());
         noticesService.update(id, notice);
         return "redirect:/notices";
-//        Notice toUpdate = noticesService.findById(id);
-//        toUpdate.setTitle(notice.getTitle());
-//        toUpdate.setContents(notice.getContents());
-//        noticesService.save(toUpdate);
-//        return "redirect:/notices";
     }
 
     // path: /notices/contents/{id}/delete
@@ -90,16 +106,21 @@ public class NoticesController {
 //        return "redirect:/notices";
 //    }
 
+//    // path: /notices/contents/{id}/delete
+//    // お知らせ詳細からお知らせを削除（論理削除）
+//    @GetMapping("/contents/{id}/delete")
+//    public String delete(@PathVariable Long id, @ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
+//        notice.setUpdatedBy(user.getUserId());
+//        noticesService.delete(id, notice);
+//        return "redirect:/notices";
+//    }
+    
     // path: /notices/contents/{id}/delete
     // お知らせ詳細からお知らせを削除（論理削除）
-    @GetMapping("/contents/{id}/delete")
-    public String delete(@PathVariable Long id, @ModelAttribute Notice notice) {
-        noticesService.delete(id, notice);
-        return "redirect:/notices";
-//        Notice toDelete = noticesService.findById(id);
-//        toDelete.setDeleted(true);
-//        noticesService.save(toDelete);
+//    @GetMapping("/contents/{id}/delete")
+//    public String delete(@PathVariable Long id, @ModelAttribute Notice notice) {
+//        noticesService.delete(id, notice);
 //        return "redirect:/notices";
-    }
+//    }
 
 }

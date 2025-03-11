@@ -21,12 +21,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "karte")
 @Data
-@EqualsAndHashCode(callSuper = false) // AbstractEntity
+@EqualsAndHashCode(callSuper = false) // EntityBase
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
 
-public class Karte extends AbstractEntity { // AbstractEntity
+public class Karte extends EntityBase { // EntityBase
 
     /** ID */
     @Id
@@ -53,8 +53,5 @@ public class Karte extends AbstractEntity { // AbstractEntity
     /** 内容 */
     @Column
     private String contents = null;
-
-    /** 削除済 */
-    private boolean deleted = false;
 
 }

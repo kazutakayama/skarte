@@ -25,7 +25,8 @@ public class GradeServiceImpl implements GradeService {
     @Override
     @Transactional(readOnly = true)
     public List<Grade> findAll() {
-        return gradeRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+//        return gradeRepository.findByDeletedFalseOrderByUpdatedAtDesc();
+        return gradeRepository.findByOrderByUpdatedAtDesc();
     }
     
     /**
@@ -89,16 +90,16 @@ public class GradeServiceImpl implements GradeService {
         gradeRepository.save(grade);
     }
 
-    /**
-     * 成績削除（理論削除）
-     * 
-     * @param grade
-     */
-    @Override
-    @Transactional
-    public void deleteGrade(Long gradeId, Grade grade) {
-        Grade targetGrade = gradeRepository.findById(gradeId).orElseThrow();
-        targetGrade.setDeleted(Boolean.TRUE);
-        gradeRepository.save(targetGrade);
-    }
+//    /**
+//     * 成績削除（理論削除）
+//     * 
+//     * @param grade
+//     */
+//    @Override
+//    @Transactional
+//    public void deleteGrade(Long gradeId, Grade grade) {
+//        Grade targetGrade = gradeRepository.findById(gradeId).orElseThrow();
+//        targetGrade.setDeleted(Boolean.TRUE);
+//        gradeRepository.save(targetGrade);
+//    }
 }

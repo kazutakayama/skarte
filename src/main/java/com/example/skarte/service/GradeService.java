@@ -52,11 +52,11 @@ public interface GradeService {
    */
   public void insertGrade(Grade grade);
 
-  /**
-   * 成績削除（理論削除）
-   * 
-   * @param grade
-   */
-  public void deleteGrade(Long gradeId, Grade g);
+//  /**
+//   * 成績削除（理論削除）
+//   * 
+//   * @param grade
+//   */
+//  public void deleteGrade(Long gradeId, Grade g);
 
 }

@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "users")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class User extends AbstractEntity implements UserDetails {
+public class User extends EntityBase implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 

@@ -23,12 +23,11 @@ import com.example.skarte.service.impl.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     @Autowired
     private FormAuthenticationProvider authenticationProvider;
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
+    private UserDetailsServiceImpl UserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
@@ -53,6 +52,11 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/") // ログイン成功時の遷移先 TODO topページのパスは変えたい
                 .failureUrl("/login-failure") // ログイン失敗時の遷移先
                 .permitAll()) // 未ログインでもアクセス可能
+        .logout(logout -> logout
+                .logoutSuccessUrl("/logout-complete") // ログアウト成功時の遷移先
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll())
         .csrf(csrf -> csrf
                 .ignoringRequestMatchers(h2RequestMatcher))
         .headers(headers -> headers.frameOptions(
