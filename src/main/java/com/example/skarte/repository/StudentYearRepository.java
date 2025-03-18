@@ -16,5 +16,6 @@ public interface StudentYearRepository extends JpaRepository<StudentYear, Long> 
     
     //生徒IDでリストを取得
     List<StudentYear> findAllByStudentId(Long studentId);
-    
+//    List<StudentYear> findAllByStudentId(Long studentId);
+//    
 }

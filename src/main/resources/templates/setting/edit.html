@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<h1>生徒情報編集</h1>
+		<li th:each="student : ${students}">
+			<article class="student">
+				生徒番号：
+				<h2 th:text="${student.studentId}" />
+
+				<form th:action="@{/setting/students/{id}/updateStudent (id=${student.studentId})}" th:method="post"
+					th:object="${students}">
+
+				<!--<form th:action="@{/setting/students/{id}/updateStudent (id=${student.studentId})}" th:method="post">
+
+
+					<div class="form-group">
+						<label class="control-label">*姓</label>
+						<input class="form-control" type="text" th:field="*{students.lastName}" />
+					</div>
+					<div th:each="studentYear : ${studentsYear}">
+						<div class="form-group">
+							<div th:text="${studentYear.ban}"></div>
+							<label class="control-label">番</label>
+							<input class="form-control" type="number" th:field="${studentYear.year}" />
+						</div>
+					</div>-->
+
+
+					*は必須項目
+
+					<div class="form-group">
+						<label class="control-label">*姓</label>
+						<input class="form-control" type="text" th:field="*{lastName}" />
+					</div>
+						<div class="form-group">
+						<label class="control-label">*名</label>
+						<input class="form-control" type="text" th:field="*{firstName}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">*せい</label>
+						<input class="form-control" type="text" th:field="*{lastNameKana}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">*めい</label>
+						<input class="form-control" type="text" th:field="*{firstNameKana}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">*生年月日</label>
+						<input class="form-control" type="date" th:field="*{birth}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">*性別</label>
+						<select th:field="*{gender}">
+							<option value="1">男</option>
+							<option value="2">女</option>
+							<option value="3">他</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">保護者1</label>
+						<input class="form-control" type="text" th:field="*{family1}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">保護者2</label>
+						<input class="form-control" type="text" th:field="*{family2}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">電話1</label>
+						<input class="form-control" type="tel" th:field="*{tel1}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">電話2</label>
+						<input class="form-control" type="tel" th:field="*{tel2}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">電話3</label>
+						<input class="form-control" type="tel" th:field="*{tel3}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">電話4</label>
+						<input class="form-control" type="tel" th:field="*{tel4}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">郵便番号</label>
+						<input class="form-control" type="number" th:field="*{postalCode}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">住所</label>
+						<input class="form-control" type="text" th:field="*{adress}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">メモ</label>
+						<input class="form-control" type="text" th:field="*{memo}" />
+					</div>
+
+					<button class="btn btn-default" type="submit">更新</button>
+				</form>
+			</article>
+		</li>
+
+		<!--<h1>登録クラス</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>年度</th>
+					<th>年</th>
+					<th>組</th>
+					<th>番</th>
+					<th>写真</th>
+					<th>編集</th>
+					<th>削除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="studentYear : ${studentsYear}">
+					<td th:text="${studentYear.year}"></td>
+					<td th:text="${studentYear.nen}"></td>
+					<td th:text="${studentYear.kumi}"></td>
+					<td th:text="${studentYear.ban}"></td>
+					<td th:text="${studentYear.path}"></td>
+					<td><a class="buttons clearfix"
+							th:href="@{/setting/students/{id}/editclass (id=${studentYear.studentYearId})}">
+							編集
+						</a></td>
+					<td><a class="buttons clearfix"
+							th:href="@{/setting/students/{id}/deleteClass (id=${studentYear.studentYearId})}">
+							削除
+						</a></td>
+				</tr>
+			</tbody>
+		</table>-->
+
+		<!--<h1>クラス編集</h1>
+		<li th:each="studentYear : ${studentsYear}">
+			<article class="studentYear">
+				生徒番号：
+				<h2 th:text="${studentYear.studentId}" />
+				<form th:action="@{/setting/students/{id}/updateclass (id=${studentYear.studentYearId})}"
+					th:method="post" th:object="${studentsYear}">
+					<div class="form-group">
+						<label class="control-label">年度</label>
+						<select th:field="*{year}">
+							<option value="2024">2024</option>
+							<option value="2025">2025</option>
+							<option value="2026">2026</option>
+							<option value="2027">2027</option>
+							<option value="2028">2028</option>
+							<option value="2029">2029</option>
+							<option value="2030">2030</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">年</label>
+						<select th:field="*{nen}">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">組</label>
+						<select th:field="*{kumi}">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">番</label>
+						<input class="form-control" type="number" th:field="*{ban}" />
+					</div>
+					<button class="btn btn-default" type="submit">更新</button>
+				</form>
+			</article>
+		</li>-->
+
+		　　　　　　　　<a href="#" onclick="history.back()">生徒詳細にもどる</a>
+		<a href="/setting/students">生徒管理にもどる</a>
+
+	</div>
+</body>
+
+</html>

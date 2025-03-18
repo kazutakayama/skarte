@@ -4,117 +4,112 @@
 
 <body>
 	<div layout:fragment="content">
-		<header　th:each="student : ${students}">
-			<table>
-				<thead>
-					<tr>
-						<th>生徒番号</th>
-						<th>姓</th>
-						<th>名</th>
-						<th>せい</th>
-						<th>めい</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td th:text="${student.studentId}"></td>
-						<td th:text="${student.lastName}"></td>
-						<td th:text="${student.firstName}"></td>
-						<td th:text="${student.lastNameKana}"></td>
-						<td th:text="${student.firstNameKana}"></td>
-					</tr>
-				</tbody>
-			</table>
-			<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
-			<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
-			<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
-			<a th:href="@{/students/{id}/grades (id=${student.studentId})}">成績</a>
-			<h2>生徒情報</h2>
+		<header>
+			<div th:each="student : ${students}">
+				<table>
+					<thead>
+						<tr>
+							<th>生徒番号</th>
+							<th>姓</th>
+							<th>名</th>
+							<th>せい</th>
+							<th>めい</th>
+							<th>生年月日</th>
+							<th>性別</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td th:text="${student.studentId}"></td>
+							<td th:text="${student.lastName}"></td>
+							<td th:text="${student.firstName}"></td>
+							<td th:text="${student.lastNameKana}"></td>
+							<td th:text="${student.firstNameKana}"></td>
+							<td th:text="${student.birth}"></td>
+							<td th:text="${student.gender}"></td>
+						</tr>
+					</tbody>
+				</table>
+				<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+				<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+				<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
+				<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
+			</div>
+		</header>
+
+		<h2>生徒情報</h2>
+		<div th:each="student : ${students}">
 			<a class="buttons clearfix" th:href="@{/students/{id}/edit (id=${student.studentId})}">
 				生徒編集
 			</a>
-		</header>
-
+		</div>
 		<table>
 			<thead>
 				<tr>
+					<th>生徒番号</th>
+					<th>姓</th>
+					<th>名</th>
+					<th>せい</th>
+					<th>めい</th>
 					<th>生年月日</th>
 					<th>性別</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.birth}"></td>
-					<td th:text="${student.gender}"></td>
-				</tr>
-			</tbody>
-		</table>
-
-
-		<table>
-			<thead>
-				<tr>
 					<th>保護者1</th>
 					<th>保護者2</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.family1}"></td>
-					<td th:text="${student.family2}"></td>
-				</tr>
-			</tbody>
-		</table>
-
-		<table>
-			<thead>
-				<tr>
 					<th>電話1</th>
 					<th>電話2</th>
 					<th>電話3</th>
 					<th>電話4</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.tel1}"></td>
-					<td th:text="${student.tel2}"></td>
-					<td th:text="${student.tel3}"></td>
-					<td th:text="${student.tel4}"></td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<table>
-			<thead>
-				<tr>
 					<th>郵便番号</th>
 					<th>住所</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.postalCode}"></td>
-					<td th:text="${student.adress}"></td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<table>
-			<thead>
-				<tr>
 					<th>メモ</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="student : ${students}">
+					<td th:text="${student.studentId}"></td>
+					<td th:text="${student.lastName}"></td>
+					<td th:text="${student.firstName}"></td>
+					<td th:text="${student.lastNameKana}"></td>
+					<td th:text="${student.firstNameKana}"></td>
+					<td th:text="${student.birth}"></td>
+					<td th:text="${student.gender}"></td>
+					<td th:text="${student.family1}"></td>
+					<td th:text="${student.family2}"></td>
+					<td th:text="${student.tel1}"></td>
+					<td th:text="${student.tel2}"></td>
+					<td th:text="${student.tel3}"></td>
+					<td th:text="${student.tel4}"></td>
+					<td th:text="${student.postalCode}"></td>
+					<td th:text="${student.adress}"></td>
 					<td th:text="${student.memo}"></td>
 				</tr>
 			</tbody>
 		</table>
-		
+
+		<h2>登録クラス</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>年度</th>
+					<th>年</th>
+					<th>組</th>
+					<th>番</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="studentYear : ${studentsYear}">
+					<td th:text="${studentYear.year}"></td>
+					<td th:text="${studentYear.nen}"></td>
+					<td th:text="${studentYear.kumi}"></td>
+					<td th:text="${studentYear.ban}"></td>
+
+				</tr>
+			</tbody>
+		</table>
+
 		<a href="/students">生徒一覧にもどる</a>
-	</div>
+
 </body>
 
 </html>

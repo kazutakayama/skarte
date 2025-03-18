@@ -61,20 +61,12 @@ public class StudentForm extends EntityBase { // EntityBase
     private Integer gender = null;
 
     /** 家族1 */
-    @NotEmpty
     private String family1 = null;
 
     /** 家族2 */
     private String family2 = null;
 
-    /** 家族3 */
-    private String family3 = null;
-
-    /** 家族4 */
-    private String family4 = null;
-
     /** 電話1 */
-    @NotNull
     private Long tel1 = null;
 
     /** 電話2 */
@@ -87,11 +79,9 @@ public class StudentForm extends EntityBase { // EntityBase
     private Long tel4 = null;
 
     /** 郵便番号 */
-    @NotNull
     private Long postalCode = null;
 
     /** 住所 */
-    @NotEmpty
     private String adress = null;
 
     /** メモ */

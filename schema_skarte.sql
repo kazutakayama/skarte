@@ -99,18 +99,18 @@ CREATE TABLE IF NOT EXISTS attendance (
 );
 ALTER TABLE attendance ADD CONSTRAINT FK_attendance_students FOREIGN KEY (student_id) REFERENCES students;
 
-DROP TABLE IF EXISTS grades;
-CREATE TABLE IF NOT EXISTS grades (
+DROP TABLE IF EXISTS grade;
+CREATE TABLE IF NOT EXISTS grade (
  grade_id SERIAL NOT NULL,
  student_id INT NOT NULL,
  year INT NOT NULL,
  term INT NOT NULL,
  subject INT NOT NULL,
- grade INT,
+ rating INT,
 -- confirmed bool NOT NULL,
  created_by INT NOT NULL,
  updated_by INT NOT NULL,
  created_at TIMESTAMP NOT NULL,
  updated_at TIMESTAMP NOT NULL
 );
-ALTER TABLE grades ADD CONSTRAINT FK_grades_students FOREIGN KEY (student_id) REFERENCES students;
+ALTER TABLE grade ADD CONSTRAINT FK_grades_students FOREIGN KEY (student_id) REFERENCES students;

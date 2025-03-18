@@ -4,9 +4,8 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>生徒情報編集</h1>
-		<li th:each="student : ${students}">
-			<article class="student">
+		<header>
+			<div th:each="student : ${students}">
 				<table>
 					<thead>
 						<tr>
@@ -31,68 +30,65 @@
 						</tr>
 					</tbody>
 				</table>
+				<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+				<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+				<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
+				<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
+			</div>
+		</header>
 
-				<form th:action="@{/students/{id}/update (id=${student.studentId})}" th:method="post"
-					th:object="${students}">
-					*は必須項目
-					<div class="form-group">
-						<input class="form-control" type="hidden" th:field="*{lastName}" />
-						<input class="form-control" type="hidden" th:field="*{firstName}" />
-						<input class="form-control" type="hidden" th:field="*{lastNameKana}" />
-						<input class="form-control" type="hidden" th:field="*{firstNameKana}" />
-						<input class="form-control" type="hidden" th:field="*{birth}" />
-						<input class="form-control" type="hidden" th:field="*{gender}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">*家族1（保護者名）</label>
-						<input class="form-control" type="text" th:field="*{family1}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">家族2</label>
-						<input class="form-control" type="text" th:field="*{family2}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">家族3</label>
-						<input class="form-control" type="text" th:field="*{family3}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">家族4</label>
-						<input class="form-control" type="text" th:field="*{family4}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">電話1</label>
-						<input class="form-control" type="tel" th:field="*{tel1}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">電話2</label>
-						<input class="form-control" type="tel" th:field="*{tel2}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">電話3</label>
-						<input class="form-control" type="tel" th:field="*{tel3}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">電話4</label>
-						<input class="form-control" type="tel" th:field="*{tel4}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">*郵便番号</label>
-						<input class="form-control" type="number" th:field="*{postalCode}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">*住所</label>
-						<input class="form-control" type="text" th:field="*{adress}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">メモ</label>
-						<input class="form-control" type="text" th:field="*{memo}" />
-					</div>
 
-					<button class="btn btn-default" type="submit">更新</button>
-				</form>
-			</article>
-		</li>
-
+		<h2>生徒編集</h2>
+		<div th:each="student : ${students}">
+			<form th:action="@{/students/{id}/updateStudent (id=${student.studentId})}" th:method="post"
+				th:object="${students}">
+				<div class="form-group">
+					<input class="form-control" type="hidden" th:field="*{lastName}" />
+					<input class="form-control" type="hidden" th:field="*{firstName}" />
+					<input class="form-control" type="hidden" th:field="*{lastNameKana}" />
+					<input class="form-control" type="hidden" th:field="*{firstNameKana}" />
+					<input class="form-control" type="hidden" th:field="*{birth}" />
+					<input class="form-control" type="hidden" th:field="*{gender}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">保護者1</label>
+					<input class="form-control" type="text" th:field="*{family1}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">保護者2</label>
+					<input class="form-control" type="text" th:field="*{family2}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">電話1</label>
+					<input class="form-control" type="tel" th:field="*{tel1}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">電話2</label>
+					<input class="form-control" type="tel" th:field="*{tel2}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">電話3</label>
+					<input class="form-control" type="tel" th:field="*{tel3}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">電話4</label>
+					<input class="form-control" type="tel" th:field="*{tel4}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">郵便番号</label>
+					<input class="form-control" type="number" th:field="*{postalCode}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">住所</label>
+					<input class="form-control" type="text" th:field="*{adress}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">メモ</label>
+					<input class="form-control" type="text" th:field="*{memo}" />
+				</div>
+				<button class="btn btn-default" type="submit">更新</button>
+			</form>
+		</div>
 		　　　　　　　　<a href="#" onclick="history.back()">生徒詳細にもどる</a>
 		<a href="/students">生徒一覧にもどる</a>
 

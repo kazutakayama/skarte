@@ -4,36 +4,41 @@
 
 <body>
 	<div layout:fragment="content">
-		<header　th:each="student : ${students}">
-			<table>
-				<thead>
-					<tr>
-						<th>生徒番号</th>
-						<th>姓</th>
-						<th>名</th>
-						<th>せい</th>
-						<th>めい</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td th:text="${student.studentId}"></td>
-						<td th:text="${student.lastName}"></td>
-						<td th:text="${student.firstName}"></td>
-						<td th:text="${student.lastNameKana}"></td>
-						<td th:text="${student.firstNameKana}"></td>
-					</tr>
-				</tbody>
-			</table>
-			<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
-			<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
-			<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
-			<a th:href="@{/students/{id}/grades (id=${student.studentId})}">成績</a>
-			<h2>成績</h2>
+		<header>
+			<div th:each="student : ${students}">
+				<table>
+					<thead>
+						<tr>
+							<th>生徒番号</th>
+							<th>姓</th>
+							<th>名</th>
+							<th>せい</th>
+							<th>めい</th>
+							<th>生年月日</th>
+							<th>性別</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td th:text="${student.studentId}"></td>
+							<td th:text="${student.lastName}"></td>
+							<td th:text="${student.firstName}"></td>
+							<td th:text="${student.lastNameKana}"></td>
+							<td th:text="${student.firstNameKana}"></td>
+							<td th:text="${student.birth}"></td>
+							<td th:text="${student.gender}"></td>
+						</tr>
+					</tbody>
+				</table>
+				<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+				<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+				<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
+				<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
+			</div>
 		</header>
 
-
-		<form th:action="@{/students/grades/add}" th:method="post" th:object="${students}">
+        <h2>成績</h2>
+		<form th:action="@{/students/grade/add}" th:method="post" th:object="${students}">
 			<div class="form-group">
 				<input class="form-control" type="hidden" th:field="*{studentId}" />
 			</div>
@@ -73,8 +78,8 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label">評定</label>
-				<select name="grade">
-					<option value=""></option>
+				<select name="rating">
+					<option value=""> </option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -82,9 +87,34 @@
 					<option value="5">5</option>
 				</select>
 			</div>
+			<!--<div class="form-group">
+				<label class="control-label">評定</label>
+				<input class="form-control" type="number" name="grade" />
+			</div>-->
 			<button class="btn btn-default" type="submit">登録</button>
 		</form>
-				
+
+		<table>
+			<thead>
+				<tr>
+					<th>年度</th>
+					<th>学期</th>
+					<th>教科</th>
+					<th>評定</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="grade : ${grade}">
+					<td th:text="${grade.year}"></td>
+					<td th:text="${grade.term}"></td>
+					<td th:text="${grade.subject}"></td>
+					<td th:text="${grade.rating}"></td>
+					<td><a th:href="@{/students/{id}/editGrade(id=${grade.gradeId})}" class="edit">編集</a>
+					</td>
+			</tbody>
+		</table>
+
+
 		<!--<section id="grade">
 			<ul>
 				<li th:each="grade : ${grades}">
@@ -115,8 +145,8 @@
 				</li>
 			</ul>
 		</section>-->
-		
-		<section id="grade">
+
+		<!--<section id="grade">
 			<ul>
 				<li th:each="grade : ${grades}">
 					<article class="post">
@@ -135,8 +165,7 @@
 							</li>
 							<li>
 								<div class="buttons clearfix">
-									<a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}"
-										class="edit">編集</a>
+									<a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}" class="edit">編集</a>
 									<a th:href="@{/students/grades/{id}/delete(id=${grade.gradeId})}"
 										class="delete">削除</a>
 								</div>
@@ -145,7 +174,7 @@
 					</article>
 				</li>
 			</ul>
-		</section>
+		</section>-->
 
 
 
