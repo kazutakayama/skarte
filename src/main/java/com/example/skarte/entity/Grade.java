@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "grades")
+@Table(name = "grade")
 @Data
 @EqualsAndHashCode(callSuper = false) // EntityBase
 @Builder // CSV
@@ -28,8 +28,8 @@ public class Grade extends EntityBase { // EntityBase
     /** ID */
     @Id
     @Column
-    @SequenceGenerator(name = "grades_gradeId_seq", sequenceName = "grades_gradeId_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grades_gradeId_seq")
+    @SequenceGenerator(name = "grade_gradeId_seq", sequenceName = "grade_gradeId_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grade_gradeId_seq")
     private Long gradeId = null;
 
     public void setId(Long gradeId) {
@@ -56,6 +56,6 @@ public class Grade extends EntityBase { // EntityBase
 
     /** 評定 */
     @Column
-    private Long grade = null;
+    private Long rating = null;
 
 }

@@ -46,8 +46,15 @@
 						<label class="control-label">番</label>
 						<input class="form-control" type="number" th:field="*{ban}" />
 					</div>
+
+					★写真を編集するフォームを追加
+
 					<button class="btn btn-default" type="submit">更新</button>
 				</form>
+				<td><a class="buttons clearfix"
+						th:href="@{/setting/students/{id}/deleteClass (id=${studentYear.studentYearId})}">
+						削除
+					</a></td>
 			</article>
 		</li>
 

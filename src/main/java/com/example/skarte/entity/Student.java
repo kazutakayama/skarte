@@ -114,6 +114,6 @@ public class Student extends EntityBase { // EntityBase
     
     @OneToMany
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
-    private List<Grade> grades;
+    private List<Grade> grade;
 
 }

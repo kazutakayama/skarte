@@ -17,26 +17,26 @@ import com.example.skarte.service.StudentsYearService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/grades")
+@RequestMapping("/grade")
 //コンストラタ生成アノテーション
 @RequiredArgsConstructor
-public class GradesController {
+public class GradeController {
 
     // コンストラクタインジェクション
     private final StudentsService studentsService;
     private final StudentsYearService studentsYearService;
     private final GradeService gradeService;
 
-    // path: /grades
+    // path: /grade
     @GetMapping("")
     public String index(Model model) {
         List<Student> students = studentsService.findAll();
         model.addAttribute("students", students);
         List<StudentYear> studentsYear = studentsYearService.findAll();
         model.addAttribute("studentsYear", studentsYear);
-        List<Grade> grades = gradeService.findAll();
-        model.addAttribute("grades", grades);
-        return "grades/index";
+        List<Grade> grade = gradeService.findAll();
+        model.addAttribute("grade", grade);
+        return "grade/index";
     }
 
 }

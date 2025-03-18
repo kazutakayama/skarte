@@ -12,5 +12,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     //更新日時の降順（削除済みは表示しない）　
 //    List<Student> findByDeletedFalseOrderByUpdatedAtDesc();
     
-    List<Student> findByOrderByUpdatedAtDesc();
+    List<Student> findByOrderByUpdatedAtDesc();    
 }

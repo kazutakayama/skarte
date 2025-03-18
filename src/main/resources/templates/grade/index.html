@@ -7,7 +7,7 @@
 	<div layout:fragment="content">
 		<h1>成績一覧</h1>
 
-		<form th:action="@{/students/grades/add}" th:method="post">
+		<form th:action="@{/students/grade/add}" th:method="post">
 			<div class="form-group">
 				<label class="control-label">生徒番号</label>
 				<input class="form-control" type="number" name="studentId" />
@@ -48,7 +48,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label">評定</label>
-				<select name="grade">
+				<select name="rating">
 					<option value=""></option>
 					<option value="1">1</option>
 					<option value="2">2</option>
@@ -73,14 +73,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="grade : ${grades}">
+				<tr th:each="grade : ${grade}">
 					<td th:text="${grade.studentId}"></td>
 					<td th:text="${grade.year}"></td>
 					<td th:text="${grade.term}"></td>
 					<td th:text="${grade.subject}"></td>
-					<td th:text="${grade.grade}"></td>
-					<td><a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}" class="edit">編集</a></td>
-					<td><a th:href="@{/students/grades/{id}/delete(id=${grade.gradeId})}" class="delete">削除</a></td>
+					<td th:text="${grade.rating}"></td>
+					<td><a th:href="@{/students/grade/{id}/edit(id=${grade.gradeId})}" class="edit">編集</a></td>
+					<td><a th:href="@{/students/grade/{id}/delete(id=${grade.gradeId})}" class="delete">削除</a></td>
 				</tr>
 			</tbody>
 		</table>

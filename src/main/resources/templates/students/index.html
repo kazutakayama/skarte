@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
-
 <body>
 	<div layout:fragment="content">
 		<h1>生徒一覧</h1>
@@ -14,23 +13,36 @@
 					<th>組</th>
 					<th>番</th>
 					<th>生徒番号</th>
-					<th>生徒詳細</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="studentYear : ${studentsYear}">
-					<td th:text="${studentYear.year}"></td>
-					<td th:text="${studentYear.nen}"></td>
-					<td th:text="${studentYear.kumi}"></td>
-					<td th:text="${studentYear.ban}"></td>
-					<td th:text="${studentYear.studentId}"></td>
-					<td><a class="buttons clearfix" th:href="@{/students/{id} (id=${studentYear.studentId})}">
-							生徒詳細
-						</a></td>
+				<tr>
+					<div th:each="studentYear : ${studentsYear}">
+						<td th:text="${studentYear.year}"></td>
+						<td th:text="${studentYear.nen}"></td>
+						<td th:text="${studentYear.kumi}"></td>
+						<td th:text="${studentYear.ban}"></td>
+						<td th:text="${studentYear.studentId}"></td>
+						<div th:each="student : ${studentYear.students}">
+							<td th:text="${student.lastName}"></td>
+                            <td th:text="${student.firstName}"></td>
+                            <td th:text="${student.lastNameKana}"></td>
+                            <td th:text="${student.firstNameKana}"></td>
+                            <td th:text="${student.birth}"></td>
+                            <td th:text="${student.gender}"></td>
+						</div>
+
+
+
+						<td><a class="buttons clearfix" th:href="@{/students/{id} (id=${studentYear.studentId})}">
+								生徒詳細
+							</a></td>
+					</div>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 </body>
+
 
 </html>

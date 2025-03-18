@@ -15,7 +15,7 @@ import com.example.skarte.entity.User;
 @Controller
 public class PagesController {
 
-    @GetMapping("/")
+    @GetMapping("/top")
     public String top() {
         return "pages/index";
     }

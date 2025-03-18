@@ -5,36 +5,36 @@
 <body>
 	<div layout:fragment="content">
 		<h1>生徒新規登録</h1>
-
-		<form th:action="@{/setting/students/addstudent}" th:method="post">
+		<h3>*は必須項目</h3>
+		<form th:action="@{/setting/students/addStudent}" th:method="post">
 			<div class="form-group">
-				<label class="control-label">生徒番号</label>
+				<label class="control-label">*生徒番号</label>
 				<input class="form-control" type="number" name="studentId" />
 			</div>
 			<div class="form-group">
 				<!-- バリデーションエラー時のメッセージ出力 -->
 				<!--<p th:if="${#fields.hasErrors('lastName')}" class="error-message" th:errors="*{lastName}"></p>-->
-				<label class="control-label">姓</label>
+				<label class="control-label">*姓</label>
 				<input class="form-control" type="text" name="lastName" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">名</label>
+				<label class="control-label">*名</label>
 				<input class="form-control" type="text" name="firstName" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">せい</label>
+				<label class="control-label">*せい</label>
 				<input class="form-control" type="text" name="lastNameKana" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">めい</label>
+				<label class="control-label">*めい</label>
 				<input class="form-control" type="text" name="firstNameKana" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">生年月日</label>
+				<label class="control-label">*生年月日</label>
 				<input class="form-control" type="date" name="birth" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">性別</label>
+				<label class="control-label">*性別</label>
 				<select name="gender">
 					<option value="1">男</option>
 					<option value="2">女</option>
@@ -42,12 +42,28 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label class="control-label">保護者名</label>
+				<label class="control-label">保護者1</label>
 				<input class="form-control" type="text" name="family1" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">電話</label>
+				<label class="control-label">保護者2</label>
+				<input class="form-control" type="text" name="family2" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">電話1</label>
 				<input class="form-control" type="tel" name="tel1" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">電話2</label>
+				<input class="form-control" type="tel" name="tel2" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">電話3</label>
+				<input class="form-control" type="tel" name="tel3" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">電話4</label>
+				<input class="form-control" type="tel" name="tel4" />
 			</div>
 			<div class="form-group">
 				<label class="control-label">郵便番号</label>
@@ -57,9 +73,13 @@
 				<label class="control-label">住所</label>
 				<input class="form-control" type="text" name="adress" />
 			</div>
+			<div class="form-group">
+				<label class="control-label">メモ</label>
+				<input class="form-control" type="text" name="memo" />
+			</div>
 			<button class="btn btn-default" type="submit">登録</button>
 		</form>
-		
+
 		<a href="/setting/students">もどる</a>
 	</div>
 </body>
