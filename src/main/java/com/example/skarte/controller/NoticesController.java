@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.skarte.entity.Notice;
+import com.example.skarte.entity.Student;
 import com.example.skarte.entity.User;
 import com.example.skarte.service.NoticesService;
 
@@ -37,12 +38,20 @@ public class NoticesController {
         return "notices/new";
     }
 
-    // path: /notices/add
-    // 画面で入力された「タイトル」「内容」を取得して、dbに登録をする
+//    // path: /notices/add
+//    // 画面で入力された「タイトル」「内容」を取得して、dbに登録をする
+//    @PostMapping("/add")
+//    public String add(@ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
+//        noticesService.add(user.getUserId(), notice);
+//        return "redirect:/notices";
+//    }
+    
+ // path: /notices/add
+    // 画面で入力されたお知らせを取得して、dbに登録をする
     @PostMapping("/add")
     public String add(@ModelAttribute Notice notice, @AuthenticationPrincipal User user) {
         noticesService.add(user.getUserId(), notice);
-        return "redirect:/notices";
+        return "redirect:/notices/contents/" + notice.getNoticeId();
     }
 
     // path: /notices/contents/{id}

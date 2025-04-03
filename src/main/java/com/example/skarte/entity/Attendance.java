@@ -41,7 +41,7 @@ public class Attendance extends EntityBase { // EntityBase
     }
 
     @Column
-    private Long studentId = null;
+    private String studentId = null;
     @ManyToOne
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
     private Student students;

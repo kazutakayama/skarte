@@ -25,7 +25,7 @@
 							<td th:text="${student.firstName}"></td>
 							<td th:text="${student.lastNameKana}"></td>
 							<td th:text="${student.firstNameKana}"></td>
-							<td th:text="${student.birth}"></td>
+							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
 							<td th:text="${student.gender}"></td>
 						</tr>
 					</tbody>
@@ -38,18 +38,16 @@
 		</header>
 
 		<h2>成績編集</h2>
+
+
+
 		<div th:each="grade : ${grade}">
 			<form th:action="@{/students/{id}/updateGrade (id=${grade.gradeId})}" th:method="post" th:object="${grade}">
 				<div class="form-group">
 					<label class="control-label">年度</label>
 					<select th:field="*{year}">
-						<option value="2024">2024</option>
-						<option value="2025">2025</option>
-						<option value="2026">2026</option>
-						<option value="2027">2027</option>
-						<option value="2028">2028</option>
-						<option value="2029">2029</option>
-						<option value="2030">2030</option>
+						<option th:each="studentYear : ${studentsYear}" th:value="${studentYear.year}"
+							th:text="${studentYear.year}"></option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -64,14 +62,14 @@
 					<label class="control-label">教科</label>
 					<select th:field="*{subject}">
 						<option value="1">国語</option>
-						<option value="2">数学</option>
-						<option value="3">英語</option>
-						<option value="4">社会</option>
-						<option value="5">理科</option>
-						<option value="6">保健体育</option>
-						<option value="7">音楽</option>
-						<option value="8">美術</option>
-						<option value="9">技術家庭</option>
+						<option value="2">社会</option>
+						<option value="3">数学</option>
+						<option value="4">理科</option>
+						<option value="5">音楽</option>
+						<option value="6">美術</option>
+						<option value="7">保健体育</option>
+						<option value="8">技術家庭</option>
+						<option value="9">英語</option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -91,13 +89,10 @@
 			<td><a class="buttons clearfix" th:href="@{/students/{id}/deleteGrade (id=${grade.gradeId})}">
 					削除
 				</a></td>
+			<a th:href="@{/students/{id}/grade (id=${grade.studentId})}">キャンセル</a>
+			<a href="/students">生徒一覧にもどる</a>
 		</div>
 
-
-
-
-		<a href="#" onclick="history.back()">もどる</a>
-		<a href="/students">生徒一覧にもどる</a>
 	</div>
 </body>
 

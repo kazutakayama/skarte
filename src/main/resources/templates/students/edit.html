@@ -88,9 +88,11 @@
 				</div>
 				<button class="btn btn-default" type="submit">更新</button>
 			</form>
+			
+			<a th:href="@{/students/{id} (id=${student.studentId})}">キャンセル</a>
+			<a href="/students">生徒一覧にもどる</a>
 		</div>
-		　　　　　　　　<a href="#" onclick="history.back()">生徒詳細にもどる</a>
-		<a href="/students">生徒一覧にもどる</a>
+
 
 	</div>
 </body>

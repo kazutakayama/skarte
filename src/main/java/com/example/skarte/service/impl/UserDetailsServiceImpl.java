@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userId == null || "".equals(userId)) {
 //            throw new UserIdNotFoundException("UserId is empty");
         }
-        User entity = repository.findByUserId(Long.parseLong(userId));
+        User entity = repository.findByUserId(userId);
 
         return entity;
     }

@@ -1,9 +1,11 @@
 package com.example.skarte.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,31 +36,37 @@ public class Student extends EntityBase { // EntityBase
     /** ID */
     @Id
     @Column
-    private Long studentId = null;
+    private String studentId = null;
 
     /** 姓 */
     @Column(length = 20, nullable = false)
+    @NotEmpty
     private String lastName = null;
 
     /** 名 */
     @Column(length = 20, nullable = false)
+    @NotEmpty
     private String firstName = null;
 
     /** せい */
     @Column(length = 20, nullable = false)
+    @NotEmpty
     private String lastNameKana = null;
 
     /** めい */
     @Column(length = 20, nullable = false)
+    @NotEmpty
     private String firstNameKana = null;
 
     /** 生年月日 */
     @Column
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth = null;
 
     /** 性別 */
     @Column
+    @NotNull
     private Integer gender = null;
 
     /** 保護者1 */
@@ -71,23 +79,23 @@ public class Student extends EntityBase { // EntityBase
 
     /** 電話1 */
     @Column
-    private Long tel1 = null;
+    private String tel1 = null;
 
     /** 電話2 */
     @Column
-    private Long tel2 = null;
+    private String tel2 = null;
 
     /** 電話3 */
     @Column
-    private Long tel3 = null;
+    private String tel3 = null;
 
     /** 電話4 */
     @Column
-    private Long tel4 = null;
+    private String tel4 = null;
 
     /** 郵便番号 */
     @Column
-    private Long postalCode = null;
+    private String postalCode = null;
 
     /** 住所 */
     @Column

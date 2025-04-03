@@ -12,8 +12,17 @@ import com.example.skarte.repository.UserRepository;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.User;
 
+
+
+
 @Controller
 public class PagesController {
+    
+    @GetMapping("/")
+    public String index() {
+//        return "pages/index";
+        return "redirect:/top";
+    }
 
     @GetMapping("/top")
     public String top() {

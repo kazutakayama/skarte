@@ -25,7 +25,7 @@
 							<td th:text="${student.firstName}"></td>
 							<td th:text="${student.lastNameKana}"></td>
 							<td th:text="${student.firstNameKana}"></td>
-							<td th:text="${student.birth}"></td>
+							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
 							<td th:text="${student.gender}"></td>
 						</tr>
 					</tbody>
@@ -98,7 +98,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="attendance : ${attendance}">
-					<td th:text="${attendance.date}"></td>
+					<td th:text="${#dates.format(attendance.date, 'yyyy-MM-dd')}"></td>
 					<td th:text="${attendance.kesseki}"></td>
 					<td th:text="${attendance.chikoku}"></td>
 					<td th:text="${attendance.soutai}"></td>

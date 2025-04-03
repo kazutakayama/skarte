@@ -1,8 +1,8 @@
 package com.example.skarte.enums;
 
 public enum Subject {
-    KOKUGO(1, "国語"), SUGAKU(2, "数学"), EIGO(3, "英語"), SYAKAI(4, "社会"), RIKA(5, "理科"), TAIIKU(6, "保健体育"), ONGAKU(7, "音楽"),
-    BIJUTSU(8, "美術"), GIJUTSU_KATEI(9, "技術家庭");
+    KOKUGO(1, "国語"), SYAKAI(2, "社会"), SUGAKU(3, "数学"), RIKA(4, "理科"), ONGAKU(5, "音楽"), BIJUTSU(6, "美術"), HOKENTAIIKU(7, "保健体育"),
+    GIJUTSUKATEI(8, "技術家庭"), EIGO(9, "英語");
 
     private int code;
     private String name;

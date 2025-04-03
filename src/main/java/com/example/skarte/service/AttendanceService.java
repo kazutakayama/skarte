@@ -31,7 +31,7 @@ public class AttendanceService {
      * 
      * @return
      */
-    public List<Attendance> findAllByStudentId(Long studentId) {
+    public List<Attendance> findAllByStudentId(String studentId) {
         return attendanceRepository.findAllByStudentId(studentId);
     }
 
@@ -51,7 +51,7 @@ public class AttendanceService {
      * @param attendance
      * @return
      */
-    public void addAttendance(Long userId, Long studentId, Attendance attendance) {
+    public void addAttendance(String userId, String studentId, Attendance attendance) {
         attendance.setStudentId(attendance.getStudentId());
         attendance.setCreatedBy(userId);
         attendance.setUpdatedBy(userId);
@@ -64,7 +64,7 @@ public class AttendanceService {
      * @param attendance
      * @return
      */
-    public Attendance updateAttendance(Long attendanceId, Long studentId, Attendance attendance) {
+    public Attendance updateAttendance(Long attendanceId, String studentId, Attendance attendance) {
         attendance.setStudentId(attendance.getStudentId());
         Attendance targetAttendance = attendanceRepository.findById(attendanceId).orElseThrow();
         targetAttendance.setDate(attendance.getDate());
@@ -83,7 +83,7 @@ public class AttendanceService {
      * 
      * @param karte
      */
-    public Attendance deleteAttendance(Long attendanceId, Long studentId, Attendance attendance) {
+    public Attendance deleteAttendance(Long attendanceId, String studentId, Attendance attendance) {
         attendance.setStudentId(attendance.getStudentId());
         Attendance deleteAttendance = attendanceRepository.findById(attendanceId).orElseThrow();
         attendanceRepository.delete(deleteAttendance);

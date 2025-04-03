@@ -31,7 +31,7 @@ public class KarteService {
      * 
      * @return
      */
-    public List<Karte> findAllByStudentId(Long studentId) {
+    public List<Karte> findAllByStudentId(String studentId) {
         return karteRepository.findAllByStudentId(studentId);
     }
 
@@ -63,7 +63,7 @@ public class KarteService {
      * @param karte
      * @return
      */
-    public void addKarte(Long userId, Long studentId, Karte karte) {
+    public void addKarte(String userId, String studentId, Karte karte) {
         karte.setStudentId(karte.getStudentId());
         karte.setCreatedBy(userId);
         karte.setUpdatedBy(userId);
@@ -76,7 +76,7 @@ public class KarteService {
      * @param karte
      * @return
      */
-    public Karte updateKarte(Long karteId, Long studentId, Karte karte) {
+    public Karte updateKarte(Long karteId, String studentId, Karte karte) {
         karte.setStudentId(karte.getStudentId());
         Karte targetKarte = karteRepository.findById(karteId).orElseThrow();
         targetKarte.setDate(karte.getDate());
@@ -91,7 +91,7 @@ public class KarteService {
      * 
      * @param karte
      */
-    public Karte deleteKarte(Long karteId, Long studentId, Karte karte) {
+    public Karte deleteKarte(Long karteId, String studentId, Karte karte) {
         karte.setStudentId(karte.getStudentId());
         Karte deleteKarte = karteRepository.findById(karteId).orElseThrow();
         karteRepository.delete(deleteKarte);

@@ -17,5 +17,5 @@ public interface KarteRepository extends JpaRepository<Karte, Long> {
     List<Karte> findByOrderByUpdatedAtDesc();
 
     // 生徒IDでリストを取得
-    List<Karte> findAllByStudentId(Long studentId);
+    List<Karte> findAllByStudentId(String studentId);
 }

@@ -22,10 +22,10 @@ public class EntityBase {
     private Date updatedAt;
 
     @Column(name = "created_by")
-    private Long createdBy;
+    private String createdBy;
 
     @Column(name = "updated_by")
-    private Long updatedBy;
+    private String updatedBy;
 
     @PrePersist
     public void onPrePersist() {

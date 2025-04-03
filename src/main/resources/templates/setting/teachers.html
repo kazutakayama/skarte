@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+
+<body>
+	<div layout:fragment="content">
+		<h1>教師一覧</h1>
+		<table border="1" style="border-collapse: collapse">
+			<thead>
+				<tr>
+					<th>職員番号</th>
+					<th>名前</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="teacher : ${teachers}">
+					<td th:text="${teacher.userId}"></td>
+					<td th:text="${teacher.lastName} + ' ' + ${teacher.firstName}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<a href="/setting">もどる</a>
+	</div>
+</body>
+
+</html>
