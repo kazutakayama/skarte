@@ -25,7 +25,7 @@
 							<td th:text="${student.firstName}"></td>
 							<td th:text="${student.lastNameKana}"></td>
 							<td th:text="${student.firstNameKana}"></td>
-							<td th:text="${student.birth}"></td>
+							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
 							<td th:text="${student.gender}"></td>
 						</tr>
 					</tbody>
@@ -37,7 +37,9 @@
 			</div>
 		</header>
 
-        <h2>成績</h2>
+		<h2>成績</h2>
+
+		　　　　　　　　<p>個別登録</p>
 		<form th:action="@{/students/grade/add}" th:method="post" th:object="${students}">
 			<div class="form-group">
 				<input class="form-control" type="hidden" th:field="*{studentId}" />
@@ -45,13 +47,15 @@
 			<div class="form-group">
 				<label class="control-label">年度</label>
 				<select name="year">
-					<option value="2024">2024</option>
+					<option th:each="studentYear : ${studentsYear}" th:value="${studentYear?.year}"
+						th:text="${studentYear?.year}"></option>
+					<!--<option value="2024">2024</option>
 					<option value="2025">2025</option>
 					<option value="2026">2026</option>
 					<option value="2027">2027</option>
 					<option value="2028">2028</option>
 					<option value="2029">2029</option>
-					<option value="2030">2030</option>
+					<option value="2030">2030</option>-->
 				</select>
 			</div>
 			<div class="form-group">
@@ -66,25 +70,24 @@
 				<label class="control-label">教科</label>
 				<select name="subject">
 					<option value="1">国語</option>
-					<option value="2">数学</option>
-					<option value="3">英語</option>
-					<option value="4">社会</option>
-					<option value="5">理科</option>
-					<option value="6">保健体育</option>
-					<option value="7">音楽</option>
-					<option value="8">美術</option>
-					<option value="9">技術家庭</option>
+					<option value="2">社会</option>
+					<option value="3">数学</option>
+					<option value="4">理科</option>
+					<option value="5">音楽</option>
+					<option value="6">美術</option>
+					<option value="7">保健体育</option>
+					<option value="8">技術家庭</option>
+					<option value="9">英語</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label class="control-label">評定</label>
 				<select name="rating">
-					<option value=""> </option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
 					<option value="4">4</option>
-					<option value="5">5</option>
+					<option value="5" selected>5</option>
 				</select>
 			</div>
 			<!--<div class="form-group">
@@ -93,88 +96,453 @@
 			</div>-->
 			<button class="btn btn-default" type="submit">登録</button>
 		</form>
+		<br>
 
-		<table>
+		<h1>一覧完成版！！</h1>
+
+
+		<table border="1" style="border-collapse: collapse">
 			<thead>
 				<tr>
-					<th>年度</th>
-					<th>学期</th>
-					<th>教科</th>
-					<th>評定</th>
+					<th rowspan="2">年度</th>
+					<th colspan="9" scope="colgroup">1学期</th>
+					<th colspan="9" scope="colgroup">2学期</th>
+					<th colspan="9" scope="colgroup">3学期</th>
+				</tr>
+				<tr>
+					<th>国語</th>
+					<th>社会</th>
+					<th>数学</th>
+					<th>理科</th>
+					<th>音楽</th>
+					<th>美術</th>
+					<th>保健体育</th>
+					<th>技術家庭</th>
+					<th>英語</th>
+					<th>国語</th>
+					<th>社会</th>
+					<th>数学</th>
+					<th>理科</th>
+					<th>音楽</th>
+					<th>美術</th>
+					<th>保健体育</th>
+					<th>技術家庭</th>
+					<th>英語</th>
+					<th>国語</th>
+					<th>社会</th>
+					<th>数学</th>
+					<th>理科</th>
+					<th>音楽</th>
+					<th>美術</th>
+					<th>保健体育</th>
+					<th>技術家庭</th>
+					<th>英語</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="grade : ${grade}">
-					<td th:text="${grade.year}"></td>
-					<td th:text="${grade.term}"></td>
-					<td th:text="${grade.subject}"></td>
-					<td th:text="${grade.rating}"></td>
-					<td><a th:href="@{/students/{id}/editGrade(id=${grade.gradeId})}" class="edit">編集</a>
+				<tr th:each="studentYear, stat : ${studentsYear}">
+					<td>
+						<th:block th:text="${studentYear.year}"></th:block>
+						<form th:action="@{/students/{id}/grade/edit (id=${students.studentId})}" th:method="post">
+							<div class="form-group">
+								<input class="form-control" type="hidden" name="year" th:value="${studentYear.year}" />
+							</div>
+							<button class="btn btn-default" type="submit">編集</button>
+						</form>
 					</td>
+					<th:block th:each="grade : ${grade[__${stat.index}__]}">
+						<td th:text="${grade?.rating}"></td>
+					</th:block>
+				</tr>
 			</tbody>
 		</table>
 
 
-		<!--<section id="grade">
-			<ul>
-				<li th:each="grade : ${grades}">
-					<article class="post">
-						<ul>
-							<li>
-								<pre class="year" th:text="${grade.year}"></pre>
-							</li>
-							<li>
-								<pre class="term" th:text="${grade.term}"></pre>
-							</li>
-							<li>
-								<pre class="subject" th:text="${grade.subject}"></pre>
-							</li>
-							<li>
-								<pre class="grade" th:text="${grade.grade}"></pre>
-							</li>
-							<li>
-								<div class="buttons clearfix">
-									<a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}"
-										class="edit">編集</a>
-									<a th:href="@{/students/grades/{id}/delete(id=${grade.gradeId})}"
-										class="delete">削除</a>
-								</div>
-							</li>
-						</ul>
-					</article>
-				</li>
-			</ul>
-		</section>-->
 
-		<!--<section id="grade">
-			<ul>
-				<li th:each="grade : ${grades}">
-					<article class="post">
-						<ul>
-							<li>
-								<pre class="year" th:text="${grade.year}"></pre>
-							</li>
-							<li>
-								<pre class="term" th:text="${grade.term}"></pre>
-							</li>
-							<li>
-								<pre class="subject" th:text="${grade.subject}"></pre>
-							</li>
-							<li>
-								<pre class="grade" th:text="${grade.grade}"></pre>
-							</li>
-							<li>
-								<div class="buttons clearfix">
-									<a th:href="@{/students/grades/{id}/edit(id=${grade.gradeId})}" class="edit">編集</a>
-									<a th:href="@{/students/grades/{id}/delete(id=${grade.gradeId})}"
-										class="delete">削除</a>
-								</div>
-							</li>
-						</ul>
-					</article>
-				</li>
-			</ul>
-		</section>-->
+
+		<h1>成績一覧</h1>
+		<table border="1" style="border-collapse: collapse">
+			<thead>
+				<tr>
+					<th rowspan="2">年度</th>
+					<th colspan="9" scope="colgroup">1学期</th>
+					<th colspan="9" scope="colgroup">２学期</th>
+					<th colspan="9" scope="colgroup">３学期</th>
+				</tr>
+				<tr>
+					<th>国語</th>
+					<th>社会</th>
+					<th>数学</th>
+					<th>理科</th>
+					<th>音楽</th>
+					<th>美術</th>
+					<th>保健体育</th>
+					<th>技術家庭</th>
+					<th>英語</th>
+					<th>国語</th>
+					<th>社会</th>
+					<th>数学</th>
+					<th>理科</th>
+					<th>音楽</th>
+					<th>美術</th>
+					<th>保健体育</th>
+					<th>技術家庭</th>
+					<th>英語</th>
+					<th>国語</th>
+					<th>社会</th>
+					<th>数学</th>
+					<th>理科</th>
+					<th>音楽</th>
+					<th>美術</th>
+					<th>保健体育</th>
+					<th>技術家庭</th>
+					<th>英語</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="studentYear : ${studentsYear}">
+					<td>
+						<th:block th:text="${studentYear.year}"></th:block>
+						<form th:action="@{/students/{id}/grade/edit (id=${students.studentId})}" th:method="post">
+							<div class="form-group">
+								<!--<input class="form-control" type="text" name="year" th:value="${year}" />-->
+								<input class="form-control" type="text" name="year" th:value="${studentYear.year}" />
+							</div>
+							<button class="btn btn-default" type="submit">編集</button>
+						</form>
+
+					</td>
+
+					<div th:each="student : ${studentYear.students}">
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 1}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 1 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 2}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 2 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 3}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 3 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 4}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 4 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 5}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 5 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 6}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 6 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 7}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 7 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 8}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 8 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 9}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 1 and grade.subject == 9 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 1}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 1 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 2}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 2 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 3}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 3 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 4}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 4 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 5}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 5 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 6}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 6 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 7}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 7 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 8}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 8 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 9}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 2 and grade.subject == 9 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 1}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 1 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 2}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 2 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 3}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 3 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 4}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 4 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 5}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 5 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 6}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 6 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 7}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 7 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 8}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 8 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+						<td>
+							<th:block th:each="grade : ${student.grade}">
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 9}"
+									th:text="${grade.rating}">
+								</a>
+								<a th:href="@{/students/{id}/editGrade (id=${grade.gradeId})}"
+									th:if="${grade.year == studentYear.year and grade.term == 3 and grade.subject == 9 and grade.rating == null}"
+									th:text="＿">
+								</a>
+							</th:block>
+						</td>
+					</div>
+
+			</tbody>
+		</table>
+
 
 
 

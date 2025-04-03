@@ -40,7 +40,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
             throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
         }
 
-        User entity = repository.findByUserId(Long.parseLong(userId));
+        User entity = repository.findByUserId(userId);
         if (entity == null) {
             throw new AuthenticationCredentialsNotFoundException("ログイン情報が存在しません。");
         }

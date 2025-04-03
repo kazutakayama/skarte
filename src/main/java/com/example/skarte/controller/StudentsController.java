@@ -184,6 +184,7 @@
 
 package com.example.skarte.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,6 +197,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
@@ -203,6 +205,7 @@ import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.entity.User;
+import com.example.skarte.form.GradeForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
@@ -243,10 +246,23 @@ public class StudentsController {
         return "students/index";
     }
 
+    // path: /students/class
+    // クラス検索
+    @PostMapping("/search")
+    public String search(Model model, @RequestParam("year") Long year, @RequestParam("nen") Long nen,
+            @RequestParam("kumi") Long kumi) {
+        List<StudentYear> result = studentsYearService.search(year, nen, kumi);
+        model.addAttribute("studentsYear", result);
+        model.addAttribute("resultSize", result.size());
+        List<Student> students = studentsService.findAll();
+        model.addAttribute("students", students);
+        return "students/index";
+    }
+
     // path: /students/{studentId}
     // 生徒詳細画面を表示
     @GetMapping("/{id}")
-    public String details(@PathVariable Long id, Model model) {
+    public String details(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
         List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
@@ -257,7 +273,7 @@ public class StudentsController {
     // path: /students/{studentId}/edit
     // 生徒編集画面を表示
     @GetMapping("/{id}/edit")
-    public String editStudent(@PathVariable Long id, Model model) {
+    public String editStudent(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
         List<StudentYear> studentsYear = studentsYearService.findAll();
@@ -268,15 +284,15 @@ public class StudentsController {
 //    // path: /students/{studentId}/update
 //    // 生徒を更新する
 //    @PostMapping("/{id}/update")
-//    public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
+//    public String updateStudent(@PathVariable String id, @ModelAttribute Student student) {
 //        Student result = studentsService.updateStudent(id, student);
 //        return "redirect:/students/" + result.getStudentId();
 //    }
-    
+
     // path: /students/{studentId}/updatestudent
     // 生徒編集画面から生徒を更新する
     @PostMapping("/{id}/updateStudent")
-    public String updateStudent(@PathVariable Long id, @Validated @ModelAttribute StudentForm form,
+    public String updateStudent(@PathVariable String id, @Validated @ModelAttribute StudentForm form,
             @AuthenticationPrincipal User user) {
         form.setUpdatedBy(user.getUserId());
         Student result = studentsService.updateStudent(id, form);
@@ -286,7 +302,7 @@ public class StudentsController {
     // path: /students/{studentId}/karte
     // カルテを表示
     @GetMapping("/{id}/karte")
-    public String karte(@PathVariable Long id, Model model) {
+    public String karte(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
         List<Karte> karte = karteService.findAllByStudentId(id);
@@ -338,7 +354,6 @@ public class StudentsController {
 //        return "redirect:/students";
 //    }
 
-    
 //    // path: /students/karte/{id}/delete
 //    // カルテを削除（論理削除）
 //    @GetMapping("/karte/{id}/delete")
@@ -350,7 +365,7 @@ public class StudentsController {
     // path: /students/{studentId}/attendance
     // 出欠を表示
     @GetMapping("/{id}/attendance")
-    public String attendance(@PathVariable Long id, Model model) {
+    public String attendance(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
         List<Attendance> attendance = attendanceService.findAllByStudentId(id);
@@ -394,7 +409,7 @@ public class StudentsController {
         Attendance deleteAttendance = attendanceService.deleteAttendance(id, attendance.getStudentId(), attendance);
         return "redirect:/students/" + deleteAttendance.getStudentId() + "/attendance";
     }
-    
+
 //    // path: /students/{karteId}/deleteKarte
 //    // カルテを削除
 //    @GetMapping("/{id}/deleteKarte")
@@ -414,11 +429,14 @@ public class StudentsController {
     // path: /students/{studentId}/grade
     // 成績を表示
     @GetMapping("/{id}/grade")
-    public String grade(@PathVariable Long id, Model model) {
+    public String grade(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
-        List<Grade> grade = gradeService.findAllByStudentId(id);
-        model.addAttribute("grade", grade);
+        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
+        model.addAttribute("studentsYear", studentsYear);
+        ArrayList<ArrayList<Grade>> studentGradeAll = gradeService.studentGradeAll(id);
+        model.addAttribute("grade", studentGradeAll);
+
         return "students/grade";
     }
 
@@ -430,6 +448,21 @@ public class StudentsController {
         return "redirect:/students/" + grade.getStudentId() + "/grade";
     }
 
+    // path: /students/{studentId}/grade/edit
+    // 一括編集する成績（年度ごと）を表示
+    @PostMapping("/{id}/grade/edit")
+    public String editStudentGrade(@PathVariable String id, Model model, @RequestParam("year") Long year,
+            GradeForm gradeForm) {
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
+        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
+        model.addAttribute("studentsYear", studentsYear);
+        ArrayList<ArrayList<Grade>> studentGradeAll = gradeService.studentGradeAll(id);
+        model.addAttribute("grade", studentGradeAll);
+        model.addAttribute("year", year);
+        return "students/editStudentGrade";
+    }
+
     // path: /students/{gradeId}/editGrade
     // 編集する成績を表示
     @GetMapping("/{id}/editGrade")
@@ -438,28 +471,28 @@ public class StudentsController {
         model.addAttribute("grade", grade);
         Student student = studentsService.findById(grade.getStudentId());
         model.addAttribute("students", student);
+        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(grade.getStudentId());
+        model.addAttribute("studentsYear", studentsYear);
         return "students/editGrade";
     }
-    
+
     // path: /students/{gradeId}/updateGrade
     // 成績を更新
     @PostMapping("/{id}/updateGrade")
-    public String updateAttendance(@PathVariable Long id, @ModelAttribute Grade grade,
+    public String updateGradeOne(@PathVariable Long id, @ModelAttribute Grade grade,
             @AuthenticationPrincipal User user) {
         grade.setUpdatedBy(user.getUserId());
-        Grade result = gradeService.updateGrade(id, grade.getStudentId(), grade);
+        Grade result = gradeService.updateGradeOne(id, grade.getStudentId(), grade);
         return "redirect:/students/" + result.getStudentId() + "/grade";
     }
 
-//    // path: /students/{id}/updateGrade
-//    // 成績を更新
-//    @PostMapping("/{id}/updateGrade")
-//    public String updateAttendance(@PathVariable Long id, @ModelAttribute Grade grade,
-//            @AuthenticationPrincipal User user) {
-//        grade.setUpdatedBy(user.getUserId());
-//        gradeService.updateGrade(id, grade);
-//        return "redirect:/students";
-//    }
+    // path: /students/{studentId}/grade/update
+    // 成績一括更新
+    @PostMapping("/{id}/grade/update")
+    public String updateGrade(@PathVariable String id, GradeForm gradeForm, @AuthenticationPrincipal User user) {
+        gradeService.updateGrade(user.getUserId(), gradeForm);
+        return "redirect:/students/" + id + "/grade";
+    }
 
     // path: /students/{gradeId}/deleteGrade
     // 成績を削除

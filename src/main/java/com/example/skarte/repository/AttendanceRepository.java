@@ -17,5 +17,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     List<Attendance> findByOrderByUpdatedAtDesc();
 
     // 生徒IDでリストを取得
-    List<Attendance> findAllByStudentId(Long studentId);
+    List<Attendance> findAllByStudentId(String studentId);
 }

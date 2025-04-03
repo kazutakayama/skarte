@@ -4,39 +4,39 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>お知らせ詳細</h1>
+		<h2>お知らせ詳細</h2>
 
-		<section>
-			<ul>
-				<li th:each="notice : ${notices}">
-					<article class="notice">
-						<ul>
-							<li>
-								タイトル：
-								<h2 th:text="${notice.title}" />
-								内容：
-								<h2 th:text="${notice.contents}" />
-								更新者：
-								<h2 th:text="${notice.updatedBy}" />
-								更新日時：
-								<h2 th:text="${notice.updatedAt}" />								
-								<a class="buttons clearfix"
-									th:href="@{/notices/contents/{id}/edit (id=${notice.noticeId})}">
-									編集
-								</a><br>
+		<table>
+			<thead>
+				<tr>
+					<th>タイトル</th>
+					<th>内容</th>
+					<th>更新者</th>
+					<th>更新日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<div th:each="notice : ${notices}">
+						<td th:text="${notice.title}"></td>
+						<td th:text="${notice.contents}"></td>
+						<td th:text="${notice.updatedBy}"></td>
+						<td th:text="${notice.updatedAt}"></td>
+						<td><a class="buttons clearfix"
+								th:href="@{/notices/contents/{id}/edit (id=${notice.noticeId})}">
+								編集
+							</a></td>
+						<td><a class="buttons clearfix"
+								th:href="@{/notices/contents/{id}/delete (id=${notice.noticeId})}">
+								削除
+							</a></td>
+					</div>
+				</tr>
+			</tbody>
+		</table>
 
-								<a class="buttons clearfix"
-									th:href="@{/notices/contents/{id}/delete (id=${notice.noticeId})}">
-									削除
-								</a>
-							</li>
-
-						</ul>
-					</article>
-				</li>
-			</ul>
-		</section>
 		<a href="/notices">一覧にもどる</a>
+
 	</div>
 </body>
 

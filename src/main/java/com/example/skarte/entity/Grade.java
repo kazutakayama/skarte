@@ -37,7 +37,7 @@ public class Grade extends EntityBase { // EntityBase
     }
 
     @Column
-    private Long studentId = null;
+    private String studentId = null;
     @ManyToOne
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
     private Student students;
@@ -52,7 +52,7 @@ public class Grade extends EntityBase { // EntityBase
 
     /** 教科 */
     @Column
-    private Integer subject = null;
+    private Long subject = null;
 
     /** 評定 */
     @Column

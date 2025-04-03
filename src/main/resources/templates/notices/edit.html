@@ -4,40 +4,52 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>お知らせ編集</h1>
+		<h2>お知らせ編集</h2>
+		<div th:each="notice : ${notices}">
+			<form th:action="@{/notices/contents/{id}/update (id=${notice.noticeId})}" th:method="post"
+				th:object="${notices}">
+				<div class="form-group">
+					<label class="control-label">タイトル</label>
+					<input class="form-control" type="text" th:field="*{title}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label">内容</label>
+					<input class="form-control" type="text" th:field="*{contents}" />
+				</div>
+				<button class="btn btn-default" type="submit">更新</button>
+			</form>
 
-		<li th:each="notice : ${notices}">
-			<article class="notice">
-
-				<form th:action="@{/notices/contents/{id}/update (id=${notice.noticeId})}" th:method="post"
-					th:object="${notices}">
-					<div class="form-group">
-						<label class="control-label">タイトル</label>
-						<input class="form-control" type="text" th:field="*{title}" />
-					</div>
-					<div class="form-group">
-						<label class="control-label">内容</label>
-						<input class="form-control" type="text" th:field="*{contents}" />
-					</div>
-					<button class="btn btn-default" type="submit">更新</button>
-				</form>
-
-
-
-				<!--<form method="post" action="/notices/update">
+			<!--<form method="post" action="/notices/update">
 					タイトル<input type="text" name="title" /><br>
 					内容<input type="text" name="contents" />
 					<input type="submit" value="更新">
 				</form>-->
 
-				<a class="buttons clearfix" th:href="@{/notices/contents/{id}(id=${notice.noticeId})}">
-					キャンセル
-				</a>
-				<h2 th:text="${notice.title}" />
-				<h2 th:text="${notice.contents}" />
-			</article>
-		</li>
+			<a class="buttons clearfix" th:href="@{/notices/contents/{id}(id=${notice.noticeId})}">
+				キャンセル
+			</a>
+		</div>
 
+		<table>
+			<thead>
+				<tr>
+					<th>タイトル</th>
+					<th>内容</th>
+					<th>更新者</th>
+					<th>更新日時</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<div th:each="notice : ${notices}">
+						<td th:text="${notice.title}"></td>
+						<td th:text="${notice.contents}"></td>
+						<td th:text="${notice.updatedBy}"></td>
+						<td th:text="${notice.updatedAt}"></td>
+					</div>
+				</tr>
+			</tbody>
+		</table>
 
 		<a href="/notices">一覧にもどる</a>
 	</div>

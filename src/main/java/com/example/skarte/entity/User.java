@@ -36,7 +36,7 @@ public class User extends EntityBase implements UserDetails {
         super();
     }
 
-    public User(Long userId, String lastName, String firstName, String password, Authority authority) {
+    public User(String userId, String lastName, String firstName, String password, Authority authority) {
         this.userId = userId;
         this.authority = authority;
         this.password = password;
@@ -46,7 +46,7 @@ public class User extends EntityBase implements UserDetails {
 
     @Id
     @Column
-    private Long userId;
+    private String userId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

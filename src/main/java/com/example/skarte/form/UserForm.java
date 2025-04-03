@@ -12,7 +12,7 @@ public class UserForm {
 
 
 //    @NotEmpty
-    private Long userId;
+    private String userId;
     
     @NotEmpty
     private String lastName;

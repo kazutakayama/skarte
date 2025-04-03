@@ -25,19 +25,26 @@ public class NoticesService {
     }
 
     // お知らせ追加
-    public Notice add(Long userId, Notice notice) {
+    public Notice add(String userId, Notice notice) {
         notice.setCreatedBy(userId);
         notice.setUpdatedBy(userId);
         return noticeRepository.save(notice);
     }
 
+//    // お知らせ追加
+//    public Notice add(Long userId, Notice notice) {
+//        notice.setCreatedBy(userId);
+//        notice.setUpdatedBy(userId);
+//        return noticeRepository.save(notice);
+//    }
+
     // お知らせ更新
     public Notice update(Long noticeId, Notice notice) {
-      Notice targetNotice = noticeRepository.findById(noticeId).orElseThrow();
-      targetNotice.setTitle(notice.getTitle());
-      targetNotice.setContents(notice.getContents());
-      targetNotice.setUpdatedBy(notice.getUpdatedBy());
-      noticeRepository.save(targetNotice);
+        Notice targetNotice = noticeRepository.findById(noticeId).orElseThrow();
+        targetNotice.setTitle(notice.getTitle());
+        targetNotice.setContents(notice.getContents());
+        targetNotice.setUpdatedBy(notice.getUpdatedBy());
+        noticeRepository.save(targetNotice);
         return noticeRepository.save(targetNotice);
     }
 
@@ -47,7 +54,6 @@ public class NoticesService {
         noticeRepository.delete(notice);
     }
 }
-
 
 //インターフェイス用
 //

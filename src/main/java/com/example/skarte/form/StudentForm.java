@@ -33,7 +33,7 @@ public class StudentForm extends EntityBase { // EntityBase
 
     /** ID */
 //    @NotEmpty
-    private Long studentId = null;
+    private String studentId = null;
 
     /** 姓 */
     @NotEmpty
@@ -67,19 +67,19 @@ public class StudentForm extends EntityBase { // EntityBase
     private String family2 = null;
 
     /** 電話1 */
-    private Long tel1 = null;
+    private String tel1 = null;
 
     /** 電話2 */
-    private Long tel2 = null;
+    private String tel2 = null;
 
     /** 電話3 */
-    private Long tel3 = null;
+    private String tel3 = null;
 
     /** 電話4 */
-    private Long tel4 = null;
+    private String tel4 = null;
 
     /** 郵便番号 */
-    private Long postalCode = null;
+    private String postalCode = null;
 
     /** 住所 */
     private String adress = null;

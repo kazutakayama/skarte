@@ -40,7 +40,7 @@ public class UsersController {
     @PostMapping("/add")
     public String add(@Validated @ModelAttribute("form") UserForm form, BindingResult result, Model model,
             RedirectAttributes redirAttrs) {
-        Long userId = form.getUserId();
+        String userId = form.getUserId();
         String lastName = form.getLastName();
         String firstName = form.getFirstName();
         String password = form.getPassword();
@@ -64,6 +64,6 @@ public class UsersController {
         model.addAttribute("hasMessage", true);
         model.addAttribute("class", "alert-info");
         model.addAttribute("message", "ユーザー登録が完了しました。");
-        return "sessions/new";
+        return "sessions/login";
     }
 }
