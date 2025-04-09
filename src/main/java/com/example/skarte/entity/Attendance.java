@@ -50,25 +50,30 @@ public class Attendance extends EntityBase { // EntityBase
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date = null;
+    
+    /** 出欠 */
+    // 1:欠席, 2:遅刻, 3:早退, 4:遅刻/早退, 5:出停, 6:忌引
+    @Column
+    private Integer kiroku = null;
 
-    /** 遅刻 */
-    @Column
-    private Integer chikoku = null;
-    
-    /** 早退 */
-    @Column
-    private Integer soutai = null;
-    
-    /** 欠席 */
-    @Column
-    private Integer kesseki = null;
-    
-    /** 出停 */
-    @Column
-    private Integer syuttei = null;
-    
-    /** 忌引 */
-    @Column
-    private Integer kibiki = null;
+//    /** 遅刻 */
+//    @Column
+//    private Integer chikoku = null;
+//    
+//    /** 早退 */
+//    @Column
+//    private Integer soutai = null;
+//    
+//    /** 欠席 */
+//    @Column
+//    private Integer kesseki = null;
+//    
+//    /** 出停 */
+//    @Column
+//    private Integer syuttei = null;
+//    
+//    /** 忌引 */
+//    @Column
+//    private Integer kibiki = null;
 
 }

@@ -37,7 +37,177 @@
 			</div>
 		</header>
 
-        <h2>出欠</h2>
+		<h2>出欠</h2>
+
+		<table border="1" style="border-collapse: collapse" 　th:each="studentYear, stat : ${studentsYear}">
+			<thead>
+				<tr>
+					<th colspan="2">年度</th>
+					<th>4月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="3" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>5月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="4" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>6月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="5" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>7月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="6" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>8月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="7" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>9月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="8" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>10月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="9" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>11月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="10" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>12月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="11" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>1月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="0" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>2月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="1" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>3月
+						<form th:action="@{/students/{id}/attendance/edit (id=${students.studentId})}" th:method="post">
+							<input type="hidden" name="year" th:value="${studentYear.year}" />
+							<input type="hidden" name="month" value="2" />
+							<button class="btn btn-default" type="submit">🖉</button>
+						</form>
+					</th>
+					<th>合計</th>
+				</tr>
+				<tr>
+					<th rowspan="6" 　th:text="${studentYear.year}"></th>
+					<th>登校日数</th>
+					<td th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+						<th:block th:text="${attendanceSummary[0]}"></th:block>
+					</td>
+				</tr>
+				<tr>
+					<th>出席数</th>
+					<td th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+						<th:block th:text="${attendanceSummary[1]}"></th:block>
+					</td>
+				</tr>
+				<tr>
+					<th>欠席数</th>
+					<td th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+						<th:block th:text="${attendanceSummary[2]}"></th:block>
+					</td>
+				</tr>
+				<tr>
+					<th>遅刻数</th>
+					<td th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+						<th:block th:text="${attendanceSummary[3]}"></th:block>
+					</td>
+				</tr>
+				<tr>
+					<th>早退数</th>
+					<td th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+						<th:block th:text="${attendanceSummary[4]}"></th:block>
+					</td>
+				</tr>
+				<tr>
+					<th>出停/忌引数</th>
+					<td th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+						<th:block th:text="${attendanceSummary[5]}"></th:block>
+					</td>
+				</tr>
+			</thead>
+		</table>
+
+		<h2>
+			<div th:if="${studentsYearSize >= 0}"><label th:text="${studentsYearSize}"></label>年間の合計</div>
+		</h2>
+		
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<th>登校日数</th>
+				<th th:text="${AttendanceTotal[0]}"></th>
+			</tr>
+			<tr>
+				<th>出席数</th>
+				<th th:text="${AttendanceTotal[1]}"></th>
+			</tr>
+			<tr>
+				<th>欠席数</th>
+				<th th:text="${AttendanceTotal[2]}"></th>
+			</tr>
+			<tr>
+				<th>遅刻数</th>
+				<th th:text="${AttendanceTotal[3]}"></th>
+			</tr>
+			<tr>
+				<th>早退数</th>
+				<th th:text="${AttendanceTotal[4]}"></th>
+			</tr>
+			<tr>
+				<th>出停/忌引数</th>
+				<th th:text="${AttendanceTotal[5]}"></th>
+			</tr>
+		</table>
+
+		<th:block th:each="attendanceSummary : ${attendanceSummary}">
+
+			<th:block th:text="${attendanceSummary}"></th:block>
+
+		</th:block>
+
+
+
 		<form th:action="@{/students/attendance/add}" th:method="post" th:object="${students}">
 			<div class="form-group">
 				<input class="form-control" type="hidden" th:field="*{studentId}" />
@@ -47,38 +217,14 @@
 				<input class="form-control" type="date" name="date" />
 			</div>
 			<div class="form-group">
-				<label class="control-label">欠席</label>
-				<select name="kesseki">
-					<option value=""> </option>
-					<option value="1">欠席</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">遅刻</label>
-				<select name="chikoku">
-					<option value=""> </option>
-					<option value="1">遅刻</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">早退</label>
-				<select name="soutai">
-					<option value=""> </option>
-					<option value="1">早退</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">出停</label>
-				<select name="syuttei">
-					<option value=""> </option>
-					<option value="1">出停</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">忌引</label>
-				<select name="kibiki">
-					<option value=""> </option>
-					<option value="1">忌引</option>
+				<label class="control-label">出欠</label>
+				<select name="kiroku">
+					<option value="1">／ : 欠席</option>
+					<option value="2">×　: 遅刻</option>
+					<option value="3">○　: 早退</option>
+					<option value="4">×○ : 遅刻/早退</option>
+					<option value="5">テ : 出停</option>
+					<option value="6">キ : 忌引</option>
 				</select>
 			</div>
 			<button class="btn btn-default" type="submit">登録</button>
@@ -89,21 +235,14 @@
 			<thead>
 				<tr>
 					<th>日付</th>
-					<th>欠席</th>
-					<th>遅刻</th>
-					<th>早退</th>
-					<th>出停</th>
-					<th>忌引</th>
+					<th>出欠</th>
+
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="attendance : ${attendance}">
 					<td th:text="${#dates.format(attendance.date, 'yyyy-MM-dd')}"></td>
-					<td th:text="${attendance.kesseki}"></td>
-					<td th:text="${attendance.chikoku}"></td>
-					<td th:text="${attendance.soutai}"></td>
-					<td th:text="${attendance.syuttei}"></td>
-					<td th:text="${attendance.kibiki}"></td>
+					<td th:text="${attendance.kiroku}"></td>
 					<td><a th:href="@{/students/{id}/editAttendance(id=${attendance.attendanceId})}" class="edit">編集</a>
 					</td>
 			</tbody>

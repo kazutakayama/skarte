@@ -141,7 +141,7 @@ public class GradeController {
         model.addAttribute("kumi", kumi);
 //        return "redirect:/grade";
 //        return "grade/index"; 
-        return search(model, year, nen, kumi);
+        return "redirect:/grade";
     }
 
 }

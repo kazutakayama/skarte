@@ -46,40 +46,18 @@
 					<input class="form-control" type="date" th:field="*{date}" />
 				</div>
 				<div class="form-group">
-					<label class="control-label">欠席</label>
-					<select th:field="*{kesseki}">
-						<option value=""> </option>
-						<option value="1">欠席</option>
+					<label class="control-label">出欠</label>
+					<select th:field="*{kiroku}">
+						<option value=""></option>
+						<option value="1">／ : 欠席</option>
+						<option value="2">×　: 遅刻</option>
+						<option value="3">○　: 早退</option>
+						<option value="4">×○ : 遅刻/早退</option>
+						<option value="5">テ : 出停</option>
+						<option value="6">キ : 忌引</option>
 					</select>
 				</div>
-				<div class="form-group">
-					<label class="control-label">遅刻</label>
-					<select th:field="*{chikoku}">
-						<option value=""> </option>
-						<option value="1">遅刻</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="control-label">早退</label>
-					<select th:field="*{soutai}">
-						<option value=""> </option>
-						<option value="1">早退</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="control-label">出停</label>
-					<select th:field="*{syuttei}">
-						<option value=""> </option>
-						<option value="1">出停</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="control-label">忌引</label>
-					<select th:field="*{kibiki}">
-						<option value=""> </option>
-						<option value="1">忌引</option>
-					</select>
-				</div>
+
 				<button class="btn btn-default" type="submit">更新</button>
 			</form>
 
@@ -103,11 +81,7 @@
 			<tbody>
 				<tr th:each="attendance : ${attendance}">
 					<td th:text="${#dates.format(attendance.date, 'yyyy-MM-dd')}"></td>
-					<td th:text="${attendance.kesseki}"></td>
-					<td th:text="${attendance.chikoku}"></td>
-					<td th:text="${attendance.soutai}"></td>
-					<td th:text="${attendance.syuttei}"></td>
-					<td th:text="${attendance.kibiki}"></td>
+					<td th:text="${attendance.kiroku}"></td>
 			</tbody>
 		</table>
 		<a th:href="@{/students/{id}/attendance (id=${attendance.studentId})}">キャンセル</a>
