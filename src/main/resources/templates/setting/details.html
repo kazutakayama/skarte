@@ -4,7 +4,8 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>生徒詳細</h1>
+		<h1>生徒詳細</h1>		
+		
 		<tr th:each="student : ${students}">
 			<a class="buttons clearfix" th:href="@{/setting/students/{id}/edit (id=${student.studentId})}">
 				生徒編集

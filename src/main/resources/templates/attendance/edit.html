@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+
+<body>
+	<div layout:fragment="content">
+		<h1>出席簿編集</h1>
+
+
+		<div th:if="${year > 0}"><label th:text="${year}"></label>年度</div>
+		<div th:if="${nen > 0}"><label th:text="${nen}"></label>年</div>
+		<div th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</div>
+		<div th:if="${month >= 0}"><label th:text="${month}+1"></label>月</div>
+		<div th:if="${date > 0}"><label th:text="${date}"></label>日の編集</div>
+		<th:block th:text="${#dates.format(cal, 'yyyy-MM-dd')}"></th:block>
+
+
+
+		<th:block th:if="${year > 0}">
+			<h1>編集完成版！！</h1>
+			<form th:action="@{/attendance/update}" th:method="post">
+				<input class="form-control" type="hidden" name="year" th:value="${year}" />
+				<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+				<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+				<input class="form-control" type="hidden" name="month" th:value="${month}" />
+				<!--<input class="form-control" type="hidden" name="date" th:value="${date}" />-->
+				<table border="1" style="border-collapse: collapse">
+					<thead>
+						<tr>
+							<th rowspan="2">年</th>
+							<th rowspan="2">組</th>
+							<th rowspan="2">番</th>
+							<th rowspan="2">名前</th>
+							<th:block th:each="calendar : ${calendar}">
+								<th>
+									<th:block th:if="${#dates.format(calendar, 'd') == #dates.format(cal, 'd')}">
+										<button class="btn btn-default" type="submit">更新</button>
+									</th:block>
+									<th:block th:text="${#dates.format(calendar, 'd')}"></th:block>
+								</th>
+							</th:block>
+							<th rowspan="2">登校日数</th>
+							<th rowspan="2">出席数</th>
+							<th rowspan="2">欠席数</th>
+							<th rowspan="2">遅刻数</th>
+							<th rowspan="2">早退数</th>
+							<th rowspan="2">出停/忌引数</th>
+						</tr>
+						<tr>
+							<th:block th:each="calendar : ${calendar}">
+								<th th:text="${#dates.format(calendar, 'E')}"></th>
+							</th:block>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="studentYear, stat : ${studentsYear}">
+							<td th:text="${studentYear.nen}"></td>
+							<td th:text="${studentYear.kumi}"></td>
+							<td th:text="${studentYear.ban}"></td>
+							<div th:each="student : ${studentYear.students}">
+								<td><a th:href="@{/students/{id}/attendance (id=${student.studentId})}"
+										th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
+							</div>
+							<th:block th:each="attendance, stat : ${attendance[__${stat.index}__]}">
+								<td>
+									<th:block th:if="${attendance?.kiroku==1}">／</th:block>
+									<th:block th:if="${attendance?.kiroku==2}">×</th:block>
+									<th:block th:if="${attendance?.kiroku==3}">○</th:block>
+									<th:block th:if="${attendance?.kiroku==4}">○×</th:block>
+									<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
+									<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
+									<th:block th:if="${stat.index + 1 == date}">
+
+										<input class="form-control" type="hidden" name="attendanceIds[]"
+											th:value="${attendance?.attendanceId}" />
+										<input class="form-control" type="hidden" name="studentIds[]"
+											th:value="${studentYear.studentId}" />
+										<input class="form-control" type="hidden" name="dates[]"
+											th:value="${#dates.format(cal, 'yyyy-MM-dd')}" />
+										<!--<input class="form-control" type="date" name="dates[]" th:value="${day}" />-->
+										<select name="kirokus[]" th:value="${attendance?.kiroku}" selected="6">
+											<option value=""></option>
+											<option value="1" th:selected="${attendance?.kiroku == 1}">／ : 欠席</option>
+											<option value="2" th:selected="${attendance?.kiroku == 2}">×　: 遅刻</option>
+											<option value="3" th:selected="${attendance?.kiroku == 3}">○　: 早退</option>
+											<option value="4" th:selected="${attendance?.kiroku == 4}">×○ : 遅刻/早退
+											</option>
+											<option value="5" th:selected="${attendance?.kiroku == 5}">テ : 出停</option>
+											<option value="6" th:selected="${attendance?.kiroku == 6}">キ : 忌引</option>
+										</select>
+									</th:block>
+								</td>
+							</th:block>
+							<th:block th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+								<td>
+									<th:block th:text="${attendanceSummary}"></th:block>
+								</td>
+							</th:block>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+
+		</th:block>
+
+
+	</div>
+</body>
+
+</html>

@@ -185,6 +185,7 @@
 package com.example.skarte.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,6 +206,7 @@ import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.entity.User;
+import com.example.skarte.form.AttendanceForm;
 import com.example.skarte.form.GradeForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.service.StudentsService;
@@ -276,8 +278,8 @@ public class StudentsController {
     public String editStudent(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
-        List<StudentYear> studentsYear = studentsYearService.findAll();
-        model.addAttribute("studentsYear", studentsYear);
+//        List<StudentYear> studentsYear = studentsYearService.findAll();
+//        model.addAttribute("studentsYear", studentsYear);
         return "students/edit";
     }
 
@@ -368,8 +370,17 @@ public class StudentsController {
     public String attendance(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("students", student);
+        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
+        model.addAttribute("studentsYear", studentsYear);
+        model.addAttribute("studentsYearSize", studentsYear.size());
+        ;
         List<Attendance> attendance = attendanceService.findAllByStudentId(id);
         model.addAttribute("attendance", attendance);
+        ArrayList<ArrayList<ArrayList<Integer>>> studentAttendanceSummary = attendanceService
+                .studentAttendanceSummary(id);
+        model.addAttribute("attendanceSummary", studentAttendanceSummary);
+        List<Integer> studentAttendanceTotal = attendanceService.studentAttendanceTotal(id);
+        model.addAttribute("AttendanceTotal", studentAttendanceTotal);
         return "students/attendance";
     }
 
@@ -392,15 +403,58 @@ public class StudentsController {
         return "students/editAttendance";
     }
 
-    // path: /students/{attendanceId}/updateAttendance
-    // 出欠を更新
-    @PostMapping("/{id}/updateAttendance")
-    public String updateAttendance(@PathVariable Long id, @ModelAttribute Attendance attendance,
-            @AuthenticationPrincipal User user) {
-        attendance.setUpdatedBy(user.getUserId());
-        Attendance result = attendanceService.updateAttendance(id, attendance.getStudentId(), attendance);
-        return "redirect:/students/" + result.getStudentId() + "/attendance";
+    // path: /students/{studentId}/attendance/edit
+    // 一括編集する出欠（月ごと）を表示
+    @PostMapping("/{id}/attendance/edit")
+    public String editStudentAttendance(@PathVariable String id, Model model, @RequestParam("year") Long year,
+            @RequestParam("month") Long month) {
+        Student student = studentsService.findById(id);
+        model.addAttribute("students", student);
+        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
+        model.addAttribute("studentsYear", studentsYear);
+
+        List<Calendar> monthCalendar = attendanceService.monthCalendar(year, month);
+        model.addAttribute("calendar", monthCalendar);
+
+        List<Attendance> studentAttendanceMonth = attendanceService.studentAttendanceMonth(id, year, month);
+        model.addAttribute("attendance", studentAttendanceMonth);
+        List<Integer> studentAttendanceMonthSummary = attendanceService.studentAttendanceMonthSummary(id, year, month);
+        model.addAttribute("attendanceSummary", studentAttendanceMonthSummary);
+
+        // あとでサービスに書くかも
+        Calendar cal = Calendar.getInstance();
+        int nendo = Integer.valueOf(year.toString());
+        int tsuki = Integer.valueOf(month.toString());
+        if (tsuki <= 2) {
+            nendo = nendo + 1;
+        }
+        cal.set(nendo, tsuki, 1);
+
+        model.addAttribute("cal", cal);
+
+        model.addAttribute("year", year);
+        model.addAttribute("month", month);
+        return "students/editStudentAttendance";
     }
+
+    // path: /students/{studentId}/attendance/update
+    // 出欠一括更新
+    @PostMapping("/{id}/attendance/update")
+    public String update(@PathVariable String id, Model model, AttendanceForm attendanceForm,
+            @AuthenticationPrincipal User user) {
+        attendanceService.update(user.getUserId(), attendanceForm);
+        return "redirect:/students/{id}/attendance";
+    }
+
+//    // path: /students/{attendanceId}/updateAttendance
+//    // 出欠を更新
+//    @PostMapping("/{id}/updateAttendance")
+//    public String updateAttendance(@PathVariable Long id, @ModelAttribute Attendance attendance,
+//            @AuthenticationPrincipal User user) {
+//        attendance.setUpdatedBy(user.getUserId());
+//        Attendance result = attendanceService.updateAttendance(id, attendance.getStudentId(), attendance);
+//        return "redirect:/students/" + result.getStudentId() + "/attendance";
+//    }
 
     // path: /students/{attendanceId}/deleteAttendance
     // 出欠を削除
