@@ -29,13 +29,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class StudentsService {
+    
+    private final StudentRepository studentRepository;
+    private final StudentYearRepository studentYearRepository;
+    private final StudentSpecification studentSpecification;
 
-    @Autowired
-    StudentRepository studentRepository;
-//    StudentRepositoryCustom studentRepositoryCustom;
-    StudentYearRepository studentYearRepository;
-
-    StudentSpecification studentSpecification;
+//    @Autowired
+//    StudentRepository studentRepository;
+//
+//    StudentYearRepository studentYearRepository;
+//
+//    StudentSpecification studentSpecification;
 
     // 生徒全取得
     public List<Student> findAll() {

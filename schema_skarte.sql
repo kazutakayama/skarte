@@ -115,3 +115,15 @@ CREATE TABLE IF NOT EXISTS grade (
  updated_at TIMESTAMP NOT NULL
 );
 ALTER TABLE grade ADD CONSTRAINT FK_grades_students FOREIGN KEY (student_id) REFERENCES students;
+
+DROP TABLE IF EXISTS schedule;
+CREATE TABLE IF NOT EXISTS schedule (
+ schedule_id SERIAL NOT NULL,
+ date DATE NOT NULL,
+ holiday bool NOT NULL,
+ created_by VARCHAR(7) NOT NULL,
+ updated_by VARCHAR(7) NOT NULL,
+ created_at TIMESTAMP NULL,
+ updated_at TIMESTAMP NULL,
+ PRIMARY KEY (schedule_id)
+);

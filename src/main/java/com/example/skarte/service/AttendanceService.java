@@ -32,6 +32,9 @@ public class AttendanceService {
     private final StudentYearRepository studentYearRepository;
     private final StudentSpecification studentSpecification;
 
+    private final ScheduleService scheduleService;
+    private final StudentsYearService studentsYearService;
+
 //    @Autowired
 //    AttendanceRepository attendanceRepository;
 
@@ -135,6 +138,7 @@ public class AttendanceService {
         for (int i = 0; i < 6; i++) {
             studentAttendanceMonthSummary.add(0);
         }
+
         int nendo = Integer.valueOf(year.toString());
         int tsuki = Integer.valueOf(month.toString());
         // 年度の調整
@@ -173,6 +177,12 @@ public class AttendanceService {
                 }
             }
         }
+
+        // 0に登校日数をset
+        int monthScheduleSize = scheduleService.monthScheduleSize(year, month);
+        studentAttendanceMonthSummary.set(0, monthScheduleSize);
+        // 1に出席日数(登校日数-(欠席数+出停忌引数))をset
+        studentAttendanceMonthSummary.set(1, monthScheduleSize - (kesseki.size() + syuttei.size()));
         studentAttendanceMonthSummary.set(2, kesseki.size());
         studentAttendanceMonthSummary.set(3, chikoku.size());
         studentAttendanceMonthSummary.set(4, soutai.size());
@@ -195,6 +205,8 @@ public class AttendanceService {
             // お試し
             studentAttendanceSummary.add(new ArrayList<>());
 
+            int toukouSum = 0;
+            int syussekiSum = 0;
             int kessekiSum = 0;
             int chikokuSum = 0;
             int soutaiSum = 0;
@@ -269,11 +281,26 @@ public class AttendanceService {
                         }
                     }
                 }
+
+                // 0に登校日数をset
+                Long month;
+                if (j >= 9) {
+                    month = (long) (j - 9);
+                } else {
+                    month = (long) (j + 3);
+                }
+                int monthScheduleSize = scheduleService.monthScheduleSize(resultYear.get(i).getYear(), month);
+                studentAttendanceSummary.get(i).get(j).set(0, monthScheduleSize);
+                // 1に出席日数(登校日数-(欠席数+出停忌引数))をset
+                studentAttendanceSummary.get(i).get(j).set(1, monthScheduleSize - (kesseki.size() + syuttei.size()));
+
                 studentAttendanceSummary.get(i).get(j).set(2, kesseki.size());
                 studentAttendanceSummary.get(i).get(j).set(3, chikoku.size());
                 studentAttendanceSummary.get(i).get(j).set(4, soutai.size());
                 studentAttendanceSummary.get(i).get(j).set(5, syuttei.size());
 
+                toukouSum = toukouSum + monthScheduleSize;
+                syussekiSum = syussekiSum + monthScheduleSize - (kesseki.size() + syuttei.size());
                 kessekiSum = kessekiSum + kesseki.size();
                 chikokuSum = chikokuSum + chikoku.size();
                 soutaiSum = soutaiSum + soutai.size();
@@ -291,13 +318,15 @@ public class AttendanceService {
             for (int l = 0; l < 6; l++) {
                 monthSummary.add(0);
             }
+            monthSummary.set(0, toukouSum);
+            monthSummary.set(1, syussekiSum);
             monthSummary.set(2, kessekiSum);
             monthSummary.set(3, chikokuSum);
             monthSummary.set(4, soutaiSum);
             monthSummary.set(5, syutteiSum);
             studentAttendanceSummary.get(i).add(monthSummary);
 //            studentAttendanceSummary.add(yearSummary.get(i));
-        } // （最大）3回の繰り返し終了
+        } // （最大）3年分の繰り返し終了
 
         return studentAttendanceSummary;
     }
@@ -312,6 +341,8 @@ public class AttendanceService {
         for (int i = 0; i < 6; i++) {
             studentAttendanceTotal.add(0);
         }
+        int toukouTotal = 0;
+        int syussekiTotal = 0;
         int kessekiTotal = 0;
         int chikokuTotal = 0;
         int soutaiTotal = 0;
@@ -338,8 +369,18 @@ public class AttendanceService {
             // 出停または忌引
             if (result.get(j).getKiroku() == 5 || result.get(j).getKiroku() == 6) {
                 syutteiTotal = syutteiTotal + 1;
-            }           
+            }
         }
+
+        List<StudentYear> resultYear = studentsYearService.findAllByStudentId(studentId);
+        for (int k = 0; k < resultYear.size(); k++) {
+            int yearScheduleCount = scheduleService.yearScheduleCount(resultYear.get(k).getYear());
+            toukouTotal = toukouTotal + yearScheduleCount;
+        }
+        syussekiTotal = toukouTotal - (kessekiTotal + syutteiTotal);
+        
+        studentAttendanceTotal.set(0, toukouTotal);
+        studentAttendanceTotal.set(1, syussekiTotal);
         studentAttendanceTotal.set(2, kessekiTotal);
         studentAttendanceTotal.set(3, chikokuTotal);
         studentAttendanceTotal.set(4, soutaiTotal);
@@ -466,11 +507,17 @@ public class AttendanceService {
                         syuttei.add(resultAttendance.get(j));
                     }
                 }
+
                 studentAttendanceMonthSummary.set(2, kesseki.size());
                 studentAttendanceMonthSummary.set(3, chikoku.size());
                 studentAttendanceMonthSummary.set(4, soutai.size());
                 studentAttendanceMonthSummary.set(5, syuttei.size());
             }
+            // 0に登校日数をset
+            int monthScheduleSize = scheduleService.monthScheduleSize(year, month);
+            studentAttendanceMonthSummary.set(0, monthScheduleSize);
+            // 1に出席日数(登校日数-(欠席数+出停忌引数))をset
+            studentAttendanceMonthSummary.set(1, monthScheduleSize - (kesseki.size() + syuttei.size()));
 
             attendanceMonthSummary.add(studentAttendanceMonthSummary);
         }
@@ -491,7 +538,7 @@ public class AttendanceService {
     }
 
     /**
-     * 出欠一括更新（日ごと）
+     * 出欠一括更新
      * 
      * @return
      */
@@ -500,9 +547,11 @@ public class AttendanceService {
         List<String> studentIds = attendanceForm.getStudentIds();
         List<Date> dates = attendanceForm.getDates();
         List<Integer> kirokus = attendanceForm.getKirokus();
+
         for (int i = 0; i < studentIds.size(); i++) {
             // 新規登録
-            if (attendanceIds.get(i) == null && kirokus.get(i) != null) {
+            if ((attendanceIds.size() != 0 && kirokus.size() != 0 && attendanceIds.get(i) == null
+                    && kirokus.get(i) != null) || (attendanceIds.size() == 0 && kirokus.size() != 0)) {
                 Attendance attendance = new Attendance();
                 attendance.setStudentId(studentIds.get(i));
                 attendance.setDate(dates.get(i));
@@ -512,20 +561,68 @@ public class AttendanceService {
                 attendanceRepository.save(attendance);
             }
             // 更新
-            if (attendanceIds.get(i) != null && kirokus.get(i) != null) {
+            if (attendanceIds.size() != 0 && kirokus.size() != 0 && attendanceIds.get(i) != null
+                    && kirokus.get(i) != null) {
                 Attendance updateAttendance = attendanceRepository.findById(attendanceIds.get(i)).orElseThrow();
                 updateAttendance.setKiroku(kirokus.get(i));
                 updateAttendance.setUpdatedBy(userId);
                 attendanceRepository.save(updateAttendance);
             }
             // 削除
-            if (attendanceIds.get(i) != null && kirokus.get(i) == null) {
+            if ((attendanceIds.size() != 0 && kirokus.size() != 0 && attendanceIds.get(i) != null
+                    && kirokus.get(i) == null) || (attendanceIds.size() != 0 && kirokus.size() == 0)) {
                 Attendance deleteAttendance = attendanceRepository.findById(attendanceIds.get(i)).orElseThrow();
                 attendanceRepository.delete(deleteAttendance);
-
             }
         }
+
     }
+
+//        for (int i = 0; i < studentIds.size(); i++) {
+//            if (attendanceIds.size() != 0 && kirokus.size() != 0) { // リストが１つだけのとき用
+////            // 新規登録
+//                if (attendanceIds.get(i) == null && kirokus.get(i) != null) {
+//                    Attendance attendance = new Attendance();
+//                    attendance.setStudentId(studentIds.get(i));
+//                    attendance.setDate(dates.get(i));
+//                    attendance.setKiroku(kirokus.get(i));
+//                    attendance.setCreatedBy(userId);
+//                    attendance.setUpdatedBy(userId);
+//                    attendanceRepository.save(attendance);
+//                }
+//                // 更新
+//                if (attendanceIds.get(i) != null && kirokus.get(i) != null) {
+//                    Attendance updateAttendance = attendanceRepository.findById(attendanceIds.get(i)).orElseThrow();
+//                    updateAttendance.setKiroku(kirokus.get(i));
+//                    updateAttendance.setUpdatedBy(userId);
+//                    attendanceRepository.save(updateAttendance);
+//                }
+//                // 削除
+//                if (attendanceIds.get(i) != null && kirokus.get(i) == null) {
+//                    Attendance deleteAttendance = attendanceRepository.findById(attendanceIds.get(i)).orElseThrow();
+//                    attendanceRepository.delete(deleteAttendance);
+//                }
+//            } // リストが１つだけのとき用
+//
+//            if (attendanceIds.size() == 0 && kirokus.size() != 0) { // リストが１つだけのとき用
+//                // 新規登録
+//                Attendance attendance = new Attendance();
+//                attendance.setStudentId(studentIds.get(i));
+//                attendance.setDate(dates.get(i));
+//                attendance.setKiroku(kirokus.get(i));
+//                attendance.setCreatedBy(userId);
+//                attendance.setUpdatedBy(userId);
+//                attendanceRepository.save(attendance);
+//            } // リストが１つだけのとき用
+//
+//            if (attendanceIds.size() != 0 && kirokus.size() == 0) { // リストが１つだけのとき用
+//                Attendance deleteAttendance = attendanceRepository.findById(attendanceIds.get(i)).orElseThrow();
+//                attendanceRepository.delete(deleteAttendance);
+//            } // リストが１つだけのとき用
+//
+//        }
+//
+//    }
 
 //    /**
 //     * 出欠更新
