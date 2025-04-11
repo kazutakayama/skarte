@@ -62,15 +62,85 @@
 		<div th:if="${month >= 0}"><label th:text="${month}+1"></label>月</div>
 		<div>月登校日数！</div>
 
-		<h1>お試し！</h1>
+		<h1>お試し！出欠まとめ</h1>
 		<th:block th:each="attendanceSummary : ${attendanceSummary}">
 
 			<th:block th:text="${attendanceSummary}"></th:block>
 
 		</th:block>
+		
+		
+
+		<th:block th:if="${year > 0 && size > 0}">
+			<h1>一覧完成版！！（改良）</h1>
+			<table border="1" style="border-collapse: collapse">
+				<thead>
+					<tr>
+						<th rowspan="2">年</th>
+						<th rowspan="2">組</th>
+						<th rowspan="2">番</th>
+						<th rowspan="2">名前</th>
+						<th:block th:each="schedule : ${schedule}">
+							<th>
+								<form th:action="@{/attendance/edit}" th:method="post">
+									<input class="form-control" type="hidden" name="year" th:value="${year}" />
+									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+									<input class="form-control" type="hidden" name="month" th:value="${month}" />
+									<input class="form-control" type="hidden" name="day"
+										th:value="${#dates.format(schedule.date, 'd')}" />
+									<button class="btn btn-default" type="submit">🖉</button>
+								</form>
+								<th:block th:text="${#dates.format(schedule.date, 'd')}"></th:block>
+							</th>
+						</th:block>
+						<th rowspan="2">登校日数</th>
+						<th rowspan="2">出席数</th>
+						<th rowspan="2">欠席数</th>
+						<th rowspan="2">遅刻数</th>
+						<th rowspan="2">早退数</th>
+						<th rowspan="2">出停/忌引数</th>
+					</tr>
+					<tr>
+						<th:block th:each="schedule : ${schedule}">
+							<th th:text="${#dates.format(schedule.date, 'E')}"></th>
+						</th:block>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="studentYear, stat : ${studentsYear}">
+						<td th:text="${studentYear.nen}"></td>
+						<td th:text="${studentYear.kumi}"></td>
+						<td th:text="${studentYear.ban}"></td>
+						<div th:each="student : ${studentYear.students}">
+							<td><a th:href="@{/students/{id}/attendance (id=${student.studentId})}"
+									th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
+						</div>
+						<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
+							<td>
+								<th:block th:if="${attendance?.kiroku==1}">／</th:block>
+								<th:block th:if="${attendance?.kiroku==2}">×</th:block>
+								<th:block th:if="${attendance?.kiroku==3}">○</th:block>
+								<th:block th:if="${attendance?.kiroku==4}">○×</th:block>
+								<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
+								<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
+							</td>
+						</th:block>
+						<th:block th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+							<td>
+								<th:block th:text="${attendanceSummary}"></th:block>
+							</td>
+						</th:block>
+
+					</tr>
+				</tbody>
+			</table>
+
+		</th:block>
 
 
-		<th:block th:if="${year > 0}">
+
+		<!--<th:block th:if="${year > 0}">
 			<h1>一覧完成版！！</h1>
 			<table border="1" style="border-collapse: collapse">
 				<thead>
@@ -135,7 +205,7 @@
 				</tbody>
 			</table>
 
-		</th:block>
+		</th:block>-->
 
 
 		<!--<form th:action="@{/students/attendance/add}" th:method="post">

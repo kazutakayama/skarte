@@ -285,7 +285,8 @@ public class GradeService {
         List<Long> ratings = gradeForm.getRatings();
         for (int i = 0; i < studentIds.size(); i++) {
             // 新規登録
-            if (gradeIds.get(i) == null && ratings.get(i) != null) {
+            if ((gradeIds.size() != 0 && ratings.size() != 0 && gradeIds.get(i) == null && ratings.get(i) != null)
+                    || (gradeIds.size() == 0 && ratings.size() != 0)) {
                 Grade grade = new Grade();
                 grade.setStudentId(studentIds.get(i));
                 grade.setYear(years.get(i));
@@ -297,14 +298,14 @@ public class GradeService {
                 gradeRepository.save(grade);
             }
             // 更新
-            if (gradeIds.get(i) != null && ratings.get(i) != null) {
+            if (gradeIds.size() != 0 && ratings.size() != 0 && gradeIds.get(i) != null && ratings.get(i) != null) {
                 Grade updateGrade = gradeRepository.findById(gradeIds.get(i)).orElseThrow();
                 updateGrade.setRating(ratings.get(i));
                 updateGrade.setUpdatedBy(userId);
                 gradeRepository.save(updateGrade);
             }
             // 削除
-            if (gradeIds.get(i) != null && ratings.get(i) == null) {
+            if ((gradeIds.size() != 0 && ratings.size() != 0 && gradeIds.get(i) != null && ratings.get(i) == null) || (gradeIds.size() != 0 && ratings.size() == 0)) {
                 Grade deleteGrade = gradeRepository.findById(gradeIds.get(i)).orElseThrow();
                 gradeRepository.delete(deleteGrade);
 

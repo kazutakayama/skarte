@@ -233,6 +233,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -242,6 +243,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -254,15 +256,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.skarte.bean.StudentsCsv;
 import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.Schedule;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.entity.User;
+import com.example.skarte.form.ScheduleForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.form.StudentYearForm;
 import com.example.skarte.repository.UserRepository;
+import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -280,6 +286,7 @@ public class SettingController {
     // コンストラクタインジェクション
     private final StudentsService studentsService;
     private final StudentsYearService studentsYearService;
+    private final ScheduleService scheduleService;
 
     @Autowired
     private UserRepository userRepository;
@@ -613,6 +620,79 @@ public class SettingController {
         List<User> teachers = userRepository.findAll(Sort.by(Sort.Direction.ASC, "userId"));
         model.addAttribute("teachers", teachers);
         return "setting/teachers";
+    }
+
+    // path: /setting/schedule
+    // スケジュール管理ページを表示
+    @GetMapping("/schedule")
+    public String schedule(Model model) {
+        List<Schedule> schedule = scheduleService.findAll();
+        model.addAttribute("schedule", schedule);
+        return "setting/schedule";
+    }
+
+    // path: /setting/schedule
+    // スケジュール管理ページを表示
+    @GetMapping("/schedule/search")
+//    public String schedule(Model model, @RequestParam("year") Long year, @ModelAttribute("modelMap")ModelMap modelMap) {
+    public String schedule(Model model, @RequestParam("year") Long year) {
+        ArrayList<ArrayList<Calendar>> yearCalendar = scheduleService.yearCalendar(year);
+        model.addAttribute("calendar", yearCalendar);
+        ArrayList<ArrayList<Schedule>> yearSchedule = scheduleService.yearSchedule(year);
+        model.addAttribute("schedule", yearSchedule);
+
+//        ArrayList<ArrayList<Schedule>> yearScheduleRedirect = (ArrayList<ArrayList<Schedule>>)modelMap.get("yearSchedule");
+//        model.addAttribute("schedule", yearScheduleRedirect);
+
+        List<Integer> yearScheduleSize = scheduleService.yearScheduleSize(year);
+        model.addAttribute("size", yearScheduleSize);
+        int yearScheduleCount = scheduleService.yearScheduleCount(year);
+        model.addAttribute("count", yearScheduleCount);
+        model.addAttribute("year", year);
+        return "setting/schedule";
+    }
+
+    // path: /setting/schedule/new
+    // 初回スケジュール一括追加
+    @PostMapping("/schedule/new")
+    public String newSchedule(Model model, @RequestParam("year") Long year, @AuthenticationPrincipal User user) {
+        scheduleService.newSchedule(year, user.getUserId());
+        return "redirect:/setting/schedule";
+    }
+
+    // path: /setting/schedule/add
+    // スケジュール登録
+    @PostMapping("/schedule/add")
+    public String addSchedule(@Validated @ModelAttribute ScheduleForm scheduleForm, @AuthenticationPrincipal User user,
+            BindingResult bindingResult, Model model) {
+        scheduleService.add(user.getUserId(), scheduleForm);
+        return "redirect:/setting/schedule";
+    }
+
+    // path: /setting/schedule/update
+    // スケジュール一括登録・削除
+    @PostMapping("/schedule/update")
+    public String updateSchedule(RedirectAttributes redirectAttributes, ScheduleForm scheduleForm,
+            @AuthenticationPrincipal User user, Model model, @RequestParam("year") Long year) {
+        scheduleService.update(user.getUserId(), scheduleForm);
+       
+        redirectAttributes.addFlashAttribute("year", year);
+
+//        ArrayList<ArrayList<Schedule>> yearSchedule = scheduleService.yearSchedule(year);
+//        redirectAttributes.addFlashAttribute("schedule", yearSchedule);
+//
+////        ModelMap modelMap = new ModelMap();
+////        modelMap.addAttribute("yearSchedule", yearSchedule);
+////        redirectAttributes.addFlashAttribute("modelMap", modelMap);
+//
+//        ArrayList<ArrayList<Calendar>> yearCalendar = scheduleService.yearCalendar(year);
+//        redirectAttributes.addFlashAttribute("calendar", yearCalendar);
+//        List<Integer> yearScheduleSize = scheduleService.yearScheduleSize(year);
+//        redirectAttributes.addFlashAttribute("size", yearScheduleSize);
+//        int yearScheduleCount = scheduleService.yearScheduleCount(year);
+//        redirectAttributes.addFlashAttribute("count", yearScheduleCount);
+
+        return "redirect:/setting/schedule/search?year=" + year;
     }
 
 }

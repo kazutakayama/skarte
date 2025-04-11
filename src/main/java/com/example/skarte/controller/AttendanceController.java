@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
+import com.example.skarte.entity.Schedule;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.entity.User;
 import com.example.skarte.form.AttendanceForm;
 import com.example.skarte.form.GradeForm;
 import com.example.skarte.service.AttendanceService;
+import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 
@@ -38,6 +40,8 @@ public class AttendanceController {
     private final StudentsService studentsService;
     private final StudentsYearService studentsYearService;
     private final AttendanceService attendanceService;
+    private final ScheduleService scheduleService;
+
 
     // path: /attendance
     @GetMapping("")
@@ -67,8 +71,14 @@ public class AttendanceController {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         model.addAttribute("resultSize", result.size());
-        List<Calendar> monthCalendar = attendanceService.monthCalendar(year, month);
-        model.addAttribute("calendar", monthCalendar);
+//        List<Calendar> monthCalendar = attendanceService.monthCalendar(year, month);
+//        model.addAttribute("calendar", monthCalendar);
+        
+        List<Schedule> monthSchedule = scheduleService.monthSchedule(year, month);
+        model.addAttribute("schedule", monthSchedule);
+        int monthScheduleSize = scheduleService.monthScheduleSize(year, month);
+        model.addAttribute("size", monthScheduleSize);
+        
 
         ArrayList<ArrayList<Attendance>> attendanceMonth = attendanceService.attendanceMonth(year, nen, kumi, month);
         model.addAttribute("attendance", attendanceMonth);
@@ -85,15 +95,20 @@ public class AttendanceController {
     }
 
     // path: /attendance/edit
-    // 出席編集画面
+    // 出席編集画面を表示
     @PostMapping("/edit")
     public String edit(Model model, @RequestParam("year") Long year, @RequestParam("nen") Long nen,
-            @RequestParam("kumi") Long kumi, @RequestParam("month") Long month, @RequestParam("date") Long date) {
+            @RequestParam("kumi") Long kumi, @RequestParam("month") Long month, @RequestParam("day") Long day) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         model.addAttribute("resultSize", result.size());
         List<Calendar> monthCalendar = attendanceService.monthCalendar(year, month);
         model.addAttribute("calendar", monthCalendar);
+        
+        List<Schedule> monthSchedule = scheduleService.monthSchedule(year, month);
+        model.addAttribute("schedule", monthSchedule);
+        int monthScheduleSize = scheduleService.monthScheduleSize(year, month);
+        model.addAttribute("size", monthScheduleSize);
 
         ArrayList<ArrayList<Attendance>> attendanceMonth = attendanceService.attendanceMonth(year, nen, kumi, month);
         model.addAttribute("attendance", attendanceMonth);
@@ -106,13 +121,13 @@ public class AttendanceController {
         model.addAttribute("nen", nen);
         model.addAttribute("kumi", kumi);
         model.addAttribute("month", month);
-        model.addAttribute("date", date);
+        model.addAttribute("day", day);
 
         // あとでサービスに書くかも
         Calendar cal = Calendar.getInstance();
         int nendo = Integer.valueOf(year.toString());
         int tsuki = Integer.valueOf(month.toString());
-        int hi = Integer.valueOf(date.toString());
+        int hi = Integer.valueOf(day.toString());
         if (tsuki <= 2) {
             nendo = nendo + 1;
         }

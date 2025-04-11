@@ -182,14 +182,14 @@
 								<th:block th:text="${grade?.rating}"></th:block>
 								<th:block
 									th:if="${term == (stat.index + 9)/9 && subject == (stat.index +((stat.index + 9)/9))%10}">
-									<input class="form-control" type="hidden" name="gradeIds[]"
+									<input class="form-control" type="number" name="gradeIds[]"
 										th:value="${grade?.gradeId}" />
-									<input class="form-control" type="hidden" name="studentIds[]"
+									<input class="form-control" type="text" name="studentIds[]"
 										th:value="${studentYear.studentId}" />
-									<input class="form-control" type="hidden" name="years[]" th:value="${year}" />
-									<input class="form-control" type="hidden" name="terms[]"
+									<input class="form-control" type="number" name="years[]" th:value="${year}" />
+									<input class="form-control" type="number" name="terms[]"
 										th:value="${(stat.index + 9)/9}" />
-									<input class="form-control" type="hidden" name="subjects[]"
+									<input class="form-control" type="number" name="subjects[]"
 										th:value="${(stat.index +((stat.index + 9)/9))%10}" />
 									<input class="form-control" type="number" name="ratings[]"
 										th:value="${grade?.rating}" />

@@ -203,6 +203,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
 import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.Schedule;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.entity.User;
@@ -212,6 +213,7 @@ import com.example.skarte.form.StudentForm;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 import com.example.skarte.service.KarteService;
+import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.AttendanceService;
 import com.example.skarte.service.GradeService;
 
@@ -230,6 +232,7 @@ public class StudentsController {
     private final KarteService karteService;
     private final AttendanceService attendanceService;
     private final GradeService gradeService;
+    private final ScheduleService scheduleService;
 
 //    @Autowired
 //    private StudentsService studentsService;
@@ -415,6 +418,11 @@ public class StudentsController {
 
         List<Calendar> monthCalendar = attendanceService.monthCalendar(year, month);
         model.addAttribute("calendar", monthCalendar);
+        
+        List<Schedule> monthSchedule = scheduleService.monthSchedule(year, month);
+        model.addAttribute("schedule", monthSchedule);
+        int monthScheduleSize = scheduleService.monthScheduleSize(year, month);
+        model.addAttribute("size", monthScheduleSize);
 
         List<Attendance> studentAttendanceMonth = attendanceService.studentAttendanceMonth(id, year, month);
         model.addAttribute("attendance", studentAttendanceMonth);

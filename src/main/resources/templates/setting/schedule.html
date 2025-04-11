@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+
+		<h1>スケジュール管理</h1>
+		<form th:action="@{/setting/schedule/search}" th:method="get">
+			<select name="year">
+				<option value="2023" th:selected="${year == 2023}">2023</option>
+				<option value="2024" th:selected="${year == 2024}">2024</option>
+				<option value="2025" th:selected="${year == 2025}">2025</option>
+				<option value="2026" th:selected="${year == 2026}">2026</option>
+				<option value="2027" th:selected="${year == 2027}">2027</option>
+				<option value="2028" th:selected="${year == 2028}">2028</option>
+				<option value="2029" th:selected="${year == 2029}">2029</option>
+				<option value="2030" th:selected="${year == 2030}">2030</option>
+			</select>
+			<button class="btn btn-default" type="submit">表示</button>
+		</form>
+
+		<th:block th:if="${year != null}">
+			<span th:text="${year}" />年度
+
+			<th:block th:if="${count == 0}">
+				
+				<form th:action="@{/setting/schedule/new}" th:method="post">
+					<input class="form-control" type="hidden" name="year" th:value="${year}" />
+					<button class="btn btn-default" type="submit">一括追加</button>
+				</form>
+			</th:block>
+
+
+			<th:block th:if="${count != 0}">
+				年間登校日数:<span th:text="${count}" />日
+				<form th:action="@{/setting/schedule/update}" th:method="post">
+					<input class="form-control" type="hidden" name="year" th:value="${year}" />
+					<button class="btn btn-default" type="submit">更新</button>
+					<br>
+
+					<!--<table border="1" style="border-collapse: collapse" th:each="calM, stat : ${calendar}">-->
+					<table border="1" style="border-collapse: collapse" th:each="scheduleM, stat : ${schedule}">
+						<tr>
+							<!--<th rowspan="2" 　th:text="${#dates.format(calM, 'M月')}"></th>-->
+							<th rowspan="2" 　th:text="${#dates.format(scheduleM[0].date, 'M月')}"></th>
+							<!--<th:block th:each="calD, stat : ${calM}">-->
+							<th:block th:each="scheduleD : ${scheduleM}">
+								<th>
+									<!--<div th:text="${#dates.format(calD, 'd')}"></div>-->
+									<div th:text="${#dates.format(scheduleD.date, 'd')}"></div>
+									<!--<input class="form-control" type="date" name="dates[]"
+									th:value="${#dates.format(calD, 'yyyy-MM-dd')}" />-->
+								</th>
+							</th:block>
+						</tr>
+						<tr>
+							<!--<th:block th:each="calD : ${calM}">-->
+							<th:block th:each="scheduleD : ${scheduleM}">
+								<!--<th th:text="${#dates.format(calD, 'E')}"></th>-->
+								<th th:text="${#dates.format(scheduleD.date, 'E')}"></th>
+							</th:block>
+						</tr>
+						<tr>
+							<th:block>
+								<td>月登校日数:<span th:text="${size[__${stat.index}__]}" /></td>
+							</th:block>
+							<!--<th:block th:each="schedule, stat : ${schedule[__${stat.index}__]}">-->
+							<th:block th:each="scheduleD : ${scheduleM}">
+								<td>
+									<!--<input class="form-control" type="hidden" name="scheduleIds[]"
+										th:value="${schedule?.scheduleId}" />
+									<select name="holidays[]" th:value="${schedule?.holiday}">
+										<option value="false" th:selected="${schedule?.holiday == false}"></option>
+										<option value="true" th:selected="${schedule?.holiday == true}">休</option>
+									</select>
+									<th:block th:if="${schedule?.holiday == true}">
+										<div>休</div>
+									</th:block>
+									<th:block th:if="${schedule?.holiday == false}">
+										<div>　</div>
+									</th:block>-->
+									<input class="form-control" type="hidden" name="scheduleIds[]"
+										th:value="${scheduleD?.scheduleId}" />
+									<select name="holidays[]" th:value="${scheduleD?.holiday}">
+										<option value="false" th:selected="${scheduleD?.holiday == false}"></option>
+										<option value="true" th:selected="${scheduleD?.holiday == true}">休</option>
+									</select>
+									<th:block th:if="${scheduleD?.holiday == true}">
+										<div>休</div>
+									</th:block>
+									<th:block th:if="${scheduleD?.holiday == false}">
+										<div>　</div>
+									</th:block>
+								</td>
+							</th:block>
+						</tr>
+					</table>
+
+				</form>
+			</th:block>
+
+			<h2>お試し</h2>
+
+		</th:block>
+
+		<h2>スケジュール追加</h2>
+		<form th:action="@{/setting/schedule/add}" th:method="post">
+			<div class="form-group">
+				<label class="control-label">日付</label>
+				<input class="form-control" type="date" name="date" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">休日</label>
+				<input class="form-control" type="checkbox" name="holiday" value="true" />
+			</div>
+			<button class="btn btn-default" type="submit">登録</button>
+		</form>
+
+		<h2>スケジュール複数追加</h2>
+		<form th:action="@{/setting/schedule/update}" th:method="post">
+			<div class="form-group">
+				<label class="control-label">id</label>
+				<input class="form-control" type="number" name="scheduleIds[]" />
+
+
+				<label class="control-label">日付</label>
+				<input class="form-control" type="date" name="dates[]" />
+
+
+				<label class="control-label">休日</label>
+
+				<input class="form-control" type="checkbox" name="holidays[]" value="true" />
+				<!--<input class="form-control" type="hidden" name="!holidays[]" value="false" />-->
+
+			</div>
+			<div class="form-group">
+				<label class="control-label">id</label>
+				<input class="form-control" type="number" name="scheduleIds[]" />
+
+
+				<label class="control-label">日付</label>
+				<input class="form-control" type="date" name="dates[]" />
+
+
+				<label class="control-label">休日</label>
+
+				<input class="form-control" type="checkbox" name="holidays[]" value="true" />
+				<!--<input class="form-control" type="hidden" name="!holidays[]" value="false" />-->
+
+			</div>
+			<button class="btn btn-default" type="submit">登録</button>
+		</form>
+
+		<br>
+		<a href="/setting">もどる</a>
+	</div>
+</body>
+
+</html>
