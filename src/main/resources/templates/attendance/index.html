@@ -5,298 +5,172 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>出席簿一覧</h1>
+		<h2>出席簿一覧</h2>
 
-		<form th:action="@{/attendance}" th:method="post">
-			<label class="control-label">クラス検索</label>
+		<form th:action="@{/attendance/search}" th:method="get">
 			<select type="number" name="year" th:value="${year}">
-				<option value="2023">2023</option>
-				<option value="2024" selected>2024</option>
-				<option value="2025">2025</option>
-				<option value="2026">2026</option>
-				<option value="2027">2027</option>
-				<option value="2028">2028</option>
-				<option value="2029">2029</option>
-				<option value="2030">2030</option>
+				<option value="2023"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2023' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2023}">
+					2023</option>
+				<option value="2024"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2024}">
+					2024</option>
+				<option value="2025"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2025}">
+					2025</option>
+				<option value="2026"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2026}">
+					2026</option>
+				<option value="2027"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2027}">
+					2027</option>
+				<option value="2028"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2028}">
+					2028</option>
+				<option value="2029"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2029}">
+					2029</option>
+				<option value="2030"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2031' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2030}">
+					2030</option>
 			</select>
 			<label class="control-label">年度</label>
+			<select type="number" name="month">
+				<option value="3"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='4') || month == 3}">4
+				</option>
+				<option value="4"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='5') || month == 4}">5
+				</option>
+				<option value="5"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='6') || month == 5}">6
+				</option>
+				<option value="6"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='7') || month == 6}">7
+				</option>
+				<option value="7"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='8') || month == 7}">8
+				</option>
+				<option value="8"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='9') || month == 8}">9
+				</option>
+				<option value="9"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='10') || month == 9}">10
+				</option>
+				<option value="10"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='11') || month == 10}">11
+				</option>
+				<option value="11"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='12') || month == 11}">12
+				</option>
+				<option value="0"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='1') || month == 0}">1
+				</option>
+				<option value="1"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='2') || month == 1}">2
+				</option>
+				<option value="2"
+					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='3') || month == 2}">3
+				</option>
+			</select>
+			<label class="control-label">月</label>
 			<select type="number" name="nen">
-				<option value="1" selected>1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
+				<option value="1" th:selected="${nen == 1}">1</option>
+				<option value="2" th:selected="${nen == 2}">2</option>
+				<option value="3" th:selected="${nen == 3}">3</option>
 			</select>
 			<label class="control-label">年</label>
 			<select type="number" name="kumi">
-				<option value="0" selected></option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
+				<option value="0" th:selected="${kumi == 0}"></option>
+				<option value="1" th:selected="${kumi == 1}">1</option>
+				<option value="2" th:selected="${kumi == 2}">2</option>
+				<option value="3" th:selected="${kumi == 3}">3</option>
+				<option value="4" th:selected="${kumi == 4}">4</option>
+				<option value="5" th:selected="${kumi == 5}">5</option>
+				<option value="6" th:selected="${kumi == 6}">6</option>
 			</select>
 			<label class="control-label">組</label>
-
-			<select type="number" name="month">
-				<option value="3">4</option>
-				<option value="4">5</option>
-				<option value="5">6</option>
-				<option value="6">7</option>
-				<option value="7">8</option>
-				<option value="8">9</option>
-				<option value="9">10</option>
-				<option value="10">11</option>
-				<option value="11">12</option>
-				<option value="0">1</option>
-				<option value="1">2</option>
-				<option value="2">3</option>
-			</select>
-			<label class="control-label">月</label>
 			<button class="btn btn-default" type="submit">検索</button>
 		</form>
 
+		<th:block th:if="${year > 0}">
+			<div><span th:if="${year > 0}"><label th:text="${year}"></label>年度</span>
+				<span th:if="${month >= 0}"><label th:text="${month}+1"></label>月</span>
+				<span th:if="${nen > 0}"><label th:text="${nen}"></label>年</span>
+				<span th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</span>
+			</div>
+			<div th:if="${schedule[0] == null}">スケジュールが登録されていません</div>
+			<div th:if="${#lists.size(studentsYear) == 0}">在籍している生徒はいません</div>
 
-		<div th:if="${year > 0}"><label th:text="${year}"></label>年度</div>
-		<div th:if="${nen > 0}"><label th:text="${nen}"></label>年</div>
-		<div th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</div>
-		<div th:if="${month >= 0}"><label th:text="${month}+1"></label>月</div>
-		<div>月登校日数！</div>
 
-		<h1>お試し！出欠まとめ</h1>
-		<th:block th:each="attendanceSummary : ${attendanceSummary}">
-
-			<th:block th:text="${attendanceSummary}"></th:block>
-
-		</th:block>
-		
-		
-
-		<th:block th:if="${year > 0 && size > 0}">
-			<h1>一覧完成版！！（改良）</h1>
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th rowspan="2">年</th>
-						<th rowspan="2">組</th>
-						<th rowspan="2">番</th>
-						<th rowspan="2">名前</th>
-						<th:block th:each="schedule : ${schedule}">
-							<th>
-								<form th:action="@{/attendance/edit}" th:method="post">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="month" th:value="${month}" />
-									<input class="form-control" type="hidden" name="day"
-										th:value="${#dates.format(schedule.date, 'd')}" />
-									<button class="btn btn-default" type="submit">🖉</button>
-								</form>
-								<th:block th:text="${#dates.format(schedule.date, 'd')}"></th:block>
-							</th>
-						</th:block>
-						<th rowspan="2">登校日数</th>
-						<th rowspan="2">出席数</th>
-						<th rowspan="2">欠席数</th>
-						<th rowspan="2">遅刻数</th>
-						<th rowspan="2">早退数</th>
-						<th rowspan="2">出停/忌引数</th>
-					</tr>
-					<tr>
-						<th:block th:each="schedule : ${schedule}">
-							<th th:text="${#dates.format(schedule.date, 'E')}"></th>
-						</th:block>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="studentYear, stat : ${studentsYear}">
-						<td th:text="${studentYear.nen}"></td>
-						<td th:text="${studentYear.kumi}"></td>
-						<td th:text="${studentYear.ban}"></td>
-						<div th:each="student : ${studentYear.students}">
-							<td><a th:href="@{/students/{id}/attendance (id=${student.studentId})}"
-									th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-						</div>
-						<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
-							<td>
-								<th:block th:if="${attendance?.kiroku==1}">／</th:block>
-								<th:block th:if="${attendance?.kiroku==2}">×</th:block>
-								<th:block th:if="${attendance?.kiroku==3}">○</th:block>
-								<th:block th:if="${attendance?.kiroku==4}">○×</th:block>
-								<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
-								<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
-							</td>
-						</th:block>
-						<th:block th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
-							<td>
-								<th:block th:text="${attendanceSummary}"></th:block>
-							</td>
-						</th:block>
-
-					</tr>
-				</tbody>
-			</table>
-
+			<th:block th:if="${schedule[0] != null && #lists.size(studentsYear) > 0}">
+				<table border="1" style="border-collapse: collapse">
+					<thead>
+						<tr>
+							<th rowspan="2">年</th>
+							<th rowspan="2">組</th>
+							<th rowspan="2">番</th>
+							<th rowspan="2">名前</th>
+							<th:block th:each="schedule : ${schedule}">
+								<th>
+									<th:block th:if="${schedule.holiday == false}">
+										<form th:action="@{/attendance/edit}" th:method="get">
+											<input class="form-control" type="hidden" name="year" th:value="${year}" />
+											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+											<input class="form-control" type="hidden" name="month"
+												th:value="${month}" />
+											<input class="form-control" type="hidden" name="day"
+												th:value="${#dates.format(schedule.date, 'd')}" />
+											<button class="btn btn-default" type="submit">🖉</button>
+										</form>
+									</th:block>
+									<th:block th:text="${#dates.format(schedule.date, 'd')}"></th:block>
+								</th>
+							</th:block>
+							<th rowspan="2">登校日数</th>
+							<th rowspan="2">出席数</th>
+							<th rowspan="2">欠席数</th>
+							<th rowspan="2">遅刻数</th>
+							<th rowspan="2">早退数</th>
+							<th rowspan="2">出停/忌引数</th>
+						</tr>
+						<tr>
+							<th:block th:each="schedule : ${schedule}">
+								<th th:text="${#dates.format(schedule.date, 'E')}"></th>
+							</th:block>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="studentYear, stat : ${studentsYear}">
+							<td th:text="${studentYear.nen}"></td>
+							<td th:text="${studentYear.kumi}"></td>
+							<td th:text="${studentYear.ban}"></td>
+							<div th:each="student : ${studentYear.students}">
+								<td><a th:href="@{/students/{id}/attendance (id=${student.studentId})}"
+										th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
+							</div>
+							<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
+								<td>
+									<th:block th:if="${attendance?.kiroku==1}">／</th:block>
+									<th:block th:if="${attendance?.kiroku==2}">×</th:block>
+									<th:block th:if="${attendance?.kiroku==3}">○</th:block>
+									<th:block th:if="${attendance?.kiroku==4}">○×</th:block>
+									<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
+									<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
+								</td>
+							</th:block>
+							<th:block th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+								<td>
+									<th:block th:text="${attendanceSummary}"></th:block>
+								</td>
+							</th:block>
+						</tr>
+					</tbody>
+				</table>
+			</th:block>
 		</th:block>
 
-
-
-		<!--<th:block th:if="${year > 0}">
-			<h1>一覧完成版！！</h1>
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th rowspan="2">年</th>
-						<th rowspan="2">組</th>
-						<th rowspan="2">番</th>
-						<th rowspan="2">名前</th>
-						<th:block th:each="calendar : ${calendar}">
-							<th>
-								<form th:action="@{/attendance/edit}" th:method="post">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="month" th:value="${month}" />
-									<input class="form-control" type="hidden" name="date"
-										th:value="${#dates.format(calendar, 'd')}" />
-									<button class="btn btn-default" type="submit">🖉</button>
-								</form>
-								<th:block th:text="${#dates.format(calendar, 'd')}"></th:block>
-							</th>
-						</th:block>
-						<th rowspan="2">登校日数</th>
-						<th rowspan="2">出席数</th>
-						<th rowspan="2">欠席数</th>
-						<th rowspan="2">遅刻数</th>
-						<th rowspan="2">早退数</th>
-						<th rowspan="2">出停/忌引数</th>
-					</tr>
-					<tr>
-						<th:block th:each="calendar : ${calendar}">
-							<th th:text="${#dates.format(calendar, 'E')}"></th>
-						</th:block>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="studentYear, stat : ${studentsYear}">
-						<td th:text="${studentYear.nen}"></td>
-						<td th:text="${studentYear.kumi}"></td>
-						<td th:text="${studentYear.ban}"></td>
-						<div th:each="student : ${studentYear.students}">
-							<td><a th:href="@{/students/{id}/attendance (id=${student.studentId})}"
-									th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-						</div>
-						<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
-							<td>
-								<th:block th:if="${attendance?.kiroku==1}">／</th:block>
-								<th:block th:if="${attendance?.kiroku==2}">×</th:block>
-								<th:block th:if="${attendance?.kiroku==3}">○</th:block>
-								<th:block th:if="${attendance?.kiroku==4}">○×</th:block>
-								<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
-								<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
-							</td>
-						</th:block>
-						<th:block th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
-							<td>
-								<th:block th:text="${attendanceSummary}"></th:block>
-							</td>
-						</th:block>
-
-					</tr>
-				</tbody>
-			</table>
-
-		</th:block>-->
-
-
-		<!--<form th:action="@{/students/attendance/add}" th:method="post">
-			<div class="form-group">
-				<label class="control-label">生徒番号</label>
-				<input class="form-control" type="text" name="studentId" />
-			</div>
-			<div class="form-group">
-				<label class="control-label">日付</label>
-				<input class="form-control" type="date" name="date" />
-			</div>
-			<div class="form-group">
-				<label class="control-label">遅刻</label>
-				<select name="chikoku">
-					<option value="0"> </option>
-					<option value="1">遅刻</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">早退</label>
-				<select name="soutai">
-					<option value="0"> </option>
-					<option value="1">早退</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">欠席</label>
-				<select name="kesseki">
-					<option value="0"> </option>
-					<option value="1">欠席</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">出停</label>
-				<select name="syuttei">
-					<option value="0"> </option>
-					<option value="1">出停</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="control-label">忌引</label>
-				<select name="kibiki">
-					<option value="0"> </option>
-					<option value="1">忌引</option>
-				</select>
-			</div>
-			<button class="btn btn-default" type="submit">登録</button>
-		</form>
-		
-		<!--<th:block>
-			<div th:text="${cal}"></div>
-			<div th:text="${#dates.format(cal, 'yyyy-MM-dd')}"></div>
-			<div th:text="${#dates.format(cal, 'E')}"></div>
-			<div th:text="${date}"></div>
-			<div th:text="${#dates.format(date, 'E')}"></div>
-		</th:block>-->
-
-		<!--<th:block th:each="calendar : ${calendar}">
-			<div th:text="${#dates.format(calendar, 'yyyy-MM-dd E')}"></div>
-		</th:block>
-
-		<table>
-			<thead>
-				<tr>
-					<th>生徒番号</th>
-					<th>日付</th>
-					<th>遅刻</th>
-					<th>早退</th>
-					<th>欠席</th>
-					<th>出停</th>
-					<th>忌引</th>
-					<th>編集</th>
-					<th>削除</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="attendance : ${attendance}">
-					<td th:text="${attendance.studentId}"></td>
-					<td th:text="${attendance.date}"></td>
-					<td th:text="${attendance.chikoku}"></td>
-					<td th:text="${attendance.soutai}"></td>
-					<td th:text="${attendance.kesseki}"></td>
-					<td th:text="${attendance.syuttei}"></td>
-					<td th:text="${attendance.kibiki}"></td>
-					<td><a th:href="@{/students/attendance/{id}/edit(id=${attendance.attendanceId})}"
-							class="edit">編集</a></td>
-					<td><a th:href="@{/students/attendance/{id}/delete(id=${attendance.attendanceId})}"
-							class="delete">削除</a></td>
-				</tr>
-			</tbody>
-		</table>-->
 	</div>
 </body>
 

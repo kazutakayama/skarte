@@ -86,4 +86,7 @@ public class StudentForm extends EntityBase { // EntityBase
 
     /** メモ */
     private String memo = null;
+    
+    /** 転出 */
+    private boolean transferred = false;
 }

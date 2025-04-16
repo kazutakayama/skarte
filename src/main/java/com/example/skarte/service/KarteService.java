@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Student;
+import com.example.skarte.form.KarteForm;
 import com.example.skarte.repository.KarteRepository;
 import com.example.skarte.repository.StudentRepository;
 import com.example.skarte.repository.StudentYearRepository;
@@ -32,7 +33,7 @@ public class KarteService {
      * @return
      */
     public List<Karte> findAllByStudentId(String studentId) {
-        return karteRepository.findAllByStudentId(studentId);
+        return karteRepository.findAllByStudentIdOrderByDateDesc(studentId);
     }
 
     /**
@@ -45,26 +46,17 @@ public class KarteService {
         return karteRepository.findById(id).orElseThrow();
     }
 
-//    /**
-//     * カルテ追加
-//     * 
-//     * @param karte
-//     * @return
-//     */
-//    public void addKarte(Long userId, Karte karte) {
-//        karte.setCreatedBy(userId);
-//        karte.setUpdatedBy(userId);
-//        karteRepository.save(karte);
-//    }
-
     /**
      * カルテ追加
      * 
      * @param karte
      * @return
      */
-    public void addKarte(String userId, String studentId, Karte karte) {
-        karte.setStudentId(karte.getStudentId());
+    public void add(String userId, KarteForm karteForm) {
+        Karte karte = new Karte();
+        karte.setStudentId(karteForm.getStudentId());
+        karte.setDate(karteForm.getDate());
+        karte.setContents(karteForm.getContents());
         karte.setCreatedBy(userId);
         karte.setUpdatedBy(userId);
         karteRepository.save(karte);
@@ -76,14 +68,12 @@ public class KarteService {
      * @param karte
      * @return
      */
-    public Karte updateKarte(Long karteId, String studentId, Karte karte) {
-        karte.setStudentId(karte.getStudentId());
-        Karte targetKarte = karteRepository.findById(karteId).orElseThrow();
-        targetKarte.setDate(karte.getDate());
-        targetKarte.setContents(karte.getContents());
-        targetKarte.setUpdatedBy(karte.getUpdatedBy());
-        karteRepository.save(targetKarte);
-        return targetKarte;
+    public void update(Long id, String userId, KarteForm karteForm) {
+        Karte karte = karteRepository.findById(id).orElseThrow();
+        karte.setDate(karteForm.getDate());
+        karte.setContents(karteForm.getContents());
+        karte.setUpdatedBy(userId);
+        karteRepository.save(karte);
     }
 
     /**
@@ -91,11 +81,9 @@ public class KarteService {
      * 
      * @param karte
      */
-    public Karte deleteKarte(Long karteId, String studentId, Karte karte) {
-        karte.setStudentId(karte.getStudentId());
-        Karte deleteKarte = karteRepository.findById(karteId).orElseThrow();
-        karteRepository.delete(deleteKarte);
-        return deleteKarte;
+    public void deleteKarte(Long id) {
+        Karte karte = karteRepository.findById(id).orElseThrow();
+        karteRepository.delete(karte);
     }
 
 //    /**

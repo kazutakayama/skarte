@@ -3,43 +3,12 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
-	<div layout:fragment="content">
-		<header>
-			<div th:each="student : ${students}">
-				<table>
-					<thead>
-						<tr>
-							<th>生徒番号</th>
-							<th>姓</th>
-							<th>名</th>
-							<th>せい</th>
-							<th>めい</th>
-							<th>生年月日</th>
-							<th>性別</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td th:text="${student.studentId}"></td>
-							<td th:text="${student.lastName}"></td>
-							<td th:text="${student.firstName}"></td>
-							<td th:text="${student.lastNameKana}"></td>
-							<td th:text="${student.firstNameKana}"></td>
-							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
-							<td th:text="${student.gender}"></td>
-						</tr>
-					</tbody>
-				</table>
-				<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
-				<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
-				<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
-				<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
-			</div>
-		</header>
+	<div layout:fragment="students">
 
 		<h2>カルテ編集</h2>
 		<div th:each="karte : ${karte}">
 			<form th:action="@{/students/{id}/updateKarte (id=${karte.karteId})}" th:method="post" th:object="${karte}">
+				<input class="form-control" type="hidden" th:field="*{studentId}" />
 				<div class="form-group">
 					<label class="control-label">日付</label>
 					<input class="form-control" type="date" th:field="*{date}" />
@@ -50,42 +19,33 @@
 				</div>
 				<button class="btn btn-default" type="submit">更新</button>
 			</form>
+			<div><a th:href="@{/students/{id}/karte (id=${karte.studentId})}">キャンセル</a></div>
 
-			<td><a class="buttons clearfix" th:href="@{/students/{id}/deleteKarte (id=${karte.karteId})}">
+			<div><a th:href="@{/students/{id}/deleteKarte (id=${karte.karteId})}">
 					削除
-				</a></td>
+				</a></div>
 		</div>
 
-
-
-
-
-
-
-
-		<table>
+		<table border="1" style="border-collapse: collapse">
 			<thead>
 				<tr>
 					<th>日付</th>
 					<th>内容</th>
 					<th>更新者</th>
 					<th>更新日時</th>
-					<th>作成者</th>
-					<th>作成日時</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="karte : ${karte}">
-					<td th:text="${karte.date}"></td>
+				<tr>
+					<td th:text="${#dates.format(karte.date, 'yyyy/M/d')}"></td>
 					<td th:text="${karte.contents}"></td>
-					<td th:text="${karte.updatedBy}"></td>
-					<td th:text="${karte.updatedAt}"></td>
-					<td th:text="${karte.createdBy}"></td>
-					<td th:text="${karte.createdAt}"></td>
+					<td th:text="${updateUser[__karte.updatedBy__]}"></td>
+					<td th:text="${#dates.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
+				</tr>
 			</tbody>
-		</table>
-		<a th:href="@{/students/{id}/karte (id=${karte.studentId})}">キャンセル</a>
-		<a href="/students">生徒一覧にもどる</a>
+		</table> 　　　　　　　　
+
+
 	</div>
 </body>
 

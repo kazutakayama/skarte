@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+
+		<h2>クラス編集</h2>
+		<div>削除の処理は年度当初におこなってください。</div>
+		<div>削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。</div>
+		<div>すでに在籍している生徒が、その年の出席簿・成績のデータを持っている場合、その生徒の削除の処理はおこなえません。</div>
+
+		<form th:action="@{/setting/class/list}" th:method="get">
+			<input type="hidden" name="year" th:value="${studentYear.year}" />
+			<input type="hidden" name="nen" th:value="${studentYear.nen}" />
+			<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
+			<button class="btn btn-default" type="submit">クラス検索にもどる</button>
+		</form>
+
+		<th:block th:if="${dataExists == false}">
+			<form th:action="@{/setting/class/{id}/delete (id=${studentYear.studentYearId})}" th:method="post">
+				<input type="hidden" name="year" th:value="${studentYear.year}" />
+				<input type="hidden" name="nen" th:value="${studentYear.nen}" />
+				<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
+				<button class="btn btn-default" type="submit">削除</button>
+			</form>
+		</th:block>
+		<th:block th:if="${dataExists == true}">
+			この生徒は削除できません
+		</th:block>
+
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<th>年度</th>
+				<th>年</th>
+				<th>組</th>
+				<th>出席番号</th>
+				<th>生徒番号</th>
+				<th>名前</th>
+				<th>なまえ</th>
+				<th>生年月日</th>
+				<th>性別</th>
+
+			</tr>
+			<tr>
+				<td th:text="${studentYear.year}"></td>
+				<td th:text="${studentYear.nen}"></td>
+				<td th:text="${studentYear.kumi}"></td>
+				<td th:text="${studentYear.ban}"></td>
+				<td th:text="${studentYear.studentId}"></td>
+				<div th:each="student : ${studentYear.students}">
+					<td th:text="${student.lastName + ' ' + student.firstName}"></td>
+					<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
+					<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+					<td th:text="${gender[__student.gender__]}"></td>
+				</div>
+			</tr>
+		</table>
+		<br>
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<th>写真</th>
+			</tr>
+			<tr>
+				<td>
+					<th:block th:if="${studentYear.path != null}">★写真を表示</th:block>
+					<th:block th:if="${studentYear.path == null}">★写真を追加するフォームを追加</th:block>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+
+</html>

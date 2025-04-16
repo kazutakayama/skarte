@@ -2,6 +2,7 @@ package com.example.skarte.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,9 +14,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import com.example.skarte.entity.Attendance;
+import com.example.skarte.entity.Grade;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.form.StudentForm;
+import com.example.skarte.repository.AttendanceRepository;
+import com.example.skarte.repository.GradeRepository;
 import com.example.skarte.repository.StudentRepository;
 import com.example.skarte.repository.StudentYearRepository;
 import com.example.skarte.specification.StudentSpecification;
@@ -29,9 +34,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class StudentsService {
-    
+
     private final StudentRepository studentRepository;
     private final StudentYearRepository studentYearRepository;
+    private final AttendanceRepository attendanceRepository;
+    private final GradeRepository gradeRepository;
     private final StudentSpecification studentSpecification;
 
 //    @Autowired
@@ -44,7 +51,6 @@ public class StudentsService {
     // 生徒全取得
     public List<Student> findAll() {
         return studentRepository.findByOrderByUpdatedAtDesc();
-//        return studentRepository.findAll();
     }
 
     // 生徒１件取得
@@ -52,94 +58,44 @@ public class StudentsService {
         return studentRepository.findById(id).orElseThrow();
     }
 
-    // 生徒名検索
-    public List<Student> search(String name) {
+//    // 性別のMap
+//    public Map<Integer, String> gender(){
+//        Map<Integer, String> gender = new HashMap<>();
+//        gender.put(1, "男");
+//        gender.put(2, "女");
+//        gender.put(3, "他");
+//        return gender;
+//    }
+
+    // 生徒検索（生徒名、年度）
+    public List<Student> search(String name, String year) {
         List<Student> result;
         if ("".equals(name)) {
-//            result = studentRepository.findByOrderByUpdatedAtDesc();
-            result = studentRepository.findAll(Sort.by(Sort.Direction.ASC, "studentId"));
+            // すべての生徒
+            if ("0".equals(year)) {
+                result = studentRepository.findAll(Sort.by(Sort.Direction.ASC, "studentId"));
+                // 年度検索
+            } else {
+                result = studentRepository.findAll(Specification.where(studentSpecification.year(year)),
+                        Sort.by(Sort.Direction.ASC, "studentId"));
+            }
         } else {
-            result = studentRepository.findAll(Specification.where(studentSpecification.search(name)), Sort.by(Sort.Direction.ASC, "studentId"));
+            // 名前検索
+            if ("0".equals(year)) {
+                result = studentRepository.findAll(Specification.where(studentSpecification.search(name)),
+                        Sort.by(Sort.Direction.ASC, "studentId"));
+                // 年度・名前検索
+            } else {
+                result = studentRepository.findAll(
+                        Specification.where(studentSpecification.search(name)).and(studentSpecification.year(year)),
+                        Sort.by(Sort.Direction.ASC, "studentId"));
+            }
         }
         return result;
     }
 
-    // 登録年度検索
-    public List<Student> year(String year) {
-         return studentRepository.findAll(Specification.where(studentSpecification.year(year)), Sort.by(Sort.Direction.ASC, "studentId"));
-    }
-
-//    public List<Student> search(String name) {
-//        // 前後の全角半角スペースを削除
-//        String trimedkeyWords = name.strip();
-//
-//        // 全角スペースと半角スペースで区切る
-//        String[] keyWordArray = trimedkeyWords.split("[　 ]", 0);
-//
-//        // 「Select * From students」 + 「Where last_name LIKE '%keyWordArray[0]%'」
-//        return StudentRepository.findAll(Specification.where(studentSpecification.search(keyWordArray[0])));
-//    }
-
-//        List<Student> result;
-//        if ("".equals(lastName)) {
-//            result = studentRepository.findByOrderByUpdatedAtDesc();
-//        } else {
-//            result = studentRepositoryCustom.search(lastName);
-//        }
-//        return result;
-
-//    // 生徒ID検索
-//    public Student getStudent(Long id) {
-//        Optional<Student> map = studentRepository.findById(id); // findById(Long id)の戻り値"student"を取得
-//        // Mapから値を取得
-//        Long studentId = (Long) map.get("studentId");
-//        String lastName = (String) map.get("lastName");
-//        String firstName = (String) map.get("firstName");
-//        String lastNameKana = (String) map.get("lastNameKana");
-//        String firstNameKana = (String) map.get("firstNameKana");
-//        Date birth = (Date) map.get("birth");
-//        int gender = (Integer) map.get("gender");
-//
-////        String family1 = (String) map.get("family1");
-////        String family2 = (String) map.get("family2");
-////        Long tel1 = (Long) map.get("tel1");
-////        Long tel2 = (Long) map.get("tel2");
-////        Long tel3 = (Long) map.get("tel3");
-////        Long tel4 = (Long) map.get("tel4");
-////        Long postalCode = (Long) map.get("postalCode");
-////        String adress = (String) map.get("adress");
-////        String memo = (String) map.get("memo");
-////        boolean transferred = (Boolean) map.get("transferred");
-//
-//        // Studentクラスに値をセット
-//        Student student = new Student();
-//        student.setStudentId(studentId);
-//        student.setLastName(lastName);
-//        student.setFirstName(firstName);
-//        student.setLastNameKana(lastNameKana);
-//        student.setFirstName(firstNameKana);
-//        student.setBirth(birth);
-//        student.setGender(gender);
-//        return student;
-//    }
-
-//    // 生徒名検索
-//    public List<Student> findByLastName(Long id) {
-//        return studentRepository.findByLastName(id);
-//    }
-
-//    // 生徒名検索
-//    public List<Student> findAllByLastName(String lastName) {
-//        return studentRepository.findAllByLastName(lastName);
-//    }
-
-//    // 生徒名でフィルターをかける
-//    public List<Student> findAllByLastName(String lastName) {
-//        return studentRepository.findAllByLastName(lastName);
-//    }
-
     // 生徒追加
-    public void addStudent(String userId, StudentForm form) {
+    public void add(String userId, StudentForm form) {
         Student student = new Student();
         student.setStudentId(form.getStudentId());
         student.setLastName(form.getLastName());
@@ -162,27 +118,27 @@ public class StudentsService {
         studentRepository.save(student);
     }
 
-    // 生徒編集
-    public Student updateStudent(String studentId, StudentForm form) {
-        Student targetStudent = studentRepository.findById(studentId).orElseThrow();
-        targetStudent.setLastName(form.getLastName());
-        targetStudent.setFirstName(form.getFirstName());
-        targetStudent.setLastNameKana(form.getLastNameKana());
-        targetStudent.setFirstNameKana(form.getFirstNameKana());
-        targetStudent.setBirth(form.getBirth());
-        targetStudent.setGender(form.getGender());
-        targetStudent.setFamily1(form.getFamily1());
-        targetStudent.setFamily2(form.getFamily2());
-        targetStudent.setTel1(form.getTel1());
-        targetStudent.setTel2(form.getTel2());
-        targetStudent.setTel3(form.getTel3());
-        targetStudent.setTel4(form.getTel4());
-        targetStudent.setPostalCode(form.getPostalCode());
-        targetStudent.setAdress(form.getAdress());
-        targetStudent.setMemo(form.getMemo());
-        targetStudent.setUpdatedBy(form.getUpdatedBy());
-        studentRepository.save(targetStudent);
-        return targetStudent;
+    // 生徒更新
+    public void update(String studentId, StudentForm form, String userId) {
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        student.setLastName(form.getLastName());
+        student.setFirstName(form.getFirstName());
+        student.setLastNameKana(form.getLastNameKana());
+        student.setFirstNameKana(form.getFirstNameKana());
+        student.setBirth(form.getBirth());
+        student.setGender(form.getGender());
+        student.setFamily1(form.getFamily1());
+        student.setFamily2(form.getFamily2());
+        student.setTel1(form.getTel1());
+        student.setTel2(form.getTel2());
+        student.setTel3(form.getTel3());
+        student.setTel4(form.getTel4());
+        student.setPostalCode(form.getPostalCode());
+        student.setAdress(form.getAdress());
+        student.setMemo(form.getMemo());
+        student.setTransferred(form.isTransferred());
+        student.setUpdatedBy(userId);
+        studentRepository.save(student);
     }
 
     // 生徒CSVアップロード
@@ -229,101 +185,22 @@ public class StudentsService {
 //         return errorMessage;
 //     } 
 
+    // 生徒が削除可能か判定する
+    // 生徒IDに紐づけられたクラス、出席簿、成績のデータがあるかどうか確認
+    public boolean dataExists(String id) {
+        boolean dataExists = false;
+        List<StudentYear> studentYear = studentYearRepository.findAllByStudentIdOrderByYearAsc(id);
+        List<Attendance> attendance = attendanceRepository.findAllByStudentId(id);
+        List<Grade> grade = gradeRepository.findAllByStudentId(id);
+        if (studentYear.size() > 0 || attendance.size() > 0 || grade.size() > 0) {
+            dataExists = true;
+        }
+        return dataExists;
+    }
+
     // 生徒削除
-    public void deleteStudent(String id) {
+    public void delete(String id) {
         Student student = studentRepository.findById(id).orElseThrow();
         studentRepository.delete(student);
     }
 }
-
-//package com.example.skarte.service;
-//
-//import java.util.List;
-//
-//import org.springframework.stereotype.Service;
-//
-////import org.springframework.stereotype.Service;
-//
-//import com.example.skarte.entity.Student;
-//import com.example.skarte.form.StudentForm;
-//
-//@Service
-//
-//
-////インターフェイス
-//public interface StudentsService {
-//
-//    /**
-//     * 生徒全取得
-//     * 
-//     * @return
-//     */
-//    public List<Student> findAll();
-//
-//    /**
-//     * 生徒1件取得
-//     * 
-//     * @param id
-//     * @return
-//     */
-//    public Student findById(Long id);
-//
-//    /**
-//     * 生徒追加
-//     * 
-//     * @param userId
-//     * @param student
-//     * @return
-//     */
-//    public void addStudent(Long userId, StudentForm form);
-//
-//    /**
-//     * 生徒編集
-//     * 
-//     * @param student
-//     * @return
-//     */
-////    public void updateStudent(Long studentId, Student student);
-//    public Student updateStudent(Long studentId, StudentForm student);
-//
-//    /**
-//     * 生徒CSVアップロード用
-//     * 
-//     * @param userId
-//     * @param student
-//     */
-//    public void addStudentByCSV(Long userId, Student student);
-//
-////    /**
-////     * 生徒削除（理論削除）
-////     * 
-////     * @param student
-////     */
-////    public void deleteStudent(Long studentId, Student student);
-//
-//}
-//
-////    @Autowired
-////    StudentRepository studentRepository;
-////
-////    public List<Student> findAll() {
-////        return studentRepository.findAll();
-////    }
-////
-////    public Student save(Student student) {
-////        return studentRepository.save(student);
-////    }
-////
-////    public Student findById(Long id) {
-////        return studentRepository.findById(id).orElseThrow();
-////    }
-////    
-////    public Student insert(Student student) {
-////        return studentRepository.save(student);
-////    }
-////    
-////    public void delete(Long id) {
-////        Student student = studentRepository.findById(id).orElseThrow();
-////        studentRepository.delete(student);
-////    }
-////}

@@ -64,8 +64,8 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     /** 画像 */
     private String path = null;
 
-    /** 転出済 */
-    private boolean transferred = false;
+//    /** 転出済 */
+//    private boolean transferred = false;
 
     
     // リスト

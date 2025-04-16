@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS students_year (
  updated_by VARCHAR(7) NOT NULL,
  created_at TIMESTAMP NOT NULL,
  updated_at TIMESTAMP NOT NULL,
- transferred bool NOT NULL
+ --transferred bool NOT NULL
 );
 ALTER TABLE students_year ADD CONSTRAINT FK_students_year_students FOREIGN KEY (student_id) REFERENCES students;
 

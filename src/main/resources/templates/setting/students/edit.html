@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<h2>生徒編集</h2>
+
+		<form th:action="@{/setting/students/{id}/update (id=${student.studentId})}" th:method="post"
+			th:object="${student}">
+
+			*は必須項目
+
+			<div th:text="${'*生徒番号  ' + student.studentId}"></div>
+			<div class="form-group">
+				<label class="control-label">*姓</label>
+				<input class="form-control" type="text" th:field="*{lastName}" />
+				<label class="control-label">*名</label>
+				<input class="form-control" type="text" th:field="*{firstName}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">*せい</label>
+				<input class="form-control" type="text" th:field="*{lastNameKana}" />
+				<label class="control-label">*めい</label>
+				<input class="form-control" type="text" th:field="*{firstNameKana}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">*生年月日</label>
+				<input class="form-control" type="date" th:field="*{birth}" />
+				<label class="control-label">*性別</label>
+				<select th:field="*{gender}">
+					<option value="1">男</option>
+					<option value="2">女</option>
+					<option value="3">他</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label">保護者1</label>
+				<input class="form-control" type="text" th:field="*{family1}" />
+				<label class="control-label">保護者2</label>
+				<input class="form-control" type="text" th:field="*{family2}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">電話1</label>
+				<input class="form-control" type="tel" th:field="*{tel1}" />
+				<label class="control-label">電話2</label>
+				<input class="form-control" type="tel" th:field="*{tel2}" />
+				<label class="control-label">電話3</label>
+				<input class="form-control" type="tel" th:field="*{tel3}" />
+				<label class="control-label">電話4</label>
+				<input class="form-control" type="tel" th:field="*{tel4}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">郵便番号</label>
+				<input class="form-control" type="text" th:field="*{postalCode}" />
+				<label class="control-label">住所</label>
+				<input class="form-control" type="textarea" name="adress" th:value="*{adress}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">メモ</label>
+				<input class="form-control" type="textarea" name="memo" th:value="*{memo}" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">転出</label>
+				<input class="form-control" type="checkbox" name="transferred" value="true" th:checked="${student.transferred == true}" />
+			</div>
+			<button class="btn btn-default" type="submit">更新</button>
+		</form>
+		<th:block th:if="${dataExists == false}">
+			<a class="buttons clearfix" th:href="@{/setting/students/{id}/delete (id=${student.studentId})}">
+				生徒削除
+			</a>
+		</th:block>
+		<th:block th:if="${dataExists == true}">この生徒は削除できません</th:block>
+		<div><a th:href="@{/setting/students/{id} (id=${student.studentId})}">キャンセル</a></div>
+
+		<div><a href="/setting/students">生徒管理にもどる</a>
+			<div>
+
+			</div>
+</body>
+
+</html>

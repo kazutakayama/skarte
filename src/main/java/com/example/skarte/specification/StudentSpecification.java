@@ -3,6 +3,7 @@ package com.example.skarte.specification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
@@ -86,7 +87,7 @@ public class StudentSpecification {
             }
         };
     }
-    
+
     public static Specification<StudentYear> year(Long year) {
         return year == null ? null : new Specification<StudentYear>() {
             @Override
@@ -95,7 +96,7 @@ public class StudentSpecification {
             }
         };
     }
-    
+
     public static Specification<StudentYear> nen(Long nen) {
         return nen == null ? null : new Specification<StudentYear>() {
             @Override
@@ -104,7 +105,7 @@ public class StudentSpecification {
             }
         };
     }
-    
+
     public static Specification<StudentYear> kumi(Long kumi) {
         return kumi == null ? null : new Specification<StudentYear>() {
             @Override
@@ -113,8 +114,17 @@ public class StudentSpecification {
             }
         };
     }
-    
-    public static Specification<Grade> grade(Long year) {
+
+    public static Specification<Grade> gradeStudentId(String studentId) {
+        return StringUtils.isEmpty(studentId) ? null : new Specification<Grade>() {
+            @Override
+            public Predicate toPredicate(Root<Grade> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.equal(root.get("studentId"), studentId);
+            }
+        };
+    }
+
+    public static Specification<Grade> gradeYear(Long year) {
         return year == null ? null : new Specification<Grade>() {
             @Override
             public Predicate toPredicate(Root<Grade> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -122,5 +132,5 @@ public class StudentSpecification {
             }
         };
     }
-    
+
 }

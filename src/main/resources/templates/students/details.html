@@ -3,90 +3,95 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
-	<div layout:fragment="content">
-		<header>
-			<div th:each="student : ${students}">
-				<table>
-					<thead>
-						<tr>
-							<th>生徒番号</th>
-							<th>姓</th>
-							<th>名</th>
-							<th>せい</th>
-							<th>めい</th>
-							<th>生年月日</th>
-							<th>性別</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td th:text="${student.studentId}"></td>
-							<td th:text="${student.lastName}"></td>
-							<td th:text="${student.firstName}"></td>
-							<td th:text="${student.lastNameKana}"></td>
-							<td th:text="${student.firstNameKana}"></td>
-							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
-							<td th:text="${student.gender}"></td>
-						</tr>
-					</tbody>
-				</table>
-				<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
-				<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
-				<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
-				<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
-			</div>
-		</header>
+
+	<div layout:fragment="students">
 
 		<h2>生徒情報</h2>
-		<div th:each="student : ${students}">
+		<div>
 			<a class="buttons clearfix" th:href="@{/students/{id}/edit (id=${student.studentId})}">
 				生徒編集
 			</a>
 		</div>
-		<table>
-			<thead>
-				<tr>
-					<th>生徒番号</th>
-					<th>姓</th>
-					<th>名</th>
-					<th>せい</th>
-					<th>めい</th>
-					<th>生年月日</th>
-					<th>性別</th>
-					<th>保護者1</th>
-					<th>保護者2</th>
-					<th>電話1</th>
-					<th>電話2</th>
-					<th>電話3</th>
-					<th>電話4</th>
-					<th>郵便番号</th>
-					<th>住所</th>
-					<th>メモ</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.studentId}"></td>
-					<td th:text="${student.lastName}"></td>
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastNameKana}"></td>
-					<td th:text="${student.firstNameKana}"></td>
-					<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
-					<td th:text="${student.gender}"></td>
-					<td th:text="${student.family1}"></td>
-					<td th:text="${student.family2}"></td>
-					<td th:text="${student.tel1}"></td>
-					<td th:text="${student.tel2}"></td>
-					<td th:text="${student.tel3}"></td>
-					<td th:text="${student.tel4}"></td>
-					<td th:text="${student.postalCode}"></td>
-					<td th:text="${student.adress}"></td>
-					<td th:text="${student.memo}"></td>
-				</tr>
-			</tbody>
+		<th:block th:if="${student.transferred == true}">転出済
+		</th:block>
+
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<th colspan="3">生徒番号</th>
+				<th colspan="8">名前</th>
+				<th colspan="8">なまえ</th>
+				<th colspan="4">生年月日</th>
+				<th colspan="1">性別</th>
+				　　　　　　　　　　　　　　　　<th colspan="8">保護者</th>
+			</tr>
+			<tr>
+				<td colspan="3" th:text="${student.studentId}"></td>
+				<td colspan="8" th:text="${student.lastName + ' ' + student.FirstName}"></td>
+				<td colspan="8" th:text="${student.lastNameKana + ' ' + student.FirstNameKana}"></td>
+				<td colspan="4" th:text="${#dates.format(student.birth, 'yyyy年M月d日')}"></td>
+				<td colspan="1" 　th:text="${gender[__student.gender__]}"></td>
+				<td colspan="8" th:text="${student.family1}"></td>
+			</tr>
+			<tr>
+				<!--<th colspan="8">1年</th>
+				<th colspan="8">2年</th>
+				<th colspan="8">3年</th>-->
+
+				<th:block th:each="studentYear : ${studentsYear}">
+
+					<td colspan="8">
+						<th:block th:if="${studentYear != null}">
+							<div
+								th:text="${studentYear?.year + '年度' + studentYear?.nen + '年' + studentYear?.kumi + '組' + studentYear?.ban + '番'}">
+							</div>
+						</th:block>
+					</td>
+
+				</th:block>
+
+				<td colspan="8" th:text="${student.family2}"></td>
+			</tr>
+			<tr>
+				<th:block th:each="studentYear : ${studentsYear}">
+
+					<td colspan="8" rowspan="5">
+						<th:block th:if="${studentYear != null}">
+							<th:block th:if="${studentYear?.path != null}">
+								<div th:text="${studentYear?.path}">写真を表示！</div>
+							</th:block>
+							<th:block th:if="${studentYear?.path == null}">
+								写真未登録
+							</th:block>
+						</th:block>
+					</td>
+				</th:block>
+				<th colspan="8">電話番号</th>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel1}"></td>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel2}"></td>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel3}"></td>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel4}"></td>
+			</tr>
+			<tr>
+				<td>住所</td>
+				<td colspan="31">
+					<span th:text="${student.postalCode}" />
+					<span th:text="${student.adress}" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="32" rowspan="3" th:text="${student.memo}"></td>
+			</tr>
 		</table>
 
-		<h2>登録クラス</h2>
+		<!--<h2>登録クラス</h2>
 		<table>
 			<thead>
 				<tr>
@@ -106,9 +111,18 @@
 
 				</tr>
 			</tbody>
-		</table>
+		</table>-->
 
-		<a href="/students">生徒一覧にもどる</a>
+		<!--<a href="/students">生徒一覧にもどる</a>
+		<form th:action="@{/students/search}" th:method="get">
+			<input type="hidden" name="year" th:value="${year}" />
+			<input type="hidden" name="nen" th:value="${nen}" />
+			<input type="hidden" name="kumi" th:value="${kumi}" />
+			<button class="btn btn-default" type="submit">もどる</button>
+		</form>-->
+	</div>
+
+
 
 </body>
 

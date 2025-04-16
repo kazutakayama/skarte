@@ -89,6 +89,19 @@ public class AttendanceService {
     public Attendance findById(Long id) {
         return attendanceRepository.findById(id).orElseThrow();
     }
+    
+    // year, month, dayから日付を取得
+    public Calendar editDate(Long year, Long month, Long day) {
+        Calendar cal = Calendar.getInstance();
+        int nendo = Integer.valueOf(year.toString());
+        int tsuki = Integer.valueOf(month.toString());
+        int hi = Integer.valueOf(day.toString());
+        if (tsuki <= 2) {
+            nendo = nendo + 1;
+        }
+        cal.set(nendo, tsuki, hi);
+        return cal;
+    }
 
     /**
      * 生徒ごとの1か月分の出欠リストを取得
@@ -371,7 +384,6 @@ public class AttendanceService {
                 syutteiTotal = syutteiTotal + 1;
             }
         }
-
         List<StudentYear> resultYear = studentsYearService.findAllByStudentId(studentId);
         for (int k = 0; k < resultYear.size(); k++) {
             int yearScheduleCount = scheduleService.yearScheduleCount(resultYear.get(k).getYear());

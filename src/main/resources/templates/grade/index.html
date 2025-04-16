@@ -5,969 +5,145 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>成績一覧</h1>
+		<h2>成績一覧</h2>
 
-		<form th:action="@{/grade}" th:method="post">
+		<form th:action="@{/grade/search}" th:method="get">
 			<label class="control-label">クラス検索</label>
 			<select type="number" name="year" th:value="${year}">
-				<option value="2023">2023</option>
-				<option value="2024" selected>2024</option>
-				<option value="2025">2025</option>
-				<option value="2026">2026</option>
-				<option value="2027">2027</option>
-				<option value="2028">2028</option>
-				<option value="2029">2029</option>
-				<option value="2030">2030</option>
+				<option value="2023"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2023' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2023}">
+					2023</option>
+				<option value="2024"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2024}">
+					2024</option>
+				<option value="2025"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2025}">
+					2025</option>
+				<option value="2026"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2026}">
+					2026</option>
+				<option value="2027"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2027}">
+					2027</option>
+				<option value="2028"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2028}">
+					2028</option>
+				<option value="2029"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2029}">
+					2029</option>
+				<option value="2030"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2031' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2030}">
+					2030</option>
 			</select>
 			<label class="control-label">年度</label>
 			<select type="number" name="nen">
-				<option value="1" selected>1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
+				<option value="1" th:selected="${nen == 1}">1</option>
+				<option value="2" th:selected="${nen == 2}">2</option>
+				<option value="3" th:selected="${nen == 3}">3</option>
 			</select>
 			<label class="control-label">年</label>
 			<select type="number" name="kumi">
-				<option value="0" selected></option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
+				<option value="0" th:selected="${kumi == 0}"></option>
+				<option value="1" th:selected="${kumi == 1}">1</option>
+				<option value="2" th:selected="${kumi == 2}">2</option>
+				<option value="3" th:selected="${kumi == 3}">3</option>
+				<option value="4" th:selected="${kumi == 4}">4</option>
+				<option value="5" th:selected="${kumi == 5}">5</option>
+				<option value="6" th:selected="${kumi == 6}">6</option>
 			</select>
 			<label class="control-label">組</label>
 			<button class="btn btn-default" type="submit">検索</button>
 		</form>
 
-
-		<div th:if="${year > 0}"><label th:text="${year}"></label>年度</div>
-		<div th:if="${nen > 0}"><label th:text="${nen}"></label>年</div>
-		<div th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</div>
-
 		<th:block th:if="${year > 0}">
+			<div><span th:if="${year > 0}"><label th:text="${year}"></label>年度</span>
+				<span th:if="${nen > 0}"><label th:text="${nen}"></label>年</span>
+				<span th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</span>
+			</div>
+			<div th:if="${#lists.size(studentsYear) == 0}">在籍している生徒はいません</div>
 
-			<h1>一覧完成版！！</h1>
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th rowspan="2">年</th>
-						<th rowspan="2">組</th>
-						<th rowspan="2">番</th>
-						<th rowspan="2">名前</th>
-						<th colspan="9" scope="colgroup">1学期</th>
-						<th colspan="9" scope="colgroup">２学期</th>
-						<th colspan="9" scope="colgroup">３学期</th>
-					</tr>
-					<tr>
-						<th>国語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="1" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>社会
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="2" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>数学
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="3" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>理科
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="4" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>音楽
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="5" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>美術
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="6" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>保健体育
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="7" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>技術家庭
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="8" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>英語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="9" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>国語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="1" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>社会
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="2" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>数学
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="3" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>理科
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="4" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>音楽
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="5" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>美術
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="6" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>保健体育
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="7" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>技術家庭
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="8" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>英語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="9" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>国語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="1" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>社会
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="2" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>数学
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="3" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>理科
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="4" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>音楽
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="5" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>美術
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="6" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>保健体育
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="7" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>技術家庭
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="8" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>英語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="9" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="studentYear, stat : ${studentsYear}">
-						<td th:text="${studentYear.nen}"></td>
-						<td th:text="${studentYear.kumi}"></td>
-						<td th:text="${studentYear.ban}"></td>
-						<div th:each="student : ${studentYear.students}">
-							<td><a th:href="@{/students/{id}/grade (id=${student.studentId})}"
-									th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-						</div>
-						<th:block th:each="grade : ${grade[__${stat.index}__]}">
-							<td th:text="${grade?.rating}"></td>
-						</th:block>
-					</tr>
-				</tbody>
-			</table>
+			<th:block th:if="${#lists.size(studentsYear) > 0}">
+				<table border="1" style="border-collapse: collapse">
+					<thead>
+						<tr>
+							<th rowspan="2">年</th>
+							<th rowspan="2">組</th>
+							<th rowspan="2">番</th>
+							<th rowspan="2">名前</th>
+							<th colspan="9" scope="colgroup">1学期</th>
+							<th colspan="9" scope="colgroup">２学期</th>
+							<th colspan="9" scope="colgroup">３学期</th>
+						</tr>
 
-
-
-
-			<h1>旧</h1>
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th rowspan="2">年</th>
-						<th rowspan="2">組</th>
-						<th rowspan="2">番</th>
-						<th rowspan="2">名前</th>
-						<th colspan="9" scope="colgroup">1学期</th>
-						<th colspan="9" scope="colgroup">２学期</th>
-						<th colspan="9" scope="colgroup">３学期</th>
-					</tr>
-					<tr>
-						<th>国語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="1" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>社会
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="2" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>数学
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="3" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>理科
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="4" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>音楽
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="5" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>美術
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="6" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>保健体育
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="7" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>技術家庭
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="8" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>英語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="1" />
-									<input class="form-control" type="hidden" name="subject" th:value="9" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>国語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="1" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>社会
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="2" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>数学
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="3" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>理科
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="4" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>音楽
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="5" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>美術
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="6" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>保健体育
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="7" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>技術家庭
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="8" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>英語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="2" />
-									<input class="form-control" type="hidden" name="subject" th:value="9" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>国語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="1" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>社会
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="2" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>数学
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="3" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>理科
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="4" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>音楽
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="5" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>美術
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="6" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>保健体育
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="7" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>技術家庭
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="8" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-						<th>英語
-							<form th:action="@{/grade/edit}" th:method="post">
-								<div class="form-group">
-									<input class="form-control" type="hidden" name="year" th:value="${year}" />
-									<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-									<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-									<input class="form-control" type="hidden" name="term" th:value="3" />
-									<input class="form-control" type="hidden" name="subject" th:value="9" />
-								</div>
-								<button class="btn btn-default" type="submit">編集</button>
-							</form>
-						</th>
-					</tr>
-				</thead>
-
-
-				<!--<tbody>
-				<tr th:each="studentYear : ${studentsYear}">
-					<td th:text="${studentYear.nen}"></td>
-					<td th:text="${studentYear.kumi}"></td>
-					<td th:text="${studentYear.ban}"></td>
-					<div th:each="student : ${studentYear.students}">
-						<td><a th:href="@{/students/{id}/grade (id=${student.studentId})}"
-								th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-						<td>
-							<th:block th:each="grade : ${grade}">
-								<th:block th:if="${grade.term == 1 && grade.subject == 1}">
-									<div th:text="${grade.rating}">
-									</div>
-								</th:block>
+						<tr>
+							<th:block th:each="kyouka : ${kyouka}">
+								<th>
+									<form th:action="@{/grade/edit}" th:method="get">
+										<div class="form-group">
+											<input class="form-control" type="hidden" name="year" th:value="${year}" />
+											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+											<input class="form-control" type="hidden" name="term" th:value="1" />
+											<input class="form-control" type="hidden" name="subject"
+												th:value="${kyouka.key}" />
+										</div>
+										<button class="btn btn-default" type="submit">🖉</button>
+									</form>
+									<th:block th:text="${kyouka.value}"></th:block>
+								</th>
 							</th:block>
-						</td>-->
-
-				<tbody>
-					<tr th:each="studentYear : ${studentsYear}">
-						<td th:text="${studentYear.nen}"></td>
-						<td th:text="${studentYear.kumi}"></td>
-						<td th:text="${studentYear.ban}"></td>
-						<div th:each="student : ${studentYear.students}">
-							<td><a th:href="@{/students/{id}/grade (id=${student.studentId})}"
-									th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 1}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-
-
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 2}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 3}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 4}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 5}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 6}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 7}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 8}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 1 && grade.subject == 9}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 1}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 2}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 3}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 4}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 5}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 6}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 7}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 8}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 2 && grade.subject == 9}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 1}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 2}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 3}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 4}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 5}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 6}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 7}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 8}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-							<td>
-								<th:block th:each="grade : ${student.grade}">
-									<th:block th:if="${grade.year == year && grade.term == 3 && grade.subject == 9}"
-										th:text="${grade.rating}">
-									</th:block>
-								</th:block>
-							</td>
-						</div>
-					</tr>
-				</tbody>
-			</table>
+							<th:block th:each="kyouka : ${kyouka}">
+								<th>
+									<form th:action="@{/grade/edit}" th:method="get">
+										<div class="form-group">
+											<input class="form-control" type="hidden" name="year" th:value="${year}" />
+											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+											<input class="form-control" type="hidden" name="term" th:value="2" />
+											<input class="form-control" type="hidden" name="subject"
+												th:value="${kyouka.key}" />
+										</div>
+										<button class="btn btn-default" type="submit">🖉</button>
+									</form>
+									<th:block th:text="${kyouka.value}"></th:block>
+								</th>
+							</th:block>
+							<th:block th:each="kyouka : ${kyouka}">
+								<th>
+									<form th:action="@{/grade/edit}" th:method="get">
+										<div class="form-group">
+											<input class="form-control" type="hidden" name="year" th:value="${year}" />
+											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+											<input class="form-control" type="hidden" name="term" th:value="3" />
+											<input class="form-control" type="hidden" name="subject"
+												th:value="${kyouka.key}" />
+										</div>
+										<button class="btn btn-default" type="submit">🖉</button>
+									</form>
+									<th:block th:text="${kyouka.value}"></th:block>
+								</th>
+							</th:block>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="studentYear, stat : ${studentsYear}">
+							<td th:text="${studentYear.nen}"></td>
+							<td th:text="${studentYear.kumi}"></td>
+							<td th:text="${studentYear.ban}"></td>
+							<div th:each="student : ${studentYear.students}">
+								<td><a th:href="@{/students/{id}/grade (id=${student.studentId})}"
+										th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
+							</div>
+							<th:block th:each="grade : ${grade[__${stat.index}__]}">
+								<td th:text="${grade?.rating}"></td>
+							</th:block>
+						</tr>
+					</tbody>
+				</table>
+			</th:block>
 		</th:block>
+
 	</div>
 </body>
 

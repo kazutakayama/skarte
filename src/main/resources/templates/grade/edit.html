@@ -5,19 +5,29 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>成績一覧編集</h1>
+		<h2>成績一覧編集</h2>
 
-		<div th:if="${year > 0}"><label th:text="${year}"></label>年度</div>
-		<div th:if="${nen > 0}"><label th:text="${nen}"></label>年</div>
-		<div th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</div>
-		<div th:if="${year > 0}"><label th:text="${term}"></label>学期</div>
-		<div th:if="${nen > 0}"><label th:text="${subject}"></label>の編集</div>
+		<div><span th:if="${year > 0}"><label th:text="${year}"></label>年度</span>
+			<span th:if="${nen > 0}"><label th:text="${nen}"></label>年</span>
+			<span th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</span>
+		</div>
+		<div><span th:if="${term > 0}"><label th:text="${term}"></label>学期</span>
+			<span th:if="${subject > 0}"><label th:text="${kyouka[__${subject}__]}"></label></span>
+		</div>
 
-		　　　　　　　　<h1>一覧編集完成版！！</h1>
+		<form th:action="@{/grade/search}" th:method="get">
+			<input type="hidden" name="year" th:value="${year}" />
+			<input type="hidden" name="nen" th:value="${nen}" />
+			<input type="hidden" name="kumi" th:value="${kumi}" />
+			<button class="btn btn-default" type="submit">成績一覧にもどる</button>
+		</form>
+
 		<form th:action="@{/grade/update}" th:method="post">
 			<input class="form-control" type="hidden" name="year" th:value="${year}" />
 			<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
 			<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+			<button class="btn btn-default" type="submit">更新</button>
+
 			<table border="1" style="border-collapse: collapse">
 				<thead>
 					<tr>
@@ -30,145 +40,17 @@
 						<th colspan="9" scope="colgroup">３学期</th>
 					</tr>
 					<tr>
-						<th>国語
-							<th:block th:if="${term == 1 && subject == 1}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>社会
-							<th:block th:if="${term == 1 && subject == 2}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>数学
-							<th:block th:if="${term == 1 && subject == 3}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>理科
-							<th:block th:if="${term == 1 && subject == 4}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>音楽
-							<th:block th:if="${term == 1 && subject == 5}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>美術
-							<th:block th:if="${term == 1 && subject == 6}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>保健体育
-							<th:block th:if="${term == 1 && subject == 7}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>技術家庭
-							<th:block th:if="${term == 1 && subject == 8}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>英語
-							<th:block th:if="${term == 1 && subject == 9}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>国語
-							<th:block th:if="${term == 2 && subject == 1}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>社会
-							<th:block th:if="${term == 2 && subject == 2}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>数学
-							<th:block th:if="${term == 2 && subject == 3}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>理科
-							<th:block th:if="${term == 2 && subject == 4}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>音楽
-							<th:block th:if="${term == 2 && subject == 5}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>美術
-							<th:block th:if="${term == 2 && subject == 6}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>保健体育
-							<th:block th:if="${term == 2 && subject == 7}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>技術家庭
-							<th:block th:if="${term == 2 && subject == 8}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>英語
-							<th:block th:if="${term == 2 && subject == 9}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>国語
-							<th:block th:if="${term == 3 && subject == 1}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>社会
-							<th:block th:if="${term == 3 && subject == 2}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>数学
-							<th:block th:if="${term == 3 && subject == 3}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>理科
-							<th:block th:if="${term == 3 && subject == 4}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>音楽
-							<th:block th:if="${term == 3 && subject == 5}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>美術
-							<th:block th:if="${term == 3 && subject == 6}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>保健体育
-							<th:block th:if="${term == 3 && subject == 7}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>技術家庭
-							<th:block th:if="${term == 3 && subject == 8}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
-						<th>英語
-							<th:block th:if="${term == 3 && subject == 9}">
-								<button class="btn btn-default" type="submit">更新</button>
-							</th:block>
-						</th>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th th:text="${kyouka.value}"></th>
+						</th:block>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th th:text="${kyouka.value}"></th>
+						</th:block>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th th:text="${kyouka.value}"></th>
+						</th:block>
 					</tr>
 				</thead>
-
-
 				<tbody>
 					<tr th:each="studentYear, stat : ${studentsYear}">
 						<td th:text="${studentYear.nen}"></td>
@@ -179,21 +61,21 @@
 						</div>
 						<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
 							<td>
-								<th:block th:text="${grade?.rating}"></th:block>
 								<th:block
 									th:if="${term == (stat.index + 9)/9 && subject == (stat.index +((stat.index + 9)/9))%10}">
-									<input class="form-control" type="number" name="gradeIds[]"
+									<input class="form-control" type="hidden" name="gradeIds[]"
 										th:value="${grade?.gradeId}" />
-									<input class="form-control" type="text" name="studentIds[]"
+									<input class="form-control" type="hidden" name="studentIds[]"
 										th:value="${studentYear.studentId}" />
-									<input class="form-control" type="number" name="years[]" th:value="${year}" />
-									<input class="form-control" type="number" name="terms[]"
+									<input class="form-control" type="hidden" name="years[]" th:value="${year}" />
+									<input class="form-control" type="hidden" name="terms[]"
 										th:value="${(stat.index + 9)/9}" />
-									<input class="form-control" type="number" name="subjects[]"
+									<input class="form-control" type="hidden" name="subjects[]"
 										th:value="${(stat.index +((stat.index + 9)/9))%10}" />
 									<input class="form-control" type="number" name="ratings[]"
 										th:value="${grade?.rating}" />
 								</th:block>
+								<th:block th:text="${grade?.rating}"></th:block>
 							</td>
 
 						</th:block>
