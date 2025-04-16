@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+		<h2>生徒詳細</h2>
+		<div>
+			<a class="buttons clearfix" th:href="@{/setting/students/{id}/edit (id=${student.studentId})}">
+				生徒編集
+			</a>
+		</div>
+		<th:block th:if="${student.transferred == true}">転出済
+		</th:block>
+
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<th colspan="3">生徒番号</th>
+				<th colspan="8">名前</th>
+				<th colspan="8">なまえ</th>
+				<th colspan="4">生年月日</th>
+				<th colspan="1">性別</th>
+				　　　　　　　　　　　　　　　　<th colspan="8">保護者</th>
+			</tr>
+			<tr>
+				<td colspan="3" th:text="${student.studentId}"></td>
+				<td colspan="8" th:text="${student.lastName + ' ' + student.FirstName}"></td>
+				<td colspan="8" th:text="${student.lastNameKana + ' ' + student.FirstNameKana}"></td>
+				<td colspan="4" th:text="${#dates.format(student.birth, 'yyyy年M月d日')}"></td>
+				<td colspan="1" 　th:text="${gender[__student.gender__]}"></td>
+				<td colspan="8" th:text="${student.family1}"></td>
+			</tr>
+			<tr>
+				<!--<th colspan="8">1年</th>
+				<th colspan="8">2年</th>
+				<th colspan="8">3年</th>-->
+
+				<th:block th:each="studentYear : ${studentsYear}">
+
+					<td colspan="8">
+						<th:block th:if="${studentYear != null}">
+							<div
+								th:text="${studentYear?.year + '年度' + studentYear?.nen + '年' + studentYear?.kumi + '組' + studentYear?.ban + '番'}">
+							</div>
+						</th:block>
+					</td>
+
+				</th:block>
+
+				<td colspan="8" th:text="${student.family2}"></td>
+			</tr>
+			<tr>
+				<th:block th:each="studentYear : ${studentsYear}">
+
+					<td colspan="8" rowspan="5">
+						<th:block th:if="${studentYear != null}">
+							<th:block th:if="${studentYear?.path != null}">
+								<div th:text="${studentYear?.path}">写真を表示！</div>
+							</th:block>
+							<th:block th:if="${studentYear?.path == null}">
+								写真未登録
+							</th:block>
+						</th:block>
+					</td>
+				</th:block>
+				<th colspan="8">電話番号</th>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel1}"></td>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel2}"></td>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel3}"></td>
+			</tr>
+			<tr>
+				<td colspan="8" th:text="${student.tel4}"></td>
+			</tr>
+			<tr>
+				<td>住所</td>
+				<td colspan="31">
+					<span th:text="${student.postalCode}" />
+					<span th:text="${student.adress}" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="32" rowspan="3" th:text="${student.memo}"></td>
+			</tr>
+		</table>
+
+		<!--<table border="1" style="border-collapse: collapse">
+			<thead>
+				<tr>
+					<th>生徒番号</th>
+					<th>姓</th>
+					<th>名</th>
+					<th>せい</th>
+					<th>めい</th>
+
+					<th>生年月日</th>
+					<th>性別</th>
+					<th>保護者1</th>
+					<th>保護者2</th>
+					<th>電話1</th>
+					<th>電話2</th>
+					<th>電話3</th>
+					<th>電話4</th>
+					<th>郵便番号</th>
+					<th>住所</th>
+					<th>メモ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td th:text="${students.studentId}"></td>
+					<td th:text="${students.lastName}"></td>
+					<td th:text="${students.firstName}"></td>
+					<td th:text="${students.lastNameKana}"></td>
+					<td th:text="${students.firstNameKana}"></td>
+
+					<td th:text="${#dates.format(students.birth, 'yyyy-MM-dd')}"></td>
+					<td th:text="${gender[__students.gender__]}"></td>
+					<td th:text="${students.family1}"></td>
+					<td th:text="${students.family2}"></td>
+					<td th:text="${students.tel1}"></td>
+					<td th:text="${students.tel2}"></td>
+					<td th:text="${students.tel3}"></td>
+					<td th:text="${students.tel4}"></td>
+					<td th:text="${students.postalCode}"></td>
+					<td th:text="${students.adress}"></td>
+					<td th:text="${students.memo}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2>登録クラス</h2>
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<th:block th:each="studentYear, stat : ${studentsYear}">
+					<th:block th:if="${studentYear != null}">
+						<td><label th:text="${studentYear?.year}"></label>年度
+							<label th:text="${studentYear?.nen}"></label>年
+							<label th:text="${studentYear?.kumi}"></label>組
+							<label th:text="${studentYear?.ban}"></label>番
+							<br>
+							<label th:text="${studentYear?.path}"></label>写真
+							<br>
+							<a class="buttons clearfix"
+								th:href="@{/setting/students/{id}/editClass (id=${studentYear?.studentYearId})}">
+								編集
+							</a>
+						</td>
+					</th:block>
+					<th:block th:if="${studentYear == null}">
+						<td>
+							<form th:action="@{/setting/students/addClass}" th:method="post" 　th:object="${students}">
+								<div class="form-group">
+									<input class="form-control" type="hidden" th:field="*{studentId}" />
+
+								</div>
+								<div class="form-group">
+									<label class="control-label">年度</label>
+									<select name="year">
+										<option value="2023">2023</option>
+										<option value="2024">2024</option>
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option>
+										<option value="2028">2028</option>
+										<option value="2029">2029</option>
+										<option value="2030">2030</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label class="control-label" th:text="${stat.index+1}"></label>年
+									<input class="form-control" type="hidden" name="nen" th:value="${stat.index+1}">
+								</div>
+								<div class="form-group">
+									<label class="control-label">組</label>
+									<select name="kumi">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label class="control-label">番</label>
+									<input class="form-control" type="number" name="ban" />
+								</div>
+
+								★写真を追加するフォームを追加
+
+								<button class="btn btn-default" type="submit">新規登録</button>
+							</form>
+						</td>
+					</th:block>
+				</th:block>
+			</tr>
+		</table>-->
+
+		<a href="/setting/students">生徒管理にもどる</a>
+
+
+		<!--<h2>管理用!※最後に削除する！</h2>
+		<table border="1" style="border-collapse: collapse">
+			<tr>
+				<th>クラス</th>
+				<th>出欠</th>
+				<th>成績</td>
+			</tr>
+			<tr>
+				<td>クラス登録
+					<form th:action="@{/setting/students/addClass}" th:method="post" 　th:object="${students}">
+						<div class="form-group">
+							<input class="form-control" type="hidden" th:field="*{studentId}" />
+
+						</div>
+						<div class="form-group">
+							<label class="control-label">年度</label>
+							<select name="year">
+								<option value="2023">2023</option>
+								<option value="2024">2024</option>
+								<option value="2025">2025</option>
+								<option value="2026">2026</option>
+								<option value="2027">2027</option>
+								<option value="2028">2028</option>
+								<option value="2029">2029</option>
+								<option value="2030">2030</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">年</label>
+							<select name="nen">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">組</label>
+							<select name="kumi">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">番</label>
+							<input class="form-control" type="number" name="ban" />
+						</div>
+
+						★写真を追加するフォームを追加
+
+						<button class="btn btn-default" type="submit">登録</button>
+					</form>
+				</td>
+				<td>出欠登録
+					<form th:action="@{/setting/students/addAttendance}" th:method="post" th:object="${students}">
+						<div class="form-group">
+							<input class="form-control" type="hidden" th:field="*{studentId}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label">日付</label>
+							<input class="form-control" type="date" name="date" />
+						</div>
+						<div class="form-group">
+							<label class="control-label">出欠</label>
+							<select name="kiroku">
+								<option value="1">／ : 欠席</option>
+								<option value="2">×　: 遅刻</option>
+								<option value="3">○　: 早退</option>
+								<option value="4">×○ : 遅刻/早退</option>
+								<option value="5">テ : 出停</option>
+								<option value="6">キ : 忌引</option>
+							</select>
+						</div>
+						<button class="btn btn-default" type="submit">登録</button>
+					</form>
+
+				</td>
+				<td>成績登録
+					<form th:action="@{/setting/students/addGrade}" th:method="post" th:object="${students}">
+						<div class="form-group">
+							<input class="form-control" type="hidden" th:field="*{studentId}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label">年度</label>
+							<select name="year">
+								<option th:each="studentYear : ${class}" th:value="${studentYear?.year}"
+									th:text="${studentYear.year}"></option>
+
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">学期</label>
+							<select name="term">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">教科</label>
+							<select name="subject">
+								<option value="1">国語</option>
+								<option value="2">社会</option>
+								<option value="3">数学</option>
+								<option value="4">理科</option>
+								<option value="5">音楽</option>
+								<option value="6">美術</option>
+								<option value="7">保健体育</option>
+								<option value="8">技術家庭</option>
+								<option value="9">英語</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">評定</label>
+							<select name="rating">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5" selected>5</option>
+							</select>
+						</div>
+						<button class="btn btn-default" type="submit">登録</button>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td>クラス一覧
+					<table border="1" style="border-collapse: collapse">
+						<tr>
+							<td>ID</td>
+							<td>年度</td>
+							<td>年</td>
+							<td>組</td>
+							<td>番</td>
+							<td>写真</td>
+						</tr>
+						<tr th:each="studentYear : ${class}">
+							<td th:text="${studentYear.studentYearId}"></td>
+							<td th:text="${studentYear.year}"></td>
+							<td th:text="${studentYear.nen}"></td>
+							<td th:text="${studentYear.kumi}"></td>
+							<td th:text="${studentYear.ban}"></td>
+							<td th:text="${studentYear.path}"></td>
+							<td><a class="buttons clearfix"
+									th:href="@{/setting/students/{id}/editClass (id=${studentYear.studentYearId})}">
+									編集
+								</a></td>
+						</tr>
+					</table>
+				</td>
+				<td>出欠一覧
+					<table border="1" style="border-collapse: collapse">
+						<tr>
+							<td>ID</td>
+							<td>日付</td>
+							<td>出欠</td>
+						</tr>
+						<tr th:each="attendance : ${attendance}">
+							<td th:text="${attendance.attendanceId}"></td>
+							<td th:text="${#dates.format(attendance.date, 'yyyy-MM-dd')}"></td>
+							<td th:text="${attendance.kiroku}"></td>
+							<td><a
+									th:href="@{/setting/students/{id}/editAttendance (id=${attendance.attendanceId})}">編集</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>成績一覧
+					<table border="1" style="border-collapse: collapse">
+						<tr>
+							<td>ID</td>
+							<td>年度</td>
+							<td>学期</td>
+							<td>教科</td>
+							<td>評定</td>
+						</tr>
+						<tr th:each="grade : ${grade}">
+							<td th:text="${grade.gradeId}"></td>
+							<td th:text="${grade.year}"></td>
+							<td th:text="${grade.term}"></td>
+							<td th:text="${grade.subject}"></td>
+							<td th:text="${grade.rating}"></td>
+							<td><a th:href="@{/setting/students/{id}/editGrade (id=${grade.gradeId})}">編集</a>
+							</td>
+						</tr>
+
+					</table>
+				</td>
+			</tr>
+
+		</table>-->
+
+	</div>
+</body>
+
+</html>

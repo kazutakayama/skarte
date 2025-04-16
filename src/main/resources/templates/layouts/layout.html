@@ -9,18 +9,47 @@
 
 <body>
 	<header>
-		<!--<h1><a href="/top">Skarte</a></h1>-->
-		<h1>Skarte</h1>
-		<a href="/top">トップ</a>
+		<h1><a href="/top">Skarte</a></h1>
+		<!--<h1>Skarte</h1>
+		<a href="/top">トップ</a>-->
 		<a href="/students">生徒一覧</a>
 		<a href="/attendance">出席簿一覧</a>
 		<a href="/grade">成績一覧</a>
 		<a href="/notices">お知らせ</a>
-		<a href="/setting">設定</a>
+		<a href="/setting">管理</a>
+		<span th:text="${#dates.format(#dates.createNow(), 'yyyy年M月d日HH:mm')}"></span>
+		ログインユーザー
+		<span th:text="${user.userId}"></span>
+		<span th:text="${user.lastName + ' ' + user.FirstName}"></span>
 		<a href="/logout-complete">ログアウト</a>
 	</header>
 
-	<div layout:fragment="content"></div>
+	<!--ここから/studentsの共通ヘッダー-->
+	<div layout:fragment="content">
+		<header>
+
+			<table>
+				<tr>
+					<th th:text="${student.studentId}"></th>
+					<th th:text="${student.lastName}"></th>
+					<th th:text="${student.firstName}"></th>
+					<th th:text="${student.lastNameKana}"></th>
+					<th th:text="${student.firstNameKana}"></th>
+					<th th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></th>
+					<th th:text="${gender[__student.gender__]}"></th>
+				</tr>
+			</table>
+			<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+			<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+			<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出席簿</a>
+			<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
+
+		</header>
+	</div>
+
+	<div layout:fragment="students"></div>
+
+
 </body>
 
 </html>

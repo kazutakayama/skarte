@@ -5,26 +5,43 @@
 
 <body>
 	<div layout:fragment="content">
-		<h1>お知らせ一覧</h1>
 
-		<a href="/notices/new">新規登録</a><br>
+		<h2>お知らせ新規登録</h2>
 
-		お知らせが<span th:text="${#lists.size(notices)}" />件あります
+		<form th:action="@{/notices/add}" th:method="post">
+			<div class="form-group">
+				<label class="control-label">タイトル</label>
+				<input class="form-control" type="text" name="title" />
+			</div>
+			<div class="form-group">
+				<label class="control-label">内容</label>
+				<input class="form-control" type="textarea" name="contents" />
+			</div>
+			<button class="btn btn-default" type="submit">登録</button>
+		</form>
 
-		<table>
+		<h2>お知らせ一覧</h2>
+
+		<table border="1" style="border-collapse: collapse">
 			<thead>
 				<tr>
 					<th>タイトル</th>
+					<th>内容</th>
 					<th>更新者</th>
 					<th>更新日時</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="notice : ${notices}">
-					<td><a th:href="@{/notices/contents/{id}(id=${notice.noticeId})}" 　th:text="${notice.title}"></a>
-					</td>
-					<td th:text="${notice.updatedBy}"></td>
-					<td th:text="${notice.updatedAt}"></td>
+					<!--<td><a th:href="@{/notices/contents/{id}(id=${notice.noticeId})}" 　th:text="${notice.title}"></a>
+					</td>-->
+					<td th:text="${notice.title}"></td>
+					<td th:text="${notice.contents}"></td>
+					<td th:text="${updateUser[__notice.updatedBy__]}"></td>
+					<td th:text="${#dates.format(notice.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
+					<td><a class="buttons clearfix" th:href="@{/notices/{id}/edit (id=${notice.noticeId})}">
+							編集
+						</a></td>
 				</tr>
 			</tbody>
 		</table>

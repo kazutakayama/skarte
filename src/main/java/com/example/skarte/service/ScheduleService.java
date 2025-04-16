@@ -89,7 +89,6 @@ public class ScheduleService {
     public int monthScheduleSize(Long year, Long month) {
         int monthScheduleSize = 0;
         List<Schedule> monthSchedule = monthSchedule(year, month);
-//        if (monthSchedule != null) {
         for (int i = 0; i < monthSchedule.size(); i++) {
             if (monthSchedule.get(i) != null) { // nullチェック
                 if (monthSchedule.get(i).isHoliday() == false) {
@@ -97,9 +96,9 @@ public class ScheduleService {
                 }
             }
         }
-//        }
         return monthScheduleSize;
     }
+
 
     // 年度で検索し、１年のスケジュールリストを取得
     public ArrayList<ArrayList<Schedule>> yearSchedule(Long year) {

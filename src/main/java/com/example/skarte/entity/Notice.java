@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -39,6 +40,7 @@ public class Notice extends EntityBase { // EntityBase
 
     /** タイトル */
     @Column(length = 20, nullable = false)
+    @NotEmpty
     private String title = null;
 
     /** 内容 */

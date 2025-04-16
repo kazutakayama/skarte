@@ -276,7 +276,7 @@ public class GradeService {
      * @param grade
      * @return
      */
-    public void updateGrade(String userId, GradeForm gradeForm) {
+    public void update(String userId, GradeForm gradeForm) {
         List<Long> gradeIds = gradeForm.getGradeIds();
         List<String> studentIds = gradeForm.getStudentIds();
         List<Long> years = gradeForm.getYears();

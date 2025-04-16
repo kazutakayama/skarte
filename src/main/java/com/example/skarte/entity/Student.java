@@ -105,7 +105,7 @@ public class Student extends EntityBase { // EntityBase
     @Column
     private String memo = null;
 
-    /** 転出済 */
+    /** 転出 */
     private boolean transferred = false;
     
     @OneToMany

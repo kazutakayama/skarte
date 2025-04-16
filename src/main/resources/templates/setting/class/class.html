@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<body>
+	<div layout:fragment="content">
+
+		<h2>クラス管理</h2>
+
+		<form th:action="@{/setting/class/list}" th:method="get">
+			<label class="control-label">クラス検索</label>
+			<select name="year">
+				<option value="2023"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2023') || year == 2023}">
+					2023</option>
+				<option value="2024"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024') || year == 2024}">
+					2024</option>
+				<option value="2025"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025') || year == 2025}">
+					2025</option>
+				<option value="2026"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026') || year == 2026}">
+					2026</option>
+				<option value="2027"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027') || year == 2027}">
+					2027</option>
+				<option value="2028"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028') || year == 2028}">
+					2028</option>
+				<option value="2029"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029') || year == 2029}">
+					2029</option>
+				<option value="2030"
+					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030') || year == 2030}">
+					2030</option>
+			</select>
+			<label class="control-label">年度</label>
+			<select name="nen">
+				<option value="1" th:selected="${nen == 1}">1</option>
+				<option value="2" th:selected="${nen == 2}">2</option>
+				<option value="3" th:selected="${nen == 3}">3</option>
+			</select>
+			<label class="control-label">年</label>
+			<select name="kumi">
+				<option value="1" th:selected="${kumi == 1}">1</option>
+				<option value="2" th:selected="${kumi == 2}">2</option>
+				<option value="3" th:selected="${kumi == 3}">3</option>
+				<option value="4" th:selected="${kumi == 4}">4</option>
+				<option value="5" th:selected="${kumi == 5}">5</option>
+				<option value="6" th:selected="${kumi == 6}">6</option>
+			</select>
+			<label class="control-label">組</label>
+			<button class="btn btn-default" type="submit">検索</button>
+		</form>
+
+		<th:block th:if="${kumi > 0}">
+			<div><span th:text="${year}" />年度　<span th:text="${nen}" />年　<span th:text="${kumi}" />組</div>
+
+			<form th:action="@{/setting/class/register}" th:method="get">
+				<input type="hidden" name="year" th:value="${year}" />
+				<input type="hidden" name="nen" th:value="${nen}" />
+				<input type="hidden" name="kumi" th:value="${kumi}" />
+				<button class="btn btn-default" type="submit">クラス一括登録</button>
+			</form>
+			<form th:action="@{/setting/class/new}" th:method="get">
+				<input type="hidden" name="year" th:value="${year}" />
+				<input type="hidden" name="nen" th:value="${nen}" />
+				<input type="hidden" name="kumi" th:value="${kumi}" />
+				<button class="btn btn-default" type="submit">クラス個別登録</button>
+			</form>
+
+			<th:block th:if="${#lists.size(studentsYear) == 0}">在籍している生徒はいません</th:block>
+
+			<th:block th:if="${#lists.size(studentsYear) > 0}">
+				<span th:text="${#lists.size(studentsYear)}" />人の生徒が在籍しています
+				<table border="1" style="border-collapse: collapse">
+					<thead>
+						<tr>
+							<th>出席番号</th>
+							<th>生徒番号</th>
+							<th>名前</th>
+							<th>なまえ</th>
+							<th>生年月日</th>
+							<th>性別</th>
+							<th>写真</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="studentYear : ${studentsYear}">
+							<th th:text="${studentYear.ban}"></th>
+							<td th:text="${studentYear.studentId}"></td>
+							<div th:each="student : ${studentYear.students}">
+								<td><a th:href="@{/setting/class/{id} (id=${studentYear.studentYearId})}"
+										th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
+								<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
+								<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+								<td th:text="${gender[__student.gender__]}"></td>
+							</div>
+							<td>
+								<th:block th:if="${studentYear.path != null}">済</th:block>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</th:block>
+		</th:block>
+
+	</div>
+</body>
+
+</html>

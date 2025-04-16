@@ -3,95 +3,59 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
-	<div layout:fragment="content">
-		<header>
-			<div th:each="student : ${students}">
-				<table>
-					<thead>
-						<tr>
-							<th>生徒番号</th>
-							<th>姓</th>
-							<th>名</th>
-							<th>せい</th>
-							<th>めい</th>
-							<th>生年月日</th>
-							<th>性別</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td th:text="${student.studentId}"></td>
-							<td th:text="${student.lastName}"></td>
-							<td th:text="${student.firstName}"></td>
-							<td th:text="${student.lastNameKana}"></td>
-							<td th:text="${student.firstNameKana}"></td>
-							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
-							<td th:text="${student.gender}"></td>
-						</tr>
-					</tbody>
-				</table>
-				<a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
-				<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
-				<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出欠</a>
-				<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
-			</div>
-		</header>
+	<div layout:fragment="students">
 
 		<h2>成績編集</h2>
+		<span th:if="${year > 0}"><label th:text="${year}"></label>年度の出席簿編集</span>
 
-
-
-		<div th:each="grade : ${grade}">
-			<form th:action="@{/students/{id}/updateGrade (id=${grade.gradeId})}" th:method="post" th:object="${grade}">
-				<div class="form-group">
-					<label class="control-label">年度</label>
-					<select th:field="*{year}">
-						<option th:each="studentYear : ${studentsYear}" th:value="${studentYear.year}"
-							th:text="${studentYear.year}"></option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="control-label">学期</label>
-					<select th:field="*{term}">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="control-label">教科</label>
-					<select th:field="*{subject}">
-						<option value="1">国語</option>
-						<option value="2">社会</option>
-						<option value="3">数学</option>
-						<option value="4">理科</option>
-						<option value="5">音楽</option>
-						<option value="6">美術</option>
-						<option value="7">保健体育</option>
-						<option value="8">技術家庭</option>
-						<option value="9">英語</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="control-label">評定</label>
-					<select th:field="*{rating}">
-						<option value=""> </option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-					</select>
-				</div>
-				<button class="btn btn-default" type="submit">更新</button>
-			</form>
-
-			<td><a class="buttons clearfix" th:href="@{/students/{id}/deleteGrade (id=${grade.gradeId})}">
-					削除
-				</a></td>
-			<a th:href="@{/students/{id}/grade (id=${grade.studentId})}">キャンセル</a>
-			<a href="/students">生徒一覧にもどる</a>
-		</div>
+		<div><a th:href="@{/students/{id}/grade (id=${student.studentId})}">キャンセル</a></div>
+		<form th:action="@{/students/{id}/grade/update (id=${student.studentId})}" th:method="post">
+			<button class="btn btn-default" type="submit">更新</button>
+			<table border="1" style="border-collapse: collapse">
+				<thead>
+					<tr>
+						<th rowspan="2">年度</th>
+						<th colspan="9" scope="colgroup">1学期</th>
+						<th colspan="9" scope="colgroup">2学期</th>
+						<th colspan="9" scope="colgroup">3学期</th>
+					</tr>
+					<tr>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th th:text="${kyouka.value}"></th>
+						</th:block>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th th:text="${kyouka.value}"></th>
+						</th:block>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th th:text="${kyouka.value}"></th>
+						</th:block>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="studentYear, stat : ${studentsYear}">
+						<td th:text="${studentYear.year}"></td>
+						<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
+							<td>
+								<th:block th:text="${grade?.rating}"></th:block>
+								<th:block th:if="${studentYear.year == year}">
+									<input class="form-control" type="hidden" name="gradeIds[]"
+										th:value="${grade?.gradeId}" />
+									<input class="form-control" type="hidden" name="studentIds[]"
+										th:value="${student.studentId}" />
+									<input class="form-control" type="hidden" name="years[]" th:value="${year}" />
+									<input class="form-control" type="hidden" name="terms[]"
+										th:value="${(stat.index + 9)/9}" />
+									<input class="form-control" type="hidden" name="subjects[]"
+										th:value="${(stat.index +((stat.index + 9)/9))%10}" />
+									<input class="form-control" type="number" name="ratings[]"
+										th:value="${grade?.rating}" />
+								</th:block>
+							</td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</form>
 
 	</div>
 </body>
