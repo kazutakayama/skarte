@@ -16,55 +16,6 @@ import jakarta.persistence.criteria.Root;
 
 @Component
 public class StudentSpecification {
-    /**
-     * 指定文字を名前に含む生徒を検索する。
-     */
-//    public Specification<User> nameContains(String name) {
-//        return StringUtils.isEmpty(name) ? null : new Specification<User>() {
-//            @Override
-//            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                return cb.like(root.get("name"), "%" + name + "%");
-//            }
-//        };
-//    }
-
-//    public Specification<Student> search(String lastName) {
-//        return new Specification<Student>() {
-//            //CriteriaAPI
-//            @Override
-//            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                // 「last_name LIKE '%lastName%'」を追加
-//                return cb.like(root.get("lastName"), "%" + lastName + "%");
-//            }
-//        };
-//    }
-
-//    // 生徒名検索
-//    public Specification<Student> search(String name) {
-//        return StringUtils.isEmpty(name) ? null : (root, query, cb) -> {
-//                // 「last_name LIKE '%lastName%'」を追加
-//                return cb.like(root.get("lastName"), "%" + name + "%");
-//            };
-//        };
-
-//    public Specification<Student> search(String name) {
-//        return StringUtils.isEmpty(name) ? null : (root, query, cb) -> {
-//            // 「last_name LIKE '%lastName%'」を追加
-//            return cb.like(root.get("lastName"), "%" + "朝比奈" + "%");
-//        };
-//    };
-
-//    public static Specification<Student> search(String name) {
-//        return StringUtils.isEmpty(name) ? null : new Specification<Student>() {
-//            @Override
-//            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                return cb.like(root.get("lastName"), "%" + name + "%");
-//                cb.or(cb.like(root.get("firstName"), "%" + name + "%"));
-//                cb.or(cb.like(root.get("lastNameKana"), "%" + name + "%"));
-//                cb.or(cb.like(root.get("firstNameKana"), "%" + name + "%"));
-//            }
-//        };
-//    }
 
     public static Specification<Student> search(String name) {
         return StringUtils.isEmpty(name) ? null : new Specification<Student>() {

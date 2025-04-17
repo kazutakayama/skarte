@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +66,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/setting")
 // コンストラタ生成アノテーション
 @RequiredArgsConstructor
-// 共通処理
-@ControllerAdvice
 public class SettingController {
 
     // コンストラクタインジェクション
@@ -102,7 +101,6 @@ public class SettingController {
         return "setting/students/students";
     }
 
-
     // path: /setting/students/new
     // 生徒新規登録ページを表示
     @GetMapping("students/new")
@@ -118,7 +116,7 @@ public class SettingController {
         return "redirect:/setting/students/" + form.getStudentId();
     }
 
-    // path: /setting/students/{id}
+    // path: /setting/students/{studentId}
     // 生徒詳細画面を表示
     @GetMapping("/students/{id}")
     public String detailsAndClassList(@PathVariable String id, Model model) {
@@ -126,15 +124,14 @@ public class SettingController {
         model.addAttribute("student", student);
         List<StudentYear> classList = studentsYearService.classList(id);
         model.addAttribute("studentsYear", classList);
+        List<String> images = studentsYearService.images(id);
+        model.addAttribute("images", images);
 
-        // 管理用※最後に削除する！
-        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
-        model.addAttribute("class", studentsYear);
+        // 管理用
         List<Attendance> attendance = attendanceService.findAllByStudentId(id);
         model.addAttribute("attendance", attendance);
         List<Grade> grade = gradeService.findAllByStudentId(id);
         model.addAttribute("grade", grade);
-        // ※
 
         return "setting/students/details";
     }
@@ -153,8 +150,7 @@ public class SettingController {
     // path: /setting/students/{id}/update
     // 生徒情報編集画面から生徒情報を更新する
     @PostMapping("/students/{id}/update")
-    public String updateStudent(@PathVariable String id, StudentForm form,
-            @AuthenticationPrincipal User user) {
+    public String updateStudent(@PathVariable String id, StudentForm form, @AuthenticationPrincipal User user) {
         studentsService.update(id, form, user.getUserId());
         return "redirect:/setting/students/" + id;
     }
@@ -275,15 +271,6 @@ public class SettingController {
 //        return "redirect:/setting/students";
 //    }
 
-//    // path: /setting/students/{id}/deletestudent
-//    // 生徒を削除（論理削除）
-//    @GetMapping("/students/{id}/deletestudent")
-//    public String delete(@PathVariable Long id, @ModelAttribute Student student, @AuthenticationPrincipal User user) {
-//        student.setUpdatedBy(user.getUserId());
-//        studentsService.deleteStudent(id, student);
-//        return "redirect:/setting/students";
-//    }
-
     // path: /setting/students/{id}/delete
     // 設定/生徒を削除（物理削除）
     @GetMapping("/students/{id}/delete")
@@ -291,69 +278,6 @@ public class SettingController {
         studentsService.delete(id);
         return "redirect:/setting/students";
     }
-
-//    // path: /setting/students/addClass
-//    // 画面で入力されたクラス情報を取得して、dbに登録をする
-//    @PostMapping("/students/addClass")
-//    public String addClass(@ModelAttribute StudentYear studentYear, @AuthenticationPrincipal User user) {
-//        studentsYearService.addClass(user.getUserId(), studentYear);
-//        return "redirect:/setting/students/" + studentYear.getStudentId();
-//    }
-
-//    // path: /setting/students/addClassMulti
-//    // 画面で入力されたクラス情報を取得して、dbに登録をする（複数）
-//    @PostMapping("/students/addClassMulti")
-//    public String addClassMulti(StudentYearForm studentYearForm, @AuthenticationPrincipal User user,
-//            @RequestParam("studentId") Long studentId) {
-//        studentsYearService.addClassMulti(user.getUserId(), studentYearForm);
-//        return "redirect:/setting/students/" + studentId;
-//    }
-
-//    // path: /setting/students/{id}/editClass
-//    // クラス編集画面を表示
-//    @GetMapping("/students/{id}/editClass")
-//    public String editClass(@PathVariable Long id, Model model) {
-//        StudentYear studentYear = studentsYearService.findById(id);
-//        model.addAttribute("studentsYear", studentYear);
-//        return "setting/editClass";
-//    }
-
-//    // path: /setting/students/{id}/updateClassMulti
-//    // クラス情報を更新する（複数）
-//    @PostMapping("/students/{id}/updateClassMulti")
-//    public String updateClassMulti(StudentYearForm studentYearForm, @AuthenticationPrincipal User user,
-//            @RequestParam("studentId") Long studentId) {
-//        studentsYearService.updateClassMulti(user.getUserId(), studentYearForm);
-//        return "redirect:/setting/students/" + studentId;
-//    }
-
-//    // path: /setting/students/{id}/updateClass
-//    // クラス情報を更新する
-//    @PostMapping("/students/{id}/updateClass")
-//    public String updateClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear,
-//            @AuthenticationPrincipal User user) {
-//        studentYear.setUpdatedBy(user.getUserId());
-//        StudentYear result = studentsYearService.updateClass(id, studentYear);
-//        return "redirect:/setting/students/" + result.getStudentId();
-//    }
-
-    // path: /setting/students/{id}/deleteClass
-    // 設定/クラスを削除（物理削除）
-    // ★★★ 削除をこの形に変更する！！
-//    @GetMapping("/students/{id}/deleteClass")
-//    public String deleteClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear) {
-//        StudentYear deleteClass = studentsYearService.deleteClass(id);
-//        return "redirect:/setting/students/" + deleteClass.getStudentId();
-//    }
-
-//    // path: /setting/students/{id}/deletestudent
-//    // クラスを削除（論理削除）
-//    @GetMapping("/students/{id}/deleteclass")
-//    public String deleteClass(@PathVariable Long id, @ModelAttribute StudentYear studentYear, @AuthenticationPrincipal User user) {
-//        studentYear.setUpdatedBy(user.getUserId());
-//        studentsYearService.deleteClass(id, studentYear);
-//        return "redirect:/setting/students";
-//    }
 
     // path: /setting/class
     // クラス管理ページを表示
@@ -429,15 +353,17 @@ public class SettingController {
     public String editClass(@PathVariable Long id, Model model) {
         StudentYear studentYear = studentsYearService.findById(id);
         model.addAttribute("studentYear", studentYear);
+        if (studentYear.getImage() != null) {
+            String image = studentsYearService.image(id);
+            model.addAttribute("image", image);
+        }
         boolean dataExists = studentsYearService.dataExists(id);
         model.addAttribute("dataExists", dataExists);
         return "setting/class/edit";
     }
-    
-    
 
     // path: /setting/class/{studentYearId}/delete
-    // クラス編集画面からクラスを削除
+    // クラス編集画面から生徒を削除
     @PostMapping("/class/{id}/delete")
     public String deleteClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
             @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, @PathVariable Long id,
@@ -451,6 +377,25 @@ public class SettingController {
             redirectAttributes.addFlashAttribute("kumi", kumi);
         }
         return "redirect:/setting/class/list";
+    }
+
+    // path: /setting/class/{studentYearId}/upload
+    // クラス編集画面から写真を登録
+    @PostMapping("/class/{id}/upload")
+    public String upload(@PathVariable Long id, @AuthenticationPrincipal User user, StudentYearForm studentYearForm)
+            throws IOException {
+        if (!(studentYearForm.getImage().isEmpty())) {
+            studentsYearService.upload(id, user.getUserId(), studentYearForm);
+        }
+        return "redirect:/setting/class/" + id;
+    }
+
+    // path: /setting/class/{studentYearId}/deleteImage
+    // クラス編集画面から写真を削除
+    @GetMapping("/class/{id}/deleteImage")
+    public String deleteImage(@PathVariable Long id) {
+        studentsYearService.deleteImage(id);
+        return "redirect:/setting/class/" + id;
     }
 
     // path: /setting/schedule
@@ -476,7 +421,8 @@ public class SettingController {
     // path: /setting/schedule/new
     // 初回スケジュール一括追加
     @PostMapping("/schedule/new")
-    public String newSchedule(RedirectAttributes redirectAttributes, @ModelAttribute("year") Long year, @AuthenticationPrincipal User user) {
+    public String newSchedule(RedirectAttributes redirectAttributes, @ModelAttribute("year") Long year,
+            @AuthenticationPrincipal User user) {
         scheduleService.newSchedule(year, user.getUserId());
         redirectAttributes.addFlashAttribute("year", year);
         return "redirect:/setting/schedule/year";
@@ -501,86 +447,25 @@ public class SettingController {
         return "setting/teachers";
     }
 
-    
-    
-    
     //
     // 以下管理用
-
-    // path: /setting/students/addAttendance
-    // 画面で入力された出欠を取得して、dbに登録をする
-    @PostMapping("/students/addAttendance")
-    public String addAttendance(@ModelAttribute Attendance attendance, @AuthenticationPrincipal User user) {
-        attendanceService.addAttendance(user.getUserId(), attendance.getStudentId(), attendance);
-        return "redirect:/setting/students/" + attendance.getStudentId();
-    }
-
-    // path: /setting/students/{attendanceId}/editAttendance
-    // 編集する出欠を表示
-    @GetMapping("/students/{id}/editAttendance")
-    public String editAtendance(@PathVariable Long id, Model model) {
-        Attendance attendance = attendanceService.findById(id);
-        model.addAttribute("attendance", attendance);
-        Student student = studentsService.findById(attendance.getStudentId());
-        model.addAttribute("students", student);
-        return "setting/editAttendance";
-    }
-
-//  // path: /setting/students/{attendanceId}/updateAttendance
-//  // 出欠を更新
-//  @PostMapping("/students/{id}/updateAttendance")
-//  public String updateAttendance(@PathVariable Long id, @ModelAttribute Attendance attendance,
-//          @AuthenticationPrincipal User user) {
-//      attendance.setUpdatedBy(user.getUserId());
-//      Attendance result = attendanceService.updateAttendance(id, attendance.getStudentId(), attendance);
-//      return "redirect:/setting/students/" + result.getStudentId();
-//  }
 
     // path: /setting/students/{attendanceId}/deleteAttendance
     // 出欠を削除
     @GetMapping("/students/{id}/deleteAttendance")
-    public String deleteAttendance(@PathVariable Long id, @ModelAttribute Attendance attendance) {
-        Attendance deleteAttendance = attendanceService.deleteAttendance(id, attendance.getStudentId(), attendance);
-        return "redirect:/setting/students/" + deleteAttendance.getStudentId();
-    }
-
-    // path: /setting/students/grade/add
-    // 画面で入力された成績を取得して、dbに登録をする
-    @PostMapping("/students/addGrade")
-    public String addGrade(@ModelAttribute Grade grade, @AuthenticationPrincipal User user) {
-        gradeService.addGrade(user.getUserId(), grade.getStudentId(), grade);
-        return "redirect:/setting/students/" + grade.getStudentId();
-    }
-
-    // path: /setting/students/{gradeId}/editGrade
-    // 編集する成績を表示
-    @GetMapping("/students/{id}/editGrade")
-    public String editGrade(@PathVariable Long id, Model model) {
-        Grade grade = gradeService.findById(id);
-        model.addAttribute("grade", grade);
-        Student student = studentsService.findById(grade.getStudentId());
-        model.addAttribute("students", student);
-        List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(grade.getStudentId());
-        model.addAttribute("studentsYear", studentsYear);
-        return "setting/editGrade";
-    }
-
-    // path: /setting/students/{gradeId}/updateGrade
-    // 成績を更新
-    @PostMapping("/students/{id}/updateGrade")
-    public String updateGradeOne(@PathVariable Long id, @ModelAttribute Grade grade,
-            @AuthenticationPrincipal User user) {
-        grade.setUpdatedBy(user.getUserId());
-        Grade result = gradeService.updateGradeOne(id, grade.getStudentId(), grade);
-        return "redirect:/setting/students/" + result.getStudentId();
+    public String deleteAttendance(@PathVariable Long id) {
+        Attendance attendance = attendanceService.findById(id);
+        attendanceService.deleteAttendance(id);
+        return "redirect:/setting/students/" + attendance.getStudentId();
     }
 
     // path: /setting/students/{gradeId}/deleteGrade
     // 成績を削除
     @GetMapping("/students/{id}/deleteGrade")
-    public String deleteGrade(@PathVariable Long id, @ModelAttribute Grade grade) {
-        Grade deleteGrade = gradeService.deleteGrade(id, grade.getStudentId(), grade);
-        return "redirect:/setting/students/" + deleteGrade.getStudentId();
+    public String deleteGrade(@PathVariable Long id) {
+        Grade grade = gradeService.findById(id);
+        gradeService.deleteGrade(id);
+        return "redirect:/setting/students/" + grade.getStudentId();
     }
 
 }

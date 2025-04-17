@@ -659,97 +659,10 @@ public class AttendanceService {
     /**
      * 出欠削除
      * 
-     * @param karte
+     * @param attendance
      */
-    public Attendance deleteAttendance(Long attendanceId, String studentId, Attendance attendance) {
-        attendance.setStudentId(attendance.getStudentId());
-        Attendance deleteAttendance = attendanceRepository.findById(attendanceId).orElseThrow();
-        attendanceRepository.delete(deleteAttendance);
-        return deleteAttendance;
+    public void deleteAttendance(Long id) {
+        Attendance attendance = attendanceRepository.findById(id).orElseThrow();
+        attendanceRepository.delete(attendance);
     }
-
-//    /**
-//     * 出欠CSVダウンロード用
-//     * 
-//     * @param attendance
-//     */
-//    public void insertAttendance(Attendance attendance) {
-//        attendanceRepository.save(attendance);
-//    }
-
-//    /**
-//     * 出欠削除（理論削除）
-//     * 
-//     * @param attendance
-//     */
-//  public void deleteAttendance(Long attendanceId, Attendance attendance) {
-//  Attendance targetAttendance = attendanceRepository.findById(attendanceId).orElseThrow();
-//  targetAttendance.setDeleted(Boolean.TRUE);
-//  attendanceRepository.save(targetAttendance);
-//}
-
 }
-
-//package com.example.skarte.service;
-//
-//import java.util.List;
-//
-//import com.example.skarte.entity.Attendance;
-//import com.example.skarte.entity.StudentYear;
-//
-////インターフェイス
-//public interface AttendanceService {
-//
-//    /**
-//     * 出欠全取得
-//     * 
-//     * @return
-//     */
-//    public List<Attendance> findAll();
-//    
-//    /**
-//     * 生徒IDでリストを取得
-//     * 
-//     * @return
-//     */
-//    public List<Attendance> findAllByStudentId(Long studentId);
-//
-//    /**
-//     * 出欠1件取得
-//     * 
-//     * @param id
-//     * @return
-//     */
-//    public Attendance findById(Long id);
-//
-//    /**
-//     * 出欠追加
-//     * 
-//     * @param attendance
-//     * @return
-//     */
-//    public void addAttendance(Attendance attendance);
-//
-//    /**
-//     * 出欠編集
-//     * 
-//     * @param attendance
-//     * @return
-//     */
-//    public Attendance updateAttendance(Long attendanceId, Attendance attendance);
-//
-//    /**
-//     * 出欠CSVダウンロード用
-//     * 
-//     * @param attendance
-//     */
-//    public void insertAttendance(Attendance attendance);
-//
-////    /**
-////     * 出欠削除（理論削除）
-////     * 
-////     * @param attendance
-////     */
-////    public void deleteAttendance(Long attendanceId, Attendance attendance);
-//
-//}

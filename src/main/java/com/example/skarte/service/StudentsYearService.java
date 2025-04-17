@@ -1,16 +1,21 @@
 package com.example.skarte.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
@@ -34,6 +39,9 @@ public class StudentsYearService {
     private final AttendanceRepository attendanceRepository;
     private final GradeRepository gradeRepository;
     private final StudentSpecification studentSpecification;
+
+    @Value("${image.local:false}")
+    private String imageLocal;
 
     /**
      * クラス全取得
@@ -75,7 +83,6 @@ public class StudentsYearService {
             classList.add(null);
         }
         List<StudentYear> result = studentYearRepository.findAllByStudentIdOrderByYearAsc(studentId);
-
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getNen() == 1) {
                 classList.set(0, result.get(i));
@@ -86,35 +93,9 @@ public class StudentsYearService {
             if (result.get(i).getNen() == 3) {
                 classList.set(2, result.get(i));
             }
-//            classList.add(result.get(i));
         }
         return classList;
     }
-
-//    /**
-//     * 生徒IDでリストを取得（配列）
-//     * 
-//     * @return
-//     */
-//    public List<StudentYear> classList(String studentId) {
-//        StudentYear[] array =new StudentYear[3];
-//
-//        List<StudentYear> result = studentYearRepository.findAllByStudentIdOrderByYearAsc(studentId);
-//
-//        for (int i = 0; i < result.size(); i++) {
-//            if (result.get(i).getNen() == 1) {
-//                array[0] = result.get(i);
-//            }
-//            if (result.get(i).getNen() == 2) {
-//                array[1] = result.get(i);
-//            }
-//            if (result.get(i).getNen() == 3) {
-//                array[2] = result.get(i);
-//            }
-//        }
-//        List<StudentYear> classList = Arrays.asList(array);
-//        return classList;
-//    }
 
     // クラス検索
     public List<StudentYear> search(Long year, Long nen, Long kumi) {
@@ -129,18 +110,6 @@ public class StudentsYearService {
                     Sort.by(Sort.Direction.ASC, "ban"));
         }
         return result;
-    }
-
-    /**
-     * クラス追加（旧）
-     * 
-     * @param studentYear
-     * @return
-     */
-    public void addClass(String userId, StudentYear studentYear) {
-        studentYear.setCreatedBy(userId);
-        studentYear.setUpdatedBy(userId);
-        studentYearRepository.save(studentYear);
     }
 
     // クラスに登録できる候補の生徒のリストを取得
@@ -177,7 +146,7 @@ public class StudentsYearService {
     }
 
     /**
-     * クラス追加
+     * クラス個別追加
      * 
      * @param studentYear
      * @return
@@ -223,128 +192,69 @@ public class StudentsYearService {
         }
     }
 
-//    /**
-//     * クラス一括追加
-//     * 
-//     * @param studentYear
-//     * @return
-//     */
-//    public void addClassMulti(String userId, StudentYearForm studentYearForm) {
-//        List<String> studentIds = studentYearForm.getStudentIds();
-//        List<Long> years = studentYearForm.getYears();
-//        List<Long> nens = studentYearForm.getNens();
-//        List<Long> kumis = studentYearForm.getKumis();
-//        List<Long> bans = studentYearForm.getBans();
-//        for (int i = 0; i < years.size(); i++) {
-//            if (bans.get(i) != null) {
-//                StudentYear studentYear = new StudentYear();
-//                studentYear.setStudentId(studentIds.get(i));
-//                studentYear.setYear(years.get(i));
-//                studentYear.setNen(nens.get(i));
-//                studentYear.setKumi(kumis.get(i));
-//                studentYear.setBan(bans.get(i));
-//                studentYear.setCreatedBy(userId);
-//                studentYear.setUpdatedBy(userId);
-//                studentYearRepository.save(studentYear);
-//            }
-//        }
-//
-//    }
-
-//    /**
-//     * クラス更新
-//     * 
-//     * @param studentYear
-//     * @return
-//     */
-//    public StudentYear updateClass(Long studentYearId, StudentYear studentYear) {
-//        StudentYear targetStudentYear = studentYearRepository.findById(studentYearId).orElseThrow();
-//        targetStudentYear.setYear(studentYear.getYear());
-//        targetStudentYear.setNen(studentYear.getNen());
-//        targetStudentYear.setKumi(studentYear.getKumi());
-//        targetStudentYear.setBan(studentYear.getBan());
-//        targetStudentYear.setUpdatedBy(studentYear.getUpdatedBy());
-//        studentYearRepository.save(targetStudentYear);
-//        return targetStudentYear;
-////        studentRepository.save(student);
-//    }
-//
-//    /**
-//     * クラス一括更新
-//     * 
-//     * @param studentYear
-//     * @return
-//     */
-//    public void updateClassMulti(String userId, StudentYearForm studentYearForm) {
-//        List<Long> studentYearIds = studentYearForm.getStudentYearIds();
-//        List<String> studentIds = studentYearForm.getStudentIds();
-//        List<Long> years = studentYearForm.getYears();
-//        List<Long> nens = studentYearForm.getNens();
-//        List<Long> kumis = studentYearForm.getKumis();
-//        List<Long> bans = studentYearForm.getBans();
-////        for (int i = 0; i < years.size(); i++) {
-//        for (int i = 0; i < 3; i++) {
-//            if (bans.get(i) != null) {
-//                StudentYear studentYear = new StudentYear();
-//                studentYear.setStudentYearId(studentYearIds.get(i));
-//                studentYear.setStudentId(studentIds.get(i));
-//                studentYear.setYear(years.get(i));
-//                studentYear.setNen(nens.get(i));
-//                studentYear.setKumi(kumis.get(i));
-//                studentYear.setBan(bans.get(i));
-//                studentYear.setCreatedBy(userId);
-//                studentYear.setUpdatedBy(userId);
-//                studentYearRepository.save(studentYear);
-//            }
-//        }
-//
-//    }
-
-//    /**
-//     * クラスCSVダウンロード用
-//     * 
-//     * @param studentYear
-//     */
-//    public void insert(StudentYear studentYear) {
-//        studentYearRepository.save(studentYear);
-//    }
-
-//    // クラス削除
-//    public void deleteClass(Long id) {
-//        StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
-//        studentYearRepository.delete(studentYear);
-//    }
-
-//    // ★★★ 削除をこの形に変更する！！
-//    // クラス削除
-//    public StudentYear deleteClass(Long id) {
-//        StudentYear deleteClass = studentYearRepository.findById(id).orElseThrow();
-//        studentYearRepository.delete(deleteClass);
-//        return deleteClass;
-//    }
-
-//    // クラス削除、その後在籍生徒をソート
-//    public void deleteClass(Long id, Long year, Long nen, Long kumi, String userId) {
-//        // 生徒削除
-//        StudentYear deleteClass = studentYearRepository.findById(id).orElseThrow();
-//        studentYearRepository.delete(deleteClass);
-//        // クラス在籍生徒取得
-//        List <StudentYear> result = studentYearRepository.findAll(Specification.where(studentSpecification.year(year))
-//                .and(studentSpecification.nen(nen)).and(studentSpecification.kumi(kumi)));
-//        // クラス在籍生徒をソート
-//        result.sort(Comparator.comparing(StudentYear::getStudentId));
-//        // 新しい出席番号を割り振って更新
-//        for (int i = 0; i < result.size(); i++) {
-//            StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
-//            studentYear.setBan((long)i+1);
-//            studentYear.setUpdatedBy(userId);
-//            studentYearRepository.save(studentYear);
-//        }
-
     // クラス在籍生徒を1名削除
     public void deleteClass(Long id) {
         StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
         studentYearRepository.delete(studentYear);
+    }
+
+//    // 画像をアップロード
+//    public void upload(Long id, String userId, MultipartFile file) throws IOException {
+//        StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
+//        MultipartFile multipartFile = file; 
+////        try {
+////            byte[] bytes = multipartFile.getBytes();            
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////            byte[] bytes = null;
+////        }
+//        byte[] bytes = file.getBytes();
+//        studentYear.setImage(bytes); 
+//        studentYear.setUpdatedBy(userId);
+//        studentYearRepository.save(studentYear);
+//        
+//    }
+
+    // 写真をアップロード
+    public void upload(Long id, String userId, StudentYearForm studentYearForm) throws IOException {
+        StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
+        MultipartFile multipartFile = studentYearForm.getImage();
+        byte[] bytes = multipartFile.getBytes();
+        studentYear.setImage(bytes);
+        studentYear.setUpdatedBy(userId);
+        studentYearRepository.save(studentYear);
+    }
+
+    // 写真を削除
+    public void deleteImage(Long id) {
+        StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
+        studentYear.setImage(null);
+        studentYearRepository.save(studentYear);
+    }
+
+    // 写真byte[]をbase64に変換（1年分）
+    public String image(Long id) {
+        StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
+        String image = Base64.getEncoder().encodeToString(studentYear.getImage());
+        return image;
+    }
+
+    // 写真byte[]をbase64に変換（3年分）
+    public List<String> images(String studentId) {
+        List<String> images = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            images.add(null);
+        }
+        List<StudentYear> classList = classList(studentId);
+        for (int i = 0; i < classList.size(); i++) {
+            if (classList.get(i) != null) {
+                if (classList.get(i).getImage() != null) {
+                    String image = Base64.getEncoder().encodeToString(classList.get(i).getImage());
+                    images.set(i, image);
+                }
+            }
+        }
+        return images;
     }
 
     // クラス在籍生徒をソートし、出席番号を割り振って更新
@@ -388,17 +298,4 @@ public class StudentsYearService {
         return dataExists;
     }
 
-//    /**
-//     * 生徒削除（理論削除）　→　転出に変更
-//     * 
-//     * @param studentYear
-//     */
-//    @Override
-//    @Transactional
-//    public void deleteClass(Long studentYearId, StudentYear studentYear) {
-//        StudentYear targetStudentYear = studentYearRepository.findById(studentYearId).orElseThrow();
-//        targetStudentYear.setUpdatedBy(studentYear.getUpdatedBy());
-//        targetStudentYear.setDeleted(Boolean.TRUE);
-//        studentYearRepository.save(targetStudentYear);
-//    }
 }

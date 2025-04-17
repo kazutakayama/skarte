@@ -59,12 +59,11 @@ CREATE TABLE IF NOT EXISTS students_year (
  nen INT NOT NULL,
  kumi INT NOT NULL,
  ban INT NOT NULL,
- path VARCHAR(255),
+ image BYTEA,
  created_by VARCHAR(7) NOT NULL,
  updated_by VARCHAR(7) NOT NULL,
  created_at TIMESTAMP NOT NULL,
- updated_at TIMESTAMP NOT NULL,
- --transferred bool NOT NULL
+ updated_at TIMESTAMP NOT NULL
 );
 ALTER TABLE students_year ADD CONSTRAINT FK_students_year_students FOREIGN KEY (student_id) REFERENCES students;
 
@@ -87,12 +86,6 @@ CREATE TABLE IF NOT EXISTS attendance (
  student_id VARCHAR(7) NOT NULL,
  date DATE NOT NULL,
  kiroku INT,
- --chikoku INT,
- --soutai INT,
- --kesseki INT,
- --syuttei INT,
- --kibiki INT,
--- confirmed bool NOT NULL,
  created_by VARCHAR(7) NOT NULL,
  updated_by VARCHAR(7) NOT NULL,
  created_at TIMESTAMP NOT NULL,
@@ -108,7 +101,6 @@ CREATE TABLE IF NOT EXISTS grade (
  term INT NOT NULL,
  subject INT NOT NULL,
  rating INT,
--- confirmed bool NOT NULL,
  created_by VARCHAR(7) NOT NULL,
  updated_by VARCHAR(7) NOT NULL,
  created_at TIMESTAMP NOT NULL,
