@@ -66,6 +66,15 @@
 
 			<th:block th:if="${#lists.size(studentsYear) > 0}">
 				<span th:text="${#lists.size(studentsYear)}" />人の生徒が在籍しています
+
+				<form method="get" action="/students/download.csv">
+					<input type="submit" name="download_file" value="CSVダウンロード">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<input type="hidden" name="year" th:value="${year}" />
+					<input type="hidden" name="nen" th:value="${nen}" />
+					<input type="hidden" name="kumi" th:value="${kumi}" />
+				</form>
+
 				<table border="1" style="border-collapse: collapse">
 					<thead>
 						<tr>

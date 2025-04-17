@@ -189,6 +189,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -199,6 +200,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
@@ -213,6 +215,7 @@ import com.example.skarte.form.KarteForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.example.skarte.service.KarteService;
 import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.AttendanceService;
@@ -241,7 +244,7 @@ public class StudentsController {
         return "students/index";
     }
 
-    // path: /students/class
+    // path: /students/search
     // クラス検索
     @GetMapping("/search")
     public String search(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
@@ -252,6 +255,16 @@ public class StudentsController {
         List<Student> students = studentsService.findAll();
         model.addAttribute("students", students);
         return "students/index";
+    }
+
+    // path: /students/download.csv
+    // クラス検索後、クラス（学年）ごとのリストをCSVダウンロード
+    @GetMapping(value = "/download.csv", params = "download_file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+            + "; charset=UTF-8; Content-Disposition: attachment")
+    @ResponseBody
+    public Object download(@RequestParam("year") Long year, @RequestParam("nen") Long nen,
+            @RequestParam("kumi") Long kumi) throws JsonProcessingException {               
+        return studentsService.downloadClass(year, nen, kumi);
     }
 
     // path: /students/{studentId}

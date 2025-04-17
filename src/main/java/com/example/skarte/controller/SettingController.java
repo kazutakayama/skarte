@@ -155,45 +155,46 @@ public class SettingController {
         return "redirect:/setting/students/" + id;
     }
 
+//    // path: /setting/students/download.csv
+//    // 生徒をcsvでダウンロードする
+//    @GetMapping(value = "/students/download.csv", params = "download_file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+//            + "; charset=UTF-8; Content-Disposition: attachment")
+//    @ResponseBody
+//    public Object download() throws JsonProcessingException {
+//        return studentsService.download();
+//    }
+
     // path: /setting/students/download.csv
-    // 生徒をcsvでダウンロードする
+    // 名前、年度で絞り込み後、生徒をcsvでダウンロードする
     @GetMapping(value = "/students/download.csv", params = "download_file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
             + "; charset=UTF-8; Content-Disposition: attachment")
     @ResponseBody
-    public Object download() throws JsonProcessingException {
-        // DBから取得
-        List<Student> students = studentsService.findAll();
-        // CSVファイル用のDTOに詰め直す
-        List<StudentsCsv> csvs = students.stream()
-                .map(e -> new StudentsCsv(e.getStudentId(), e.getLastName(), e.getFirstName(), e.getLastNameKana(),
-                        e.getFirstNameKana(), e.getBirth(), e.getGender(), e.getFamily1(), e.getFamily2(), e.getTel1(),
-                        e.getTel2(), e.getTel3(), e.getTel4(), e.getPostalCode(), e.getAdress(), e.getMemo()))
-                .collect(Collectors.toList());
-        // ファイルをダウンロードさせる
-        CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = mapper.schemaFor(StudentsCsv.class).withHeader();
-        return mapper.writer(schema).writeValueAsString(csvs);
+    public Object download(@RequestParam("name") String name, @RequestParam("year") String year)
+            throws JsonProcessingException {
+        return studentsService.download(name, year);
     }
 
+//    // path: /setting/students/upload
+//    // 生徒をcsvでアップロードする ★一旦完成版
+//    @PostMapping(value = "/students/upload", params = "upload_file")
+//    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) throws IOException {
+//        try (BufferedReader br = new BufferedReader(
+//                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+//            studentsService.uploadCsv(user.getUserId(), br);
+//        } catch (IOException e) {
+//            throw new RuntimeException("ファイルが読み込めません", e);
+//        }
+//        return "redirect:/setting/students";
+//    }
+
     // path: /setting/students/upload
-    // 生徒をcsvでアップロードする
+    // 生徒をcsvでアップロードする★★★お試し！
     @PostMapping(value = "/students/upload", params = "upload_file")
-    public String uploadFile(@RequestParam("file") MultipartFile uploadFile, @AuthenticationPrincipal User user) {
+    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user)
+            throws IOException {
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(uploadFile.getInputStream(), StandardCharsets.UTF_8))) {
-            String line;
-            // ヘッダーレコードをとばすためにあらかじめ１行だけ読み取っておく
-            line = br.readLine();
-            // 行がNULL（CSVの値がなくなる）になるまで処理を繰り返す
-            while ((line = br.readLine()) != null) {
-                final String[] split = line.split(",");
-                final Student student = Student.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
-                        .lastNameKana(split[3]).firstNameKana(split[4]).birth(Date.valueOf(split[5]))
-                        .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
-                        .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
-                        .memo(split[15]).build();
-                studentsService.upload(user.getUserId(), student);
-            }
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+            studentsService.upload(user.getUserId(), br);
         } catch (IOException e) {
             throw new RuntimeException("ファイルが読み込めません", e);
         }
@@ -202,69 +203,26 @@ public class SettingController {
 
 //    // path: /setting/students/upload
 //    // 生徒をcsvでアップロードする
-//    @PostMapping(value = "/students/upload")
-//    public String upload(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) {
-//        try (InputStream inputStream = file.getInputStream();
-//                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-//
-//            // 読み取ったCSVの行を入れるための変数を作成
-//            String line;
-//            // ヘッダーレコードを飛ばすためにあらかじめ１行だけ読み取っておく
-//            line = br.readLine();
-//            // 行がNULL（CSVの値がなくなる）になるまで処理を繰り返す
-//            while ((line = br.readLine()) != null) {
-//                // Stringのsplitメソッドを使用してカンマごとに分割して配列にいれる
-//                String[] csvSplit = line.split(",");
-//                // 分割したのをセットして登録
-//                Student student = new Student();
-//                student.setStudentId((String) Integer.parseInt(csvSplit[0]));
-//                student.setLastName(csvSplit[1]);
-//                student.setFirstName(csvSplit[2]);
-//                student.setLastNameKana(csvSplit[3]);
-//                student.setFirstNameKana(csvSplit[4]);
-//                student.setBirth(Date.valueOf(csvSplit[5]));
-//                student.setGender((int) Integer.parseInt(csvSplit[6]));
-//                student.setFamily1(csvSplit[7]);
-//                student.setFamily2(csvSplit[8]);
-//                student.setTel1((String) Integer.parseInt(csvSplit[9]));
-//                student.setTel2((String) Integer.parseInt(csvSplit[10]));
-//                student.setTel3((String) Integer.parseInt(csvSplit[11]));
-//                student.setTel4((String) Integer.parseInt(csvSplit[12]));
-//                student.setPostalCode((String) Integer.parseInt(csvSplit[13]));
-//                student.setAdress(csvSplit[14]);
-//                student.setMemo(csvSplit[15]);
-//                studentsService.addStudentByCSV(user.getUserId(), student);
-//            }
-//            br.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "redirect:/setting/students";
-//    }
-
-//    // path: /setting/students/upload
-//    // 生徒をcsvでアップロードする
 //    @PostMapping(value = "/students/upload", params = "upload_file")
-//    public String uploadFile(@RequestParam("file") MultipartFile uploadFile,
-//            @Validated @ModelAttribute StudentForm form, @AuthenticationPrincipal User user,
-//            BindingResult bindingResult, Model model) {
+//    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user)
+//            throws IOException {
 //        try (BufferedReader br = new BufferedReader(
-//                new InputStreamReader(uploadFile.getInputStream(), StandardCharsets.UTF_8))) {
+//                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
 //            String line;
 //            // ヘッダーレコードをとばすためにあらかじめ１行だけ読み取っておく
 //            line = br.readLine();
 //            // 行がNULL（CSVの値がなくなる）になるまで処理を繰り返す
 //            while ((line = br.readLine()) != null) {
-//                final String[] split = line.split(",");
-//                final Student student = Student.builder().studentId((long) Integer.parseInt(split[0]))
-//                        .lastName(split[1]).firstName(split[2]).lastNameKana(split[3]).firstNameKana(split[4])
-//                        .birth(Date.valueOf(split[5])).gender((int) Integer.parseInt(split[6])).family1(split[7])
-//                        .family2(split[8]).tel1((long) Integer.parseInt(split[9]))
-//                        .tel2((long) Integer.parseInt(split[10])).tel3((long) Integer.parseInt(split[11]))
-//                        .tel4((long) Integer.parseInt(split[12])).postalCode((long) Integer.parseInt(split[13]))
-//                        .adress(split[14]).memo(split[15]).build();
-//                studentsService.upload(form);
+//                // 負の数字を引数に指定し、中身が空でも、全ての要素を取得
+//                String[] split = line.split(",", -1);
+//                Student student = Student.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
+//                        .lastNameKana(split[3]).firstNameKana(split[4]).birth(Date.valueOf(split[5]))
+//                        .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
+//                        .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
+//                        .memo(split[15]).build();
+//                studentsService.upload(user.getUserId(), student);
 //            }
+//            br.close();
 //        } catch (IOException e) {
 //            throw new RuntimeException("ファイルが読み込めません", e);
 //        }
