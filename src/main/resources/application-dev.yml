@@ -17,5 +17,5 @@ spring:
      username: skarte
      password: skarte
 debug: true
-image:
-  local: true  
+#image:
+#  local: true  

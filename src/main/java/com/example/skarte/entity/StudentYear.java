@@ -71,9 +71,7 @@ public class StudentYear extends EntityBase { // EntityBase
 
     /** 画像 */
     @Column
-    private String path = null;
+    private byte[] image = null;
 
-    /** 転出済 */
-    private boolean transferred = false;
 
 }

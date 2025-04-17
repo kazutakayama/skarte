@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.EntityBase;
@@ -62,12 +63,13 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     private Long ban = null;
 
     /** 画像 */
-    private String path = null;
+    private MultipartFile image = null;
+
+//    private String imageData;
 
 //    /** 転出済 */
 //    private boolean transferred = false;
 
-    
     // リスト
 //    private List<Long> studentYearIds;
 //
@@ -88,7 +90,7 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     public void setStudentYearIds(List<Long> studentYearIds) {
         this.studentYearIds = studentYearIds;
     }
-    
+
     private List<String> studentIds;
 
     public List<String> getStudentIds() {
@@ -108,7 +110,7 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     public void setYears(List<Long> years) {
         this.years = years;
     }
-    
+
     private List<Long> nens;
 
     public List<Long> getNens() {
@@ -118,7 +120,7 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     public void setNens(List<Long> nens) {
         this.nens = nens;
     }
-    
+
     private List<Long> kumis;
 
     public List<Long> getKumis() {
@@ -128,7 +130,7 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     public void setKumis(List<Long> kumis) {
         this.kumis = kumis;
     }
-    
+
     private List<Long> bans;
 
     public List<Long> getBans() {
@@ -138,7 +140,7 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     public void setBans(List<Long> bans) {
         this.bans = bans;
     }
-    
+
     private List<String> paths;
 
     public List<String> getPaths() {
@@ -148,5 +150,5 @@ public class StudentYearForm extends EntityBase { // EntityBase {
     public void setPaths(List<String> paths) {
         this.paths = paths;
     }
-    
+
 }

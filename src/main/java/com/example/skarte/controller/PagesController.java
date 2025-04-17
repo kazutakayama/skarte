@@ -59,6 +59,15 @@ public class PagesController {
         gender.put(2, "女");
         gender.put(3, "他");
         model.addAttribute("gender", gender);
+        // 出欠記録のマップ 1:欠席,2:遅刻,3:早退,4:遅刻/早退,5:出停,6:忌引
+        Map<Integer, String> syukketsu = new HashMap<>();
+        syukketsu.put(1, "欠席");
+        syukketsu.put(2, "遅刻");
+        syukketsu.put(3, "早退");
+        syukketsu.put(4, "遅刻/早退");
+        syukketsu.put(5, "出停");
+        syukketsu.put(6, "忌引");
+        model.addAttribute("syukketsu", syukketsu);
         // 教科のマップ 1:国語,2:社会,3:数学,4:理科,5:音楽,6:美術,7:保健体育,8:技術家庭,9:英語
         Map<Integer, String> kyouka = new HashMap<>();
         kyouka.put(1, "国語");

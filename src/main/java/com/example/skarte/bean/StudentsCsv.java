@@ -3,6 +3,8 @@ package com.example.skarte.bean;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -28,6 +30,7 @@ public class StudentsCsv {
     @JsonProperty("めい")
     private String firstNameKana;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("生年月日")
     private Date birth;
 

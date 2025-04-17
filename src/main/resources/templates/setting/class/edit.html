@@ -63,8 +63,18 @@
 			</tr>
 			<tr>
 				<td>
-					<th:block th:if="${studentYear.path != null}">★写真を表示</th:block>
-					<th:block th:if="${studentYear.path == null}">★写真を追加するフォームを追加</th:block>
+					<!--<th:block th:if="${studentYear.image != null}">-->
+					<th:block th:if="${image != null}">
+						<img th:src="${'data:image/png;base64,'+image}" alt="写真" width="100">
+						<a th:href="@{/setting/class/{id}/deleteImage (id=${studentYear.studentYearId})}">削除</a>
+					</th:block>
+					<th:block th:if="${studentYear.image == null}">
+						<form method="post" th:action="@{/setting/class/{id}/upload (id=${studentYear.studentYearId})}"
+							enctype="multipart/form-data">
+							<input type="file" class="form-control-file" name="image" />
+							<button class="btn btn-default" type="submit">追加</button>
+						</form>
+					</th:block>
 				</td>
 			</tr>
 		</table>
