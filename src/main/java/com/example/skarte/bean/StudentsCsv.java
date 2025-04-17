@@ -1,6 +1,6 @@
 package com.example.skarte.bean;
 
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,7 +13,7 @@ import lombok.Value;
 
 @Value
 @AllArgsConstructor
-@JsonPropertyOrder({ "生徒ID", "姓", "名", "せい", "めい", "生年月日", "性別", "保護者1", "保護者2", "電話1", "電話2", "電話3", "電話4", "郵便番号",
+@JsonPropertyOrder({ "生徒ID", "姓", "名", "せい", "めい", "生年月日yyyy-MM-dd", "性別1男2女3他", "保護者1", "保護者2", "電話1", "電話2", "電話3", "電話4", "郵便番号",
         "住所", "メモ" })
 
 // CSVダウンロード用
@@ -30,13 +30,13 @@ public class StudentsCsv {
     @JsonProperty("めい")
     private String firstNameKana;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("生年月日")
-    private Date birth;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("生年月日yyyy-MM-dd")
+    private Date birth;  
 
-    @JsonProperty("性別")
+    @JsonProperty("性別1男2女3他")
     private Integer gender;
-    
+
     @JsonProperty("保護者1")
     private String family1;
     @JsonProperty("保護者2")

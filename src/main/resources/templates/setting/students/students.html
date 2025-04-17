@@ -27,22 +27,32 @@
 
 		<div><a href="/setting/students/new">生徒新規登録</a></div>
 
-		<form method="post" action="/setting/students/upload" enctype="multipart/form-data">
+		<!--<form method="post" action="/setting/students/upload" enctype="multipart/form-data">
 			<input type="file" name="file">
 			<input type="submit" name="upload_file" value="CSVアップロード">
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		</form>
+		</form>-->
 
-		<form method="get" action="/setting/students/download.csv">
+		<!--<form method="get" action="/setting/students/download.csv">
 			<input type="submit" name="download_file" value="CSVダウンロード">
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		</form>
+		</form>-->
 
 		<div th:if="${name != null || year != null}">
-			<label th:text="${#lists.size(students)}"></label>人の生徒が見つかりました
+			<label th:text="${#lists.size(students)}"></label>人の生徒がみつかりました
 		</div>
 
 		<th:block th:if="${#lists.size(students) > 0}">
+
+			<th:block th:if="${name != null || year != null}">
+				<form method="get" action="/setting/students/download.csv">
+					<input type="submit" name="download_file" value="CSVダウンロード">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<input type="hidden" name="name" th:value="${name}" />
+					<input type="hidden" name="year" th:value="${year}" />
+				</form>
+			</th:block>
+
 			<table border="1" style="border-collapse: collapse">
 				<thead>
 					<tr>
