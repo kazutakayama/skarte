@@ -193,6 +193,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -201,6 +202,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
@@ -263,7 +265,7 @@ public class StudentsController {
             + "; charset=UTF-8; Content-Disposition: attachment")
     @ResponseBody
     public Object download(@RequestParam("year") Long year, @RequestParam("nen") Long nen,
-            @RequestParam("kumi") Long kumi) throws JsonProcessingException {               
+            @RequestParam("kumi") Long kumi) throws JsonProcessingException {
         return studentsService.downloadClass(year, nen, kumi);
     }
 
@@ -281,7 +283,7 @@ public class StudentsController {
     // path: /students/{studentId}/edit
     // 生徒編集画面を表示
     @GetMapping("/{id}/edit")
-    public String editStudent(@PathVariable String id, Model model) {
+    public String edit(@PathVariable String id, Model model, @ModelAttribute StudentForm form) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
         return "students/edit";
@@ -295,18 +297,30 @@ public class StudentsController {
 //        return "redirect:/students/" + result.getStudentId();
 //    }
 
-    // path: /students/{studentId}/updatestudent
+    // path: /students/{studentId}/update
     // 生徒編集画面から生徒を更新する
-    @PostMapping("/{id}/updateStudent")
-    public String updateStudent(@PathVariable String id, StudentForm form, @AuthenticationPrincipal User user) {
+    @PostMapping("/{id}/update")
+    public String update(@PathVariable String id, @Validated @ModelAttribute StudentForm form, BindingResult result,
+            Model model, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "更新に失敗しました");
+            Student student = studentsService.findById(id);
+            model.addAttribute("student", student);
+            return "students/edit";
+        }
         studentsService.update(id, form, user.getUserId());
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "生徒を更新しました");
         return "redirect:/students/{id}";
     }
 
     // path: /students/{studentId}/karte
     // カルテを表示
     @GetMapping("/{id}/karte")
-    public String karte(@PathVariable String id, Model model) {
+    public String karte(@PathVariable String id, Model model, @ModelAttribute KarteForm karteForm) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
         List<Karte> karte = karteService.findAllByStudentId(id);
@@ -314,18 +328,33 @@ public class StudentsController {
         return "students/karte";
     }
 
-    // path: /students/karte/add
+    // path: /students/{studentId}/karte/add
     // 画面で入力されたカルテを取得して、dbに登録をする
-    @PostMapping("/karte/add")
-    public String addKarte(KarteForm karteForm, @AuthenticationPrincipal User user) {
-        karteService.add(user.getUserId(), karteForm);
-        return "redirect:/students/" + karteForm.getStudentId() + "/karte";
+    @PostMapping("/{id}/karte/add")
+    public String addKarte(@PathVariable String id, @Validated @ModelAttribute KarteForm karteForm,
+            BindingResult result, @AuthenticationPrincipal User user, Model model,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            Student student = studentsService.findById(id);
+            model.addAttribute("student", student);
+            List<Karte> karte = karteService.findAllByStudentId(id);
+            model.addAttribute("karte", karte);
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "登録に失敗しました");
+            return "students/karte";
+        }
+        karteService.add(id, user.getUserId(), karteForm);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "カルテを登録しました");
+        return "redirect:/students/" + id + "/karte";
     }
 
-    // path: /students/{karteId}/editKarte
+    // path: /students/{karteId}/karte/edit
     // 編集するカルテを表示
-    @GetMapping("/{id}/editKarte")
-    public String editKarte(@PathVariable Long id, Model model) {
+    @GetMapping("/{id}/karte/edit")
+    public String editKarte(@PathVariable Long id, Model model, @ModelAttribute KarteForm karteForm) {
         Karte karte = karteService.findById(id);
         model.addAttribute("karte", karte);
         Student student = studentsService.findById(karte.getStudentId());
@@ -333,25 +362,40 @@ public class StudentsController {
         return "students/editKarte";
     }
 
-    // path: /students/{karteId}/updateKarte
+    // path: /students/{karteId}/karte/update
     // カルテを更新
-    @PostMapping("/{id}/updateKarte")
-    public String updateKarte(@PathVariable Long id, @AuthenticationPrincipal User user, KarteForm karteForm) {
+    @PostMapping("/{id}/karte/update")
+    public String updateKarte(@PathVariable Long id, @AuthenticationPrincipal User user,
+            @Validated @ModelAttribute KarteForm karteForm, BindingResult result, RedirectAttributes redirectAttributes,
+            Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "更新に失敗しました");
+            Karte karte = karteService.findById(id);
+            model.addAttribute("karte", karte);
+            Student student = studentsService.findById(karte.getStudentId());
+            model.addAttribute("student", student);
+            return "students/editKarte";
+        }
         karteService.update(id, user.getUserId(), karteForm);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "カルテを更新しました");
         return "redirect:/students/" + karteForm.getStudentId() + "/karte";
     }
 
-    // path: /students/{karteId}/deleteKarte
+    // path: /students/{karteId}/kartedelete
     // カルテを削除
-    @GetMapping("/{id}/deleteKarte")
+    @GetMapping("/{id}/karte/delete")
     public String deleteKarte(@PathVariable Long id) {
         Karte karte = karteService.findById(id);
-        karteService.deleteKarte(id);
+        karteService.delete(id);
         return "redirect:/students/" + karte.getStudentId() + "/karte";
     }
 
     // path: /students/{studentId}/attendance
-    // 出席簿を表示
+    // 生徒の出席簿（3年分まとめ）を表示
     @GetMapping("/{id}/attendance")
     public String attendance(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
@@ -368,7 +412,7 @@ public class StudentsController {
     }
 
     // path: /students/{studentId}/attendance/edit
-    // 一括編集する出欠（月ごと）を表示
+    // 生徒の出席簿（月ごと・編集用）を表示
     @GetMapping("/{id}/attendance/edit")
     public String editAttendance(@PathVariable String id, Model model, @ModelAttribute("year") Long year,
             @ModelAttribute("month") Long month) {
@@ -388,11 +432,14 @@ public class StudentsController {
     }
 
     // path: /students/{studentId}/attendance/update
-    // 出欠一括更新
+    // 出席簿一括更新
     @PostMapping("/{id}/attendance/update")
     public String updateAttendance(@PathVariable String id, Model model, AttendanceForm attendanceForm,
-            @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
         attendanceService.update(user.getUserId(), attendanceForm);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "出席簿を更新しました");
         return "redirect:/students/{id}/attendance";
     }
 
@@ -405,7 +452,7 @@ public class StudentsController {
 //    }
 
     // path: /students/{studentId}/grade
-    // 成績を表示
+    // 生徒の成績を表示
     @GetMapping("/{id}/grade")
     public String grade(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
@@ -419,7 +466,7 @@ public class StudentsController {
     }
 
     // path: /students/{studentId}/grade/edit
-    // 一括編集する成績（年度ごと）を表示
+    // 生徒の成績（年度ごと・編集用）を表示
     @GetMapping("/{id}/grade/edit")
     public String editGrade(@PathVariable String id, Model model, @ModelAttribute("year") Long year) {
         Student student = studentsService.findById(id);
@@ -434,8 +481,12 @@ public class StudentsController {
     // path: /students/{studentId}/grade/update
     // 成績一括更新
     @PostMapping("/{id}/grade/update")
-    public String updateGrade(@PathVariable String id, GradeForm gradeForm, @AuthenticationPrincipal User user) {
+    public String updateGrade(@PathVariable String id, GradeForm gradeForm, @AuthenticationPrincipal User user,
+            RedirectAttributes redirectAttributes) {
         gradeService.update(user.getUserId(), gradeForm);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "成績を更新しました");
         return "redirect:/students/{id}/grade";
     }
 

@@ -10,10 +10,18 @@
 				<div class="form-group">
 					<label class="control-label">タイトル</label>
 					<input class="form-control" type="text" name="title" th:value="*{title}" />
+					<div th:object="${noticeForm}">
+						<span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">内容</label>
-					<input class="form-control" type="textarea" name="contents" th:value="*{contents}" />
+					<input class="form-control" th:object="${notice}" type="textarea" name="contents"
+						th:value="*{contents}" />
+					<div th:object="${noticeForm}">
+						<span class="text-danger" th:if="${#fields.hasErrors('contents')}"
+							th:errors="*{contents}"></span>
+					</div>
 				</div>
 				<button class="btn btn-default" type="submit">更新</button>
 			</form>

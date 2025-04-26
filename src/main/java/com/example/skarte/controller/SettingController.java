@@ -104,15 +104,34 @@ public class SettingController {
     // path: /setting/students/new
     // 生徒新規登録ページを表示
     @GetMapping("students/new")
-    public String newStudent() {
+    public String newStudent(@ModelAttribute StudentForm form) {
         return "setting/students/new";
     }
 
     // path: /setting/students/add
     // 画面で入力された生徒情報を取得して、dbに登録をする
+    // ※BindingResultは必ずバリデーション対象オブジェクトの直後に置く
     @PostMapping("/students/add")
-    public String addStudent(StudentForm form, @AuthenticationPrincipal User user) {
+    public String add(@Validated @ModelAttribute StudentForm form, BindingResult result, Model model,
+            @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        if (studentsService.findByStudentId(form.getStudentId()) != null) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "その生徒IDはすでに登録済みです");
+            model.addAttribute("form", form);
+            return "setting/students/new";
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "登録に失敗しました");
+            model.addAttribute("form", form);
+            return "setting/students/new";
+        }
         studentsService.add(user.getUserId(), form);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "生徒を登録しました");
         return "redirect:/setting/students/" + form.getStudentId();
     }
 
@@ -139,7 +158,7 @@ public class SettingController {
     // path: /setting/students/{id}/edit
     // 生徒情報編集画面を表示
     @GetMapping("/students/{id}/edit")
-    public String edit(@PathVariable String id, Model model) {
+    public String edit(@PathVariable String id, Model model, @ModelAttribute StudentForm form) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
         boolean dataExists = studentsService.dataExists(id);
@@ -150,8 +169,22 @@ public class SettingController {
     // path: /setting/students/{id}/update
     // 生徒情報編集画面から生徒情報を更新する
     @PostMapping("/students/{id}/update")
-    public String updateStudent(@PathVariable String id, StudentForm form, @AuthenticationPrincipal User user) {
+    public String update(@PathVariable String id, @Validated @ModelAttribute StudentForm form,
+            BindingResult result, Model model, @AuthenticationPrincipal User user,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "更新に失敗しました");
+//            model.addAttribute("form", form);
+            Student student = studentsService.findById(id);
+            model.addAttribute("student", student);
+            return "setting/students/edit";
+        }
         studentsService.update(id, form, user.getUserId());
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "生徒を更新しました");
         return "redirect:/setting/students/" + id;
     }
 
@@ -190,16 +223,53 @@ public class SettingController {
     // path: /setting/students/upload
     // 生徒をcsvでアップロードする★★★お試し！
     @PostMapping(value = "/students/upload", params = "upload_file")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user)
-            throws IOException {
+    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user, Model model,
+            StudentForm form, RedirectAttributes redirectAttributes) throws Exception {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            studentsService.upload(user.getUserId(), br);
+            List<Student> studentList = studentsService.upload(user.getUserId(), br);
+            if (studentList.size() != 0) {
+                redirectAttributes.addFlashAttribute("hasMessage", true);
+                redirectAttributes.addFlashAttribute("class", "alert-info");
+                redirectAttributes.addFlashAttribute("message", studentList.size() + "人の生徒を登録しました");
+                return "redirect:/setting/students";
+            } else {
+                model.addAttribute("hasMessage", true);
+                model.addAttribute("class", "alert-danger");
+                model.addAttribute("message", "登録に失敗しました。入力必須項目や、生徒IDの重複などを確認してください");
+                return "setting/students/new";
+            }
         } catch (IOException e) {
-            throw new RuntimeException("ファイルが読み込めません", e);
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "登録に失敗しました。ファイルが読み込みできません" + " " + e);
+            return "setting/students/new";
+        } catch (Exception e) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "登録に失敗しました" + " " + e);
+            return "setting/students/new";
         }
-        return "redirect:/setting/students";
     }
+//        }catch (Exception e) {
+//            model.addAttribute("hasMessage", true);
+//            model.addAttribute("class", "alert-danger");
+//            model.addAttribute("message", "登録に失敗しました" + " " + e.getMessage());
+////            model.addAttribute("form", form);
+//            return "setting/students/new";
+//        }
+
+//        } catch (IOException e) {
+//            throw new RuntimeException("ファイルが読み込めませんでした", e);
+//        } catch (Exception e) {
+//            model.addAttribute("hasMessage", true);
+//            model.addAttribute("class", "alert-danger");
+//            model.addAttribute("message", "登録に失敗しました" + " " + e.getMessage());
+////            model.addAttribute("form", form);
+//            return "setting/students/new";
+//        }
+//        return "redirect:/setting/students";
+//    }
 
 //    // path: /setting/students/upload
 //    // 生徒をcsvでアップロードする
@@ -272,11 +342,15 @@ public class SettingController {
     public String createClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
             @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, StudentYearForm studentYearForm,
             @AuthenticationPrincipal User user) {
-        studentsYearService.create(user.getUserId(), studentYearForm, year, nen, kumi);
+        List<String> create = studentsYearService.create(user.getUserId(), studentYearForm, year, nen, kumi);
         studentsYearService.sort(year, nen, kumi, user.getUserId());
         redirectAttributes.addFlashAttribute("year", year);
         redirectAttributes.addFlashAttribute("nen", nen);
         redirectAttributes.addFlashAttribute("kumi", kumi);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message",
+                create.size() + "人の生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
         return "redirect:/setting/class/list";
     }
 
@@ -302,6 +376,9 @@ public class SettingController {
         redirectAttributes.addFlashAttribute("year", year);
         redirectAttributes.addFlashAttribute("nen", nen);
         redirectAttributes.addFlashAttribute("kumi", kumi);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
         return "redirect:/setting/class/list";
     }
 
@@ -337,20 +414,53 @@ public class SettingController {
         return "redirect:/setting/class/list";
     }
 
-    // path: /setting/class/{studentYearId}/upload
-    // クラス編集画面から写真を登録
-    @PostMapping("/class/{id}/upload")
-    public String upload(@PathVariable Long id, @AuthenticationPrincipal User user, StudentYearForm studentYearForm)
+    // path: /setting/class/{studentYearId}/image/add
+    // クラス編集画面から写真を追加
+    @PostMapping("/class/{id}/image/add")
+    public String upload(@PathVariable Long id, @AuthenticationPrincipal User user, StudentYearForm studentYearForm,
+            BindingResult result, RedirectAttributes redirectAttributes, @RequestParam("image") MultipartFile file)
             throws IOException {
-        if (!(studentYearForm.getImage().isEmpty())) {
-            studentsYearService.upload(id, user.getUserId(), studentYearForm);
+        // ファイルタイプのバリデーション
+        String contentType = studentYearForm.getImage().getContentType();
+//        String contentType = file.getContentType();
+        if ((!contentType.startsWith("image/")) && (!(studentYearForm.getImage().isEmpty()))) {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "登録に失敗しました。画像ファイルをアップロードしてください");
+        }
+        // ファイルサイズのバリデーション（1MB以下）
+        long maxFileSize = 1 * 1024 * 1024;
+        if ((studentYearForm.getImage().getSize() > maxFileSize) && (!(studentYearForm.getImage().isEmpty()))) {
+//        if (file.getSize() > maxFileSize) {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "登録に失敗しました。ファイルサイズは最大1MBです");
+        }
+        // その他のエラー
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "登録に失敗しました");
+        }
+        if ((contentType.startsWith("image/")) && (studentYearForm.getImage().getSize() <= maxFileSize)
+                && (!(studentYearForm.getImage().isEmpty()))) {
+            try {
+                studentsYearService.addImage(id, user.getUserId(), studentYearForm);
+                redirectAttributes.addFlashAttribute("hasMessage", true);
+                redirectAttributes.addFlashAttribute("class", "alert-info");
+                redirectAttributes.addFlashAttribute("message", "写真を登録しました");
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("hasMessage", true);
+                redirectAttributes.addFlashAttribute("class", "alert-danger");
+                redirectAttributes.addFlashAttribute("message", "登録に失敗しました。ファイルが読み込みできません" + " " + e);
+            }
         }
         return "redirect:/setting/class/" + id;
     }
 
-    // path: /setting/class/{studentYearId}/deleteImage
+    // path: /setting/class/{studentYearId}/image/delete
     // クラス編集画面から写真を削除
-    @GetMapping("/class/{id}/deleteImage")
+    @GetMapping("/class/{id}/image/delete")
     public String deleteImage(@PathVariable Long id) {
         studentsYearService.deleteImage(id);
         return "redirect:/setting/class/" + id;
@@ -383,6 +493,9 @@ public class SettingController {
             @AuthenticationPrincipal User user) {
         scheduleService.newSchedule(year, user.getUserId());
         redirectAttributes.addFlashAttribute("year", year);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", year + "年度のスケジュールを登録しました");
         return "redirect:/setting/schedule/year";
     }
 
@@ -393,6 +506,9 @@ public class SettingController {
             @AuthenticationPrincipal User user, Model model, @ModelAttribute("year") Long year) {
         scheduleService.update(user.getUserId(), scheduleForm);
         redirectAttributes.addFlashAttribute("year", year);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", year + "年度のスケジュールを更新しました");
         return "redirect:/setting/schedule/year";
     }
 
@@ -408,18 +524,18 @@ public class SettingController {
     //
     // 以下管理用
 
-    // path: /setting/students/{attendanceId}/deleteAttendance
+    // path: /setting/students/{attendanceId}/attendance/delete
     // 出欠を削除
-    @GetMapping("/students/{id}/deleteAttendance")
+    @GetMapping("/students/{id}/attendance/delete")
     public String deleteAttendance(@PathVariable Long id) {
         Attendance attendance = attendanceService.findById(id);
         attendanceService.deleteAttendance(id);
         return "redirect:/setting/students/" + attendance.getStudentId();
     }
 
-    // path: /setting/students/{gradeId}/deleteGrade
+    // path: /setting/students/{gradeId}/grade/delete
     // 成績を削除
-    @GetMapping("/students/{id}/deleteGrade")
+    @GetMapping("/students/{id}/grade/delete")
     public String deleteGrade(@PathVariable Long id) {
         Grade grade = gradeService.findById(id);
         gradeService.deleteGrade(id);

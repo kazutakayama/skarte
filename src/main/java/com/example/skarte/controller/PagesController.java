@@ -1,5 +1,7 @@
 package com.example.skarte.controller;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +82,15 @@ public class PagesController {
         kyouka.put(8, "技術家庭");
         kyouka.put(9, "英語");
         model.addAttribute("kyouka", kyouka);
+        // 現在の「年度」の取得       
+        LocalDate date = LocalDate.now();
+        int nendo;
+        if (date.getMonthValue() >= 4) {
+            nendo = date.getYear();
+        }else {
+            nendo = date.getYear() - 1;
+        }        
+        model.addAttribute("nendo", nendo);
     }
 
 }

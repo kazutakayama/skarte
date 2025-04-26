@@ -54,7 +54,7 @@
 					<td colspan="8" rowspan="5">
 						<th:block th:if="${studentYear != null}">
 							<th:block th:if="${images[__${stat.index}__] != null}">
-								<img th:src="${'data:image/png;base64,'+images[__${stat.index}__]}" alt="写真" width="100">
+								<img th:src="${images[__${stat.index}__]}" alt="写真" width="100">
 							</th:block>
 							<th:block th:if="${images[__${stat.index}__] == null}">
 								写真未登録
@@ -90,7 +90,6 @@
 
 		<div><a href="/setting/students">生徒管理にもどる</a></div>
 
-		<br>
 		<!--以下、管理用-->
 		<table>
 			<tr>
@@ -106,7 +105,7 @@
 							<td th:text="${#dates.format(attendance.date, 'yyyy-MM-dd')}"></td>
 							<td th:text="${syukketsu[__${attendance.kiroku}__]}"></td>
 							<td><a
-									th:href="@{/setting/students/{id}/deleteAttendance (id=${attendance.attendanceId})}">削除</a>
+									th:href="@{/setting/students/{id}/attendance/delete (id=${attendance.attendanceId})}">削除</a>
 							</td>
 						</tr>
 					</table>
@@ -126,7 +125,7 @@
 							<td th:text="${grade.term}"></td>
 							<td th:text="${kyouka[__${grade.subject}__]}"></td>
 							<td th:text="${grade.rating}"></td>
-							<td><a th:href="@{/setting/students/{id}/deleteGrade (id=${grade.gradeId})}">削除</a>
+							<td><a th:href="@{/setting/students/{id}/grade/delete (id=${grade.gradeId})}">削除</a>
 							</td>
 						</tr>
 

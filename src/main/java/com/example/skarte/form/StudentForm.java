@@ -3,6 +3,7 @@ package com.example.skarte.form;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.skarte.entity.Attendance;
@@ -16,8 +17,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,70 +30,90 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
+//@Valid
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
 @EqualsAndHashCode(callSuper = false) // EntityBase
 public class StudentForm extends EntityBase { // EntityBase
+    
+//    @Valid
+//    private List<StudentForm> studentFormLista;
 
     /** ID */
-//    @NotEmpty
-    private String studentId = null;
+//    @NotEmpty(message = "「生徒ID」を入力してください")
+//    @NotBlank(message = "「生徒ID」を入力してください")
+    @Pattern(regexp="^[0-9]{7}$", message = "「生徒ID」は半角数字7桁で入力してください")
+    private String studentId;
 
     /** 姓 */
-    @NotEmpty
-    private String lastName = null;
+    @NotBlank(message = "「姓」を入力してください")
+    @Size(max=20, message = "「姓」は20字文字以内で入力してください")
+    private String lastName;
 
     /** 名 */
-    @NotEmpty
-    private String firstName = null;
+    @NotBlank(message = "「名」を入力してください")
+    @Size(max=20, message = "「名」は20文字以内で入力してください")
+    private String firstName;
 
     /** せい */
-    @NotEmpty
-    private String lastNameKana = null;
+    @NotBlank(message = "「せい」を入力してください")
+    @Pattern(regexp="^[\u3040-\u309F]{0,20}$", message = "「せい」はひらがな20文字以内で入力してください")
+    private String lastNameKana;
 
     /** めい */
-    @NotEmpty
-    private String firstNameKana = null;
+    @NotBlank(message = "「めい」を入力してください")
+    @Pattern(regexp="^[\u3040-\u309F]{0,20}$", message = "「めい」はひらがな20文字以内で入力してください")
+    private String firstNameKana;
 
     /** 生年月日 */
-    @NotNull
+    @NotNull(message = "「生年月日」を入力してください")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth = null;
+    private Date birth;
 
     /** 性別 */
-    @NotNull
-    private Integer gender = null;
+    @NotNull(message = "「性別」を入力してください")
+    @Range(min = 1, max = 3, message = "1:男,2:女,3:他のいずれかの半角数字を入力してください")
+    private Integer gender;
 
-    /** 家族1 */
-    private String family1 = null;
+    /** 保護者1 */
+    @Size(max=30, message = "「保護者名」は30文字以内で入力してください")
+    private String family1;
 
-    /** 家族2 */
-    private String family2 = null;
+    /** 保護者2 */
+    @Size(max=30, message = "「保護者名」は30文字以内で入力してください")
+    private String family2;
 
     /** 電話1 */
-    private String tel1 = null;
+    @Pattern(regexp="^[0-9-]{0,13}$", message = "「電話番号」は13桁以内で入力してください※半角数字,ハイフン(-)が使用できます")
+    private String tel1;
 
     /** 電話2 */
-    private String tel2 = null;
+    @Pattern(regexp="^[0-9-]{0,13}$", message = "「電話番号」は13桁以内で入力してください※半角数字,ハイフン(-)が使用できます")
+    private String tel2;
 
     /** 電話3 */
-    private String tel3 = null;
+    @Pattern(regexp="^[0-9-]{0,13}$", message = "「電話番号」は13桁以内で入力してください※半角数字,ハイフン(-)が使用できます")
+    private String tel3;
 
     /** 電話4 */
-    private String tel4 = null;
+    @Pattern(regexp="^[0-9-]{0,13}$", message = "「電話番号」は13桁以内で入力してください※半角数字,ハイフン(-)が使用できます")
+    private String tel4;
 
     /** 郵便番号 */
-    private String postalCode = null;
+    @Pattern(regexp="^[0-9-]{0,8}$", message = "「郵便番号」は8桁以内で入力してください※半角数字,ハイフン(-)が使用できます")
+    private String postalCode;
 
     /** 住所 */
-    private String adress = null;
+    @Size(max=100, message = "「住所」は100文字以内で入力してください")
+    private String adress;
 
     /** メモ */
-    private String memo = null;
+    @Size(max=500, message = "「メモ」は500文字以内で入力してください")
+    private String memo;
 
     /** 転出 */
-    private boolean transferred = false;
+    private boolean transferred;
 
     // リスト
     private List<String> studentIds;

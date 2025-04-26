@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
+import com.example.skarte.entity.User;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, String> , JpaSpecificationExecutor<Student>{
@@ -26,6 +27,9 @@ public interface StudentRepository extends JpaRepository<Student, String> , JpaS
 //    List<Student> findByDeletedFalseOrderByUpdatedAtDesc();
 
     List<Student> findByOrderByUpdatedAtDesc();
+    
+    Student findByStudentId(String studentId);
+    
 //    List<Student> findAll();
 //    List<Student> findAllByOrderById(String id);
     

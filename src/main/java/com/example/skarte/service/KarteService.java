@@ -52,9 +52,9 @@ public class KarteService {
      * @param karte
      * @return
      */
-    public void add(String userId, KarteForm karteForm) {
+    public void add(String studentId, String userId, KarteForm karteForm) {
         Karte karte = new Karte();
-        karte.setStudentId(karteForm.getStudentId());
+        karte.setStudentId(studentId);
         karte.setDate(karteForm.getDate());
         karte.setContents(karteForm.getContents());
         karte.setCreatedBy(userId);
@@ -81,7 +81,7 @@ public class KarteService {
      * 
      * @param karte
      */
-    public void deleteKarte(Long id) {
+    public void delete(Long id) {
         Karte karte = karteRepository.findById(id).orElseThrow();
         karteRepository.delete(karte);
     }

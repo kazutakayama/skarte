@@ -5,17 +5,20 @@
 <body>
 	<div layout:fragment="students">
 		<h2>カルテ</h2>
-		<form th:action="@{/students/karte/add}" th:method="post" th:object="${student}">
-			<div class="form-group">
-				<input class="form-control" type="hidden" th:field="*{studentId}" />
-			</div>
+		<form th:action="@{/students/{id}/karte/add (id=${student.studentId})}" th:method="post"
+			th:object="${karteForm}">
 			<div class="form-group">
 				<label class="control-label">日付</label>
-				<input class="form-control" type="date" name="date" />
+				<input class="form-control" type="date" th:field="*{date}" th:errorclass="border-danger" />
+				<div class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">
+				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label">内容</label>
-				<input class="form-control" type="text" name="contents" />
+				<input class="form-control" type="textarea" name="contents" th:value="*{contents}"
+					th:errorclass="border-danger" />
+				<div class="text-danger" th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}">
+				</div>
 			</div>
 			<button class="btn btn-default" type="submit">登録</button>
 		</form>
@@ -39,7 +42,7 @@
 						<td th:text="${karte.contents}"></td>
 						<td th:text="${updateUser[__karte.updatedBy__]}"></td>
 						<td th:text="${#dates.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
-						<td><a th:href="@{/students/{id}/editKarte(id=${karte.karteId})}" class="edit">編集</a></td>
+						<td><a th:href="@{/students/{id}/karte/edit(id=${karte.karteId})}" class="edit">編集</a></td>
 					</tr>
 				</tbody>
 			</table> 　　　　　　　　
