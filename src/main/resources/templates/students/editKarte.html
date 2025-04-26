@@ -7,21 +7,29 @@
 
 		<h2>カルテ編集</h2>
 		<div th:each="karte : ${karte}">
-			<form th:action="@{/students/{id}/updateKarte (id=${karte.karteId})}" th:method="post" th:object="${karte}">
+			<form th:action="@{/students/{id}/karte/update (id=${karte.karteId})}" th:method="post"
+				th:object="${karte}">
 				<input class="form-control" type="hidden" th:field="*{studentId}" />
 				<div class="form-group">
 					<label class="control-label">日付</label>
 					<input class="form-control" type="date" th:field="*{date}" />
+					<div th:object="${karteForm}">
+						<span class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></span>
+					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">内容</label>
 					<input class="form-control" type="text" th:field="*{contents}" />
+					<div th:object="${karteForm}">
+						<span class="text-danger" th:if="${#fields.hasErrors('contents')}"
+							th:errors="*{contents}"></span>
+					</div>
 				</div>
 				<button class="btn btn-default" type="submit">更新</button>
 			</form>
 			<div><a th:href="@{/students/{id}/karte (id=${karte.studentId})}">キャンセル</a></div>
 
-			<div><a th:href="@{/students/{id}/deleteKarte (id=${karte.karteId})}">
+			<div><a th:href="@{/students/{id}/karte/delete (id=${karte.karteId})}">
 					削除
 				</a></div>
 		</div>

@@ -3,6 +3,7 @@ package com.example.skarte.form;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.skarte.entity.Attendance;
@@ -23,6 +24,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,19 +37,9 @@ import lombok.NoArgsConstructor;
 
 public class GradeForm extends EntityBase { // EntityBase {
     /** ID */
-//    @Id
-//    @SequenceGenerator(name = "studentsYear_studentYearId_seq", sequenceName = "studentsYear_studentYearId_seq", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentsYear_studentYearId_seq")
     private Long gradeId = null;
-//
-//    public void setId(Long studentYearId) {
-//        this.studentYearId = null;
-//    }
 
     private String studentId = null;
-//    @ManyToOne
-//    @JoinColumn(name = "studentId", insertable = false, updatable = false)
-//    private Student students;
 
     /** 年度 */
     private Long year = null;

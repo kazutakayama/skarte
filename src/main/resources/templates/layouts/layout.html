@@ -8,6 +8,10 @@
 </head>
 
 <body>
+	<div th:if="${hasMessage}" class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
+		<span th:text="${message}"></span>
+	</div>
+
 	<header>
 		<h1><a href="/top">Skarte</a></h1>
 		<!--<h1>Skarte</h1>

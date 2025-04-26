@@ -72,8 +72,19 @@
 										th:value="${(stat.index + 9)/9}" />
 									<input class="form-control" type="hidden" name="subjects[]"
 										th:value="${(stat.index +((stat.index + 9)/9))%10}" />
-									<input class="form-control" type="number" name="ratings[]"
-										th:value="${grade?.rating}" />
+									<select name="ratings[]" th:value="${grade?.rating}">
+										<option value=""></option>
+										<option value="1" th:selected="${grade?.rating == 1}">1
+										</option>
+										<option value="2" th:selected="${grade?.rating == 2}">2
+										</option>
+										<option value="3" th:selected="${grade?.rating == 3}">3
+										</option>
+										<option value="4" th:selected="${grade?.rating == 4}">4
+										</option>
+										<option value="5" th:selected="${grade?.rating == 5}">5
+										</option>
+									</select>
 								</th:block>
 								<th:block th:text="${grade?.rating}"></th:block>
 							</td>

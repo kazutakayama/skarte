@@ -2,7 +2,6 @@ package com.example.skarte.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,7 +66,7 @@ public class AttendanceController {
     }
 
     // path: /attendance/edit
-    // 出席編集画面を表示
+    // 出席簿編集画面を表示
     @GetMapping("/edit")
     public String edit(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
             @ModelAttribute("kumi") Long kumi, @ModelAttribute("month") Long month, @ModelAttribute("day") Long day) {
@@ -86,7 +85,7 @@ public class AttendanceController {
     }
 
     // path: /attendance/update
-    // 出席一括更新
+    // 出席簿一括更新
     @PostMapping("/update")
     public String update(RedirectAttributes redirectAttributes, Model model, AttendanceForm attendanceForm, @ModelAttribute("year") Long year,
             @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, @ModelAttribute("month") Long month,
@@ -96,6 +95,9 @@ public class AttendanceController {
         redirectAttributes.addFlashAttribute("nen", nen);
         redirectAttributes.addFlashAttribute("kumi", kumi);
         redirectAttributes.addFlashAttribute("month", month);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "出席簿を更新しました");
         return "redirect:/attendance/search";
     }
 

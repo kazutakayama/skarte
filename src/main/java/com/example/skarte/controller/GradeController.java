@@ -81,6 +81,9 @@ public class GradeController {
         redirectAttributes.addFlashAttribute("year", year);
         redirectAttributes.addFlashAttribute("nen", nen);
         redirectAttributes.addFlashAttribute("kumi", kumi);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "成績を更新しました");
         return "redirect:/grade/search";
     }
 

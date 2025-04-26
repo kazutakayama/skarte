@@ -8,11 +8,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.Student;
@@ -38,7 +40,7 @@ public class NoticesController {
     // path: /notices
     // お知らせ一覧ページを表示
     @GetMapping("")
-    public String index(Model model) {
+    public String index(Model model, @ModelAttribute NoticeForm form) {
         List<Notice> notices = noticesService.findAll();
         model.addAttribute("notices", notices);
         return "notices/index";
@@ -47,26 +49,51 @@ public class NoticesController {
     // path: /notices/add
     // 画面で入力されたお知らせを取得して、dbに登録をする
     @PostMapping("/add")
-    public String add(NoticeForm noticeForm, @AuthenticationPrincipal User user) {
-        noticesService.add(user.getUserId(), noticeForm);
+    public String add(@ModelAttribute @Validated NoticeForm form, BindingResult result, Model model,
+            @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "登録に失敗しました");
+            model.addAttribute("form", form);
+            List<Notice> notices = noticesService.findAll();
+            model.addAttribute("notices", notices);
+            return "notices/index";
+        }
+        noticesService.add(user.getUserId(), form);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "お知らせを登録しました");
         return "redirect:/notices";
     }
 
-    // path: /notices/contents/{noticeId}/edit
+    // path: /notices/{noticeId}/edit
     // お知らせ詳細からお知らせ編集へのリンク
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
+    public String edit(@PathVariable Long id, Model model, NoticeForm form) {
         Notice notice = noticesService.findById(id);
         model.addAttribute("notice", notice);
         return "notices/edit";
     }
 
-    // path: /notices/contents/{id}/update
+    // path: /notices/{noticeId}/update
     // 編集画面からお知らせを更新する
     @PostMapping("/{id}/update")
-    public String update(@PathVariable Long id, @ModelAttribute NoticeForm noticeForm,
-            @AuthenticationPrincipal User user) {
-        noticesService.update(id, noticeForm, user.getUserId());
+    public String update(@PathVariable Long id, @ModelAttribute @Validated NoticeForm form, BindingResult result,
+            @AuthenticationPrincipal User user, Model model, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "更新に失敗しました");
+            model.addAttribute("form", form);
+            Notice notice = noticesService.findById(id);
+            model.addAttribute("notice", notice);
+            return "notices/edit";
+        }
+        noticesService.update(id, form, user.getUserId());
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "お知らせを更新しました");
         return "redirect:/notices";
     }
 

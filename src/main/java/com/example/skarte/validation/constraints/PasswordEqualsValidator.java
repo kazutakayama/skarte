@@ -18,7 +18,7 @@ public class PasswordEqualsValidator implements ConstraintValidator<PasswordEqua
     public void initialize(PasswordEquals annotation) {
         field1 = "password";
         field2 = "passwordConfirmation";
-        message = annotation.message();
+        message = "パスワードが一致しません";
     }
 
     @Override

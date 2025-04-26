@@ -30,7 +30,7 @@ public class UsersController {
     // path: /users/new
     // 新規登録ページを表示
     @GetMapping("/new")
-    public String newUser(Model model) {
+    public String newUser(Model model, @ModelAttribute UserForm form) {
         model.addAttribute("form", new UserForm());
         return "users/new";
     }
@@ -38,21 +38,25 @@ public class UsersController {
     // path: /users/add
     // 画面で入力されたユーザー情報を取得して、dbに登録をする
     @PostMapping("/add")
-    public String add(@Validated @ModelAttribute("form") UserForm form, BindingResult result, Model model,
-            RedirectAttributes redirAttrs) {
+    public String add(@ModelAttribute @Validated UserForm form, BindingResult result, Model model,
+            RedirectAttributes redirectAttributes) {
         String userId = form.getUserId();
         String lastName = form.getLastName();
         String firstName = form.getFirstName();
         String password = form.getPassword();
 
-        if (repository.findByUserId(userId) != null) {
-            FieldError fieldError = new FieldError(result.getObjectName(), "userId", "そのユーザーIDはすでに使用されています。");
-            result.addError(fieldError);
+        if (repository.findByUserId(form.getUserId()) != null) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "そのユーザーIDはすでに使用されています");
+            model.addAttribute("form", form);
+            return "users/new";
         }
         if (result.hasErrors()) {
             model.addAttribute("hasMessage", true);
             model.addAttribute("class", "alert-danger");
-            model.addAttribute("message", "ユーザー登録に失敗しました。");
+            model.addAttribute("message", "登録に失敗しました");
+            model.addAttribute("form", form);
             return "users/new";
         }
 

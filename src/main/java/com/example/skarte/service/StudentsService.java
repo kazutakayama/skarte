@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.sql.Date;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.skarte.bean.StudentsCsv;
@@ -47,6 +52,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import jakarta.persistence.Column;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 //import io.micrometer.common.util.StringUtils;
@@ -72,6 +81,10 @@ public class StudentsService {
     // 生徒１件取得
     public Student findById(String id) {
         return studentRepository.findById(id).orElseThrow();
+    }
+
+    public Student findByStudentId(String id) {
+        return studentRepository.findByStudentId(id);
     }
 
     // 生徒検索（生徒名、年度）
@@ -209,8 +222,73 @@ public class StudentsService {
         return mapper.writer(schema).writeValueAsString(csvs);
     }
 
-    // 生徒CSVアップロード ★一旦完成版
-    public void upload(String userId, BufferedReader br) throws IOException {
+//    // 生徒CSVアップロード ★一旦完成版
+//    public void uploadCsv(String userId, BufferedReader br) throws IOException {
+//        String line;
+//        // ヘッダーレコードをとばすためにあらかじめ１行だけ読み取っておく
+//        line = br.readLine();
+//        // 行がNULL（CSVの値がなくなる）になるまで処理を繰り返す
+//        while ((line = br.readLine()) != null) {
+//            // 負の数字を引数に指定し、中身が空でも、全ての要素を取得
+//            String[] split = line.split(",", -1);
+//            StudentForm studentForm = StudentForm.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
+//                    .lastNameKana(split[3]).firstNameKana(split[4]).birth(Date.valueOf(split[5]))
+//                    .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
+//                    .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
+//                    .memo(split[15]).build();
+//            add(userId, studentForm);
+////            Student student = new Student();
+////            student.setStudentId(studentForm.getStudentId());
+////            student.setLastName(studentForm.getLastName());
+////            student.setFirstName(studentForm.getFirstName());
+////            student.setLastNameKana(studentForm.getLastNameKana());
+////            student.setFirstNameKana(studentForm.getFirstNameKana());
+////            student.setBirth(studentForm.getBirth());
+////            student.setGender(studentForm.getGender());
+////            student.setFamily1(studentForm.getFamily1());
+////            student.setFamily2(studentForm.getFamily2());
+////            student.setTel1(studentForm.getTel1());
+////            student.setTel2(studentForm.getTel2());
+////            student.setTel3(studentForm.getTel3());
+////            student.setTel4(studentForm.getTel4());
+////            student.setPostalCode(studentForm.getPostalCode());
+////            student.setAdress(studentForm.getAdress());
+////            student.setMemo(studentForm.getMemo());
+////            student.setCreatedBy(userId);
+////            student.setUpdatedBy(userId);
+////            studentRepository.save(student);
+//        }
+//    }
+
+    // オブジェクトのバリデーション（CSVアップロード用）
+    public int validation(Object object) {
+        // バリデーターを取得
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        // バリデーションの実行
+        Set<ConstraintViolation<Object>> result = validator.validate(object);
+        // エラーがなければ0を返す
+        return result.size();
+    }
+
+//    // オブジェクトのバリデーション（CSVアップロード用）
+//    private Object validation(Object obj) {
+//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+//        Validator validator = factory.getValidator();
+//        // バリデーションの実行
+//        Set<ConstraintViolation<Object>> result = validator.validate(obj);
+//        return result;
+//    }
+
+    // ★おためし 生徒CSVアップロード ★一旦完成版
+    public List<Student> upload(String userId, BufferedReader br) throws Exception {
+        // 「登録に成功した生徒のリスト」
+        List<Student> studentList = new ArrayList<>();
+        // 「登録待ち生徒のリスト」
+        List<StudentForm> studentFormList = new ArrayList<>();
+        // 「エラー生徒のリスト」
+        List<StudentForm> errorList = new ArrayList<>();
+
         String line;
         // ヘッダーレコードをとばすためにあらかじめ１行だけ読み取っておく
         line = br.readLine();
@@ -218,60 +296,112 @@ public class StudentsService {
         while ((line = br.readLine()) != null) {
             // 負の数字を引数に指定し、中身が空でも、全ての要素を取得
             String[] split = line.split(",", -1);
-            StudentForm studentForm = StudentForm.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
+            StudentForm form = StudentForm.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
                     .lastNameKana(split[3]).firstNameKana(split[4]).birth(Date.valueOf(split[5]))
                     .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
                     .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
                     .memo(split[15]).build();
-            add(userId, studentForm);
+            // バリデーション
+            int result = validation(form);
+            // エラーがなければresultが0 && 生徒IDがすでに登録済みでないか確認 → 「登録待ち生徒のリスト」に追加
+            if (result == 0 && findByStudentId(form.getStudentId()) == null) {
+                studentFormList.add(form);
+                // エラーがあった場合、「エラー生徒のリスト」に追加
+            } else {
+                errorList.add(form);
+            }
+        }
+        // ここまでひとりもエラーがなければ、新規登録生徒どうしの生徒IDの重複チェックを行う
+        if (errorList.size() == 0) {
+            // データの重複を許さないHashSetに生徒IDを追加する
+            HashSet<String> set = new HashSet<>();
+            for (int i = 0; i < studentFormList.size(); i++) {
+                set.add(studentFormList.get(i).getStudentId());
+            }
+            // 重複がない場合、新規登録する
+            if (studentFormList.size() == set.size()) {
+                for (int i = 0; i < studentFormList.size(); i++) {
+                    Student student = new Student();
+                    student.setStudentId(studentFormList.get(i).getStudentId());
+                    student.setLastName(studentFormList.get(i).getLastName());
+                    student.setFirstName(studentFormList.get(i).getFirstName());
+                    student.setLastNameKana(studentFormList.get(i).getLastNameKana());
+                    student.setFirstNameKana(studentFormList.get(i).getFirstNameKana());
+                    student.setBirth(studentFormList.get(i).getBirth());
+                    student.setGender(studentFormList.get(i).getGender());
+                    student.setFamily1(studentFormList.get(i).getFamily1());
+                    student.setFamily2(studentFormList.get(i).getFamily2());
+                    student.setTel1(studentFormList.get(i).getTel1());
+                    student.setTel2(studentFormList.get(i).getTel2());
+                    student.setTel3(studentFormList.get(i).getTel3());
+                    student.setTel4(studentFormList.get(i).getTel4());
+                    student.setPostalCode(studentFormList.get(i).getPostalCode());
+                    student.setAdress(studentFormList.get(i).getAdress());
+                    student.setMemo(studentFormList.get(i).getMemo());
+                    student.setCreatedBy(userId);
+                    student.setUpdatedBy(userId);
+                    studentRepository.save(student);
+                    studentList.add(student);
+                }
+            }
+        }
+        return studentList;
+    }
+
+//        if (errorList.size() == 0) {
+//            for (int i = 0; i < studentFormList.size(); i++) {
+//                Student student = new Student();
+//                student.setStudentId(studentFormList.get(i).getStudentId());
+//                student.setLastName(studentFormList.get(i).getLastName());
+//                student.setFirstName(studentFormList.get(i).getFirstName());
+//                student.setLastNameKana(studentFormList.get(i).getLastNameKana());
+//                student.setFirstNameKana(studentFormList.get(i).getFirstNameKana());
+//                student.setBirth(studentFormList.get(i).getBirth());
+//                student.setGender(studentFormList.get(i).getGender());
+//                student.setFamily1(studentFormList.get(i).getFamily1());
+//                student.setFamily2(studentFormList.get(i).getFamily2());
+//                student.setTel1(studentFormList.get(i).getTel1());
+//                student.setTel2(studentFormList.get(i).getTel2());
+//                student.setTel3(studentFormList.get(i).getTel3());
+//                student.setTel4(studentFormList.get(i).getTel4());
+//                student.setPostalCode(studentFormList.get(i).getPostalCode());
+//                student.setAdress(studentFormList.get(i).getAdress());
+//                student.setMemo(studentFormList.get(i).getMemo());
+//                student.setCreatedBy(userId);
+//                student.setUpdatedBy(userId);
+//                studentRepository.save(student);
+//                studentList.add(student);
+//            }
+//        }
+
+//            form.add(studentForm);
+//        for (int i = 0; i < form.size(); i++) {           
 //            Student student = new Student();
-//            student.setStudentId(studentForm.getStudentId());
-//            student.setLastName(studentForm.getLastName());
-//            student.setFirstName(studentForm.getFirstName());
-//            student.setLastNameKana(studentForm.getLastNameKana());
-//            student.setFirstNameKana(studentForm.getFirstNameKana());
-//            student.setBirth(studentForm.getBirth());
-//            student.setGender(studentForm.getGender());
-//            student.setFamily1(studentForm.getFamily1());
-//            student.setFamily2(studentForm.getFamily2());
-//            student.setTel1(studentForm.getTel1());
-//            student.setTel2(studentForm.getTel2());
-//            student.setTel3(studentForm.getTel3());
-//            student.setTel4(studentForm.getTel4());
-//            student.setPostalCode(studentForm.getPostalCode());
-//            student.setAdress(studentForm.getAdress());
-//            student.setMemo(studentForm.getMemo());
+//            student.setStudentId(form.get(i).getStudentId());
+//            student.setLastName(form.get(i).getLastName());
+//            student.setFirstName(form.get(i).getFirstName());
+//            student.setLastNameKana(form.get(i).getLastNameKana());
+//            student.setFirstNameKana(form.get(i).getFirstNameKana());
+//            student.setBirth(form.get(i).getBirth());
+//            student.setGender(form.get(i).getGender());
+//            student.setFamily1(form.get(i).getFamily1());
+//            student.setFamily2(form.get(i).getFamily2());
+//            student.setTel1(form.get(i).getTel1());
+//            student.setTel2(form.get(i).getTel2());
+//            student.setTel3(form.get(i).getTel3());
+//            student.setTel4(form.get(i).getTel4());
+//            student.setPostalCode(form.get(i).getPostalCode());
+//            student.setAdress(form.get(i).getAdress());
+//            student.setMemo(form.get(i).getMemo());
 //            student.setCreatedBy(userId);
 //            student.setUpdatedBy(userId);
 //            studentRepository.save(student);
-        }
-    }
+//           
+//        }
 
-//    // 生徒CSVアップロード★★★お試し！
-//    public void uploadCsv(String userId, BufferedReader br, StudentForm studentForm) throws IOException {
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        String line;
-//        // ヘッダーレコードをとばすためにあらかじめ１行だけ読み取っておく
-//        line = br.readLine();
-//        // 行がNULL（CSVの値がなくなる）になるまで処理を繰り返す
-//        while ((line = br.readLine()) != null) {
-//            // 負の数字を引数に指定し、中身が空でも、全ての要素を取得
-//            
-//            String[] split = line.split(",", -1);
-//            Student student = Student.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
-//                    .lastNameKana(split[3]).firstNameKana(split[4]).birth(format.parse(split[5]))
-//                    .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
-//                    .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
-//                    .memo(split[15]).build();
-//        upload(userId, student);
-//        studentForm.setStudentIds((List<String>) StudentForm.builder().studentId(split[0]).build());
-//        studentForm.setLastNames((List<String>) StudentForm.builder().lastName(split[1]).build());
-//        studentForm.setFirstNames((List<String>) StudentForm.builder().firstName(split[2]).build());
-//        studentForm.setLastNameKanas((List<String>) StudentForm.builder().lastNameKana(split[3]).build());
-//        studentForm.setFirstNameKanas((List<String>) StudentForm.builder().firstNameKana(split[4]).build());
-//        studentForm.setBirths((List<Date>) StudentForm.builder().birth(format.parse(split[5])).build());
-//        
-//        }              
+//    // バリデーションチェック
+//    public StudentForm check(@Validated StudentForm form, BindingResult result) {
+//        return result;
 //    }
 
     // 生徒CSVアップロード

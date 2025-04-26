@@ -39,12 +39,12 @@ public class Notice extends EntityBase { // EntityBase
     }
 
     /** タイトル */
-    @Column(length = 20, nullable = false)
+    @Column
     @NotEmpty
     private String title = null;
 
     /** 内容 */
-    @Column(length = 1000, nullable = false)
+    @Column
     private String contents = null;
 
 }

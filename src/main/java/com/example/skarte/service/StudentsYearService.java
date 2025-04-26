@@ -40,9 +40,6 @@ public class StudentsYearService {
     private final GradeRepository gradeRepository;
     private final StudentSpecification studentSpecification;
 
-    @Value("${image.local:false}")
-    private String imageLocal;
-
     /**
      * クラス全取得
      * 
@@ -174,7 +171,7 @@ public class StudentsYearService {
      * @param studentYear
      * @return
      */
-    public void create(String userId, StudentYearForm studentYearForm, Long year, Long nen, Long kumi) {
+    public List<String> create(String userId, StudentYearForm studentYearForm, Long year, Long nen, Long kumi) {
         List<String> studentIds = studentYearForm.getStudentIds();
         if (studentIds != null) {
             // 一括追加生徒を番号1で一時的に登録する
@@ -190,6 +187,7 @@ public class StudentsYearService {
                 studentYearRepository.save(studentYear);
             }
         }
+        return studentIds;
     }
 
     // クラス在籍生徒を1名削除
@@ -215,8 +213,8 @@ public class StudentsYearService {
 //        
 //    }
 
-    // 写真をアップロード
-    public void upload(Long id, String userId, StudentYearForm studentYearForm) throws IOException {
+    // 写真を追加
+    public void addImage(Long id, String userId, StudentYearForm studentYearForm) throws IOException {
         StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
         MultipartFile multipartFile = studentYearForm.getImage();
         byte[] bytes = multipartFile.getBytes();
@@ -235,8 +233,12 @@ public class StudentsYearService {
     // 写真byte[]をbase64に変換（1年分）
     public String image(Long id) {
         StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
+        StringBuffer data = new StringBuffer();
         String image = Base64.getEncoder().encodeToString(studentYear.getImage());
-        return image;
+        // 拡張子をjpegと指定 <img ht:src="">で指定できる形にする
+        data.append("data:image/jpeg;base64,");
+        data.append(image);
+        return data.toString();
     }
 
     // 写真byte[]をbase64に変換（3年分）
@@ -249,26 +251,64 @@ public class StudentsYearService {
         for (int i = 0; i < classList.size(); i++) {
             if (classList.get(i) != null) {
                 if (classList.get(i).getImage() != null) {
+                    StringBuffer data = new StringBuffer();
                     String image = Base64.getEncoder().encodeToString(classList.get(i).getImage());
-                    images.set(i, image);
+                    // 拡張子をjpegと指定 <img ht:src="">で指定できる形にする
+                    data.append("data:image/jpeg;base64,");
+                    data.append(image);
+                    images.set(i, data.toString());
                 }
             }
         }
         return images;
     }
 
-    // クラス在籍生徒をソートし、出席番号を割り振って更新
+// クラス在籍生徒を名前の順にソートし、出席番号を割り振って更新
     public void sort(Long year, Long nen, Long kumi, String userId) {
-        List<StudentYear> result = studentYearRepository.findAll(Specification.where(studentSpecification.year(year))
-                .and(studentSpecification.nen(nen)).and(studentSpecification.kumi(kumi)));
-        result.sort(Comparator.comparing(StudentYear::getStudentId));
-        for (int i = 0; i < result.size(); i++) {
-            StudentYear studentYear = studentYearRepository.findById(result.get(i).getStudentYearId()).orElseThrow();
-            studentYear.setBan((long) i + 1);
-            studentYear.setUpdatedBy(userId);
-            studentYearRepository.save(studentYear);
+        int intYear = Integer.valueOf(year.toString());
+        int intNen = Integer.valueOf(nen.toString());
+        int intKumi = Integer.valueOf(kumi.toString());
+        // クラスの在籍生徒<StudentYear>を取得
+        List<StudentYear> studentsYear = studentYearRepository
+                .findAll(Specification.where(studentSpecification.year(year)).and(studentSpecification.nen(nen))
+                        .and(studentSpecification.kumi(kumi)));
+        // クラスの在籍生徒<Student>を取得
+        List<Student> students = new ArrayList<>();
+        for (int i = 0; i < studentsYear.size(); i++) {
+            Student student = studentRepository.findById(studentsYear.get(i).getStudentId()).orElseThrow();
+            students.add(student);
+        }
+        // 名前の順 lastName → firstName の順にソート
+        students.sort(Comparator.comparing(Student::getLastNameKana)
+                .thenComparing(Comparator.comparing(Student::getFirstNameKana)));
+        // studentIdから<StudentYear>をさがす
+        for (int i = 0; i < students.size(); i++) {
+            List<StudentYear> result = findAllByStudentId(students.get(i).getStudentId());
+            for (int j = 0; j < result.size(); j++) {
+                if (result.get(j).getYear() == intYear && result.get(j).getNen() == intNen
+                        && result.get(j).getKumi() == intKumi) {
+                    // 順番に出席番号を割り振って更新
+                    StudentYear studentYear = result.get(j);
+                    studentYear.setBan((long) i + 1);
+                    studentYear.setUpdatedBy(userId);
+                    studentYearRepository.save(studentYear);
+                }
+            }
         }
     }
+
+//    // クラス在籍生徒をソートし、出席番号を割り振って更新
+//    public void sort(Long year, Long nen, Long kumi, String userId) {
+//        List<StudentYear> result = studentYearRepository.findAll(Specification.where(studentSpecification.year(year))
+//                .and(studentSpecification.nen(nen)).and(studentSpecification.kumi(kumi)));
+//        result.sort(Comparator.comparing(StudentYear::getStudentId));
+//        for (int i = 0; i < result.size(); i++) {
+//            StudentYear studentYear = studentYearRepository.findById(result.get(i).getStudentYearId()).orElseThrow();
+//            studentYear.setBan((long) i + 1);
+//            studentYear.setUpdatedBy(userId);
+//            studentYearRepository.save(studentYear);
+//        }
+//    }
 
     // クラス在籍生徒が削除可能か判定
     // 紐づいた出席簿・成績のデータがないかどうか確認

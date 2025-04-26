@@ -8,14 +8,17 @@
 
 		<h2>お知らせ新規登録</h2>
 
-		<form th:action="@{/notices/add}" th:method="post">
+		<form th:action="@{/notices/add}" th:method="post" th:object="${noticeForm}">
 			<div class="form-group">
 				<label class="control-label">タイトル</label>
-				<input class="form-control" type="text" name="title" />
+				<input class="form-control" type="text" name="title" th:value="*{title}" th:errorclass="border-danger" />
+				<div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
 			</div>
 			<div class="form-group">
 				<label class="control-label">内容</label>
-				<input class="form-control" type="textarea" name="contents" />
+				<input class="form-control" type="textarea" name="contents" th:value="*{contents}"
+					th:errorclass="border-danger" />
+				<div class="text-danger" th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}"></div>
 			</div>
 			<button class="btn btn-default" type="submit">登録</button>
 		</form>
