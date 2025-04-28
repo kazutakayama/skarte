@@ -25,11 +25,11 @@
 							th:errors="*{contents}"></span>
 					</div>
 				</div>
-				<button class="btn btn-default" type="submit">更新</button>
+				<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 			</form>
 			<div><a th:href="@{/students/{id}/karte (id=${karte.studentId})}">キャンセル</a></div>
 
-			<div><a th:href="@{/students/{id}/karte/delete (id=${karte.karteId})}">
+			<div><a onClick="return checkDelete()" th:href="@{/students/{id}/karte/delete (id=${karte.karteId})}">
 					削除
 				</a></div>
 		</div>
@@ -45,10 +45,10 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td th:text="${#dates.format(karte.date, 'yyyy/M/d')}"></td>
+					<td th:text="${karte.date}"></td>
 					<td th:text="${karte.contents}"></td>
 					<td th:text="${updateUser[__karte.updatedBy__]}"></td>
-					<td th:text="${#dates.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
+					<td th:text="${#temporals.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
 				</tr>
 			</tbody>
 		</table> 　　　　　　　　

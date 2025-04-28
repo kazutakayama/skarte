@@ -1,5 +1,6 @@
 package com.example.skarte.form;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class ScheduleForm extends EntityBase {
     private Long scheduleId = null;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date = null;
+    private LocalDate date = null;
 
     private Boolean holiday = false;
 
@@ -33,15 +34,15 @@ public class ScheduleForm extends EntityBase {
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private List<Date> dates;
+    private List<LocalDate> dates;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public List<Date> getDates() {
+    public List<LocalDate> getDates() {
         return dates;
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public void setDates(List<Date> dates) {
+    public void setDates(List<LocalDate> dates) {
         this.dates = dates;
     }
     

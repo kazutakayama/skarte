@@ -1,10 +1,7 @@
 package com.example.skarte.bean;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -30,9 +27,9 @@ public class StudentsCsv {
     @JsonProperty("めい")
     private String firstNameKana;
 
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("生年月日yyyy-MM-dd")
-    private Date birth;  
+    private LocalDate birth;  
 
     @JsonProperty("性別1男2女3他")
     private Integer gender;

@@ -402,10 +402,11 @@ public class StudentsController {
         model.addAttribute("student", student);
         List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
         model.addAttribute("studentsYear", studentsYear);
-
+        
         ArrayList<ArrayList<ArrayList<Integer>>> studentAttendanceSummary = attendanceService
                 .studentAttendanceSummary(id);
         model.addAttribute("attendanceSummary", studentAttendanceSummary);
+        // 3年分のまとめ
         List<Integer> studentAttendanceTotal = attendanceService.studentAttendanceTotal(id);
         model.addAttribute("AttendanceTotal", studentAttendanceTotal);
         return "students/attendance";

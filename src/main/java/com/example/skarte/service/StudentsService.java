@@ -8,10 +8,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-//import java.util.Date;
-import java.sql.Date;
-
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -201,7 +197,10 @@ public class StudentsService {
         // ファイルをダウンロード
         CsvMapper mapper = new CsvMapper();
         // 日付をフォーマット
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        mapper.registerModule(javaTimeModule);
+        
         CsvSchema schema = mapper.schemaFor(StudentsCsv.class).withHeader();
         return mapper.writer(schema).writeValueAsString(csvs);
     }
@@ -217,7 +216,10 @@ public class StudentsService {
         // ファイルをダウンロード
         CsvMapper mapper = new CsvMapper();
         // 日付をフォーマット
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        mapper.registerModule(javaTimeModule);
+        
         CsvSchema schema = mapper.schemaFor(StudentsCsv.class).withHeader();
         return mapper.writer(schema).writeValueAsString(csvs);
     }
@@ -297,7 +299,8 @@ public class StudentsService {
             // 負の数字を引数に指定し、中身が空でも、全ての要素を取得
             String[] split = line.split(",", -1);
             StudentForm form = StudentForm.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
-                    .lastNameKana(split[3]).firstNameKana(split[4]).birth(Date.valueOf(split[5]))
+                    .lastNameKana(split[3]).firstNameKana(split[4])
+                    .birth(LocalDate.parse(split[5], DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
                     .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
                     .memo(split[15]).build();

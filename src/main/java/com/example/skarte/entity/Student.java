@@ -1,7 +1,6 @@
 package com.example.skarte.entity;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -62,7 +61,7 @@ public class Student extends EntityBase { // EntityBase
     @Column
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth = null;
+    private LocalDate birth = null;
 
     /** 性別 */
     @Column

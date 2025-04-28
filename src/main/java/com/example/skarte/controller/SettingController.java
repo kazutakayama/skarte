@@ -169,9 +169,8 @@ public class SettingController {
     // path: /setting/students/{id}/update
     // 生徒情報編集画面から生徒情報を更新する
     @PostMapping("/students/{id}/update")
-    public String update(@PathVariable String id, @Validated @ModelAttribute StudentForm form,
-            BindingResult result, Model model, @AuthenticationPrincipal User user,
-            RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable String id, @Validated @ModelAttribute StudentForm form, BindingResult result,
+            Model model, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("hasMessage", true);
             model.addAttribute("class", "alert-danger");
@@ -302,8 +301,11 @@ public class SettingController {
     // path: /setting/students/{id}/delete
     // 設定/生徒を削除（物理削除）
     @GetMapping("/students/{id}/delete")
-    public String delete(@PathVariable String id) {
+    public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
         studentsService.delete(id);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "生徒を削除しました");
         return "redirect:/setting/students";
     }
 
@@ -347,11 +349,16 @@ public class SettingController {
         redirectAttributes.addFlashAttribute("year", year);
         redirectAttributes.addFlashAttribute("nen", nen);
         redirectAttributes.addFlashAttribute("kumi", kumi);
-        redirectAttributes.addFlashAttribute("hasMessage", true);
-        redirectAttributes.addFlashAttribute("class", "alert-info");
-        redirectAttributes.addFlashAttribute("message",
-                create.size() + "人の生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
-        return "redirect:/setting/class/list";
+        if (create != null) {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-info");
+            redirectAttributes.addFlashAttribute("message",
+                    create.size() + "人の生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
+            return "redirect:/setting/class/list";
+        } else {
+            return "redirect:/setting/class/register";
+        }
+
     }
 
     // path: /setting/class/new
@@ -428,22 +435,13 @@ public class SettingController {
             redirectAttributes.addFlashAttribute("class", "alert-danger");
             redirectAttributes.addFlashAttribute("message", "登録に失敗しました。画像ファイルをアップロードしてください");
         }
-        // ファイルサイズのバリデーション（1MB以下）
-        long maxFileSize = 1 * 1024 * 1024;
-        if ((studentYearForm.getImage().getSize() > maxFileSize) && (!(studentYearForm.getImage().isEmpty()))) {
-//        if (file.getSize() > maxFileSize) {
-            redirectAttributes.addFlashAttribute("hasMessage", true);
-            redirectAttributes.addFlashAttribute("class", "alert-danger");
-            redirectAttributes.addFlashAttribute("message", "登録に失敗しました。ファイルサイズは最大1MBです");
-        }
         // その他のエラー
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("hasMessage", true);
             redirectAttributes.addFlashAttribute("class", "alert-danger");
             redirectAttributes.addFlashAttribute("message", "登録に失敗しました");
         }
-        if ((contentType.startsWith("image/")) && (studentYearForm.getImage().getSize() <= maxFileSize)
-                && (!(studentYearForm.getImage().isEmpty()))) {
+        if ((contentType.startsWith("image/")) && (!(studentYearForm.getImage().isEmpty()))) {
             try {
                 studentsYearService.addImage(id, user.getUserId(), studentYearForm);
                 redirectAttributes.addFlashAttribute("hasMessage", true);
@@ -461,8 +459,11 @@ public class SettingController {
     // path: /setting/class/{studentYearId}/image/delete
     // クラス編集画面から写真を削除
     @GetMapping("/class/{id}/image/delete")
-    public String deleteImage(@PathVariable Long id) {
+    public String deleteImage(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         studentsYearService.deleteImage(id);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "写真を削除しました");
         return "redirect:/setting/class/" + id;
     }
 
@@ -479,8 +480,10 @@ public class SettingController {
     public String schedule(Model model, @ModelAttribute("year") Long year) {
         ArrayList<ArrayList<Schedule>> yearSchedule = scheduleService.yearSchedule(year);
         model.addAttribute("schedule", yearSchedule);
+        // 月登校日数（1年分）
         List<Integer> yearScheduleSize = scheduleService.yearScheduleSize(year);
         model.addAttribute("size", yearScheduleSize);
+        // 年間合計登校日数
         int yearScheduleCount = scheduleService.yearScheduleCount(year);
         model.addAttribute("count", yearScheduleCount);
         return "setting/schedule";

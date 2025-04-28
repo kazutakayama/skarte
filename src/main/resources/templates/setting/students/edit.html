@@ -13,9 +13,9 @@
 
 			<div class="form-group">
 				<label class="control-label">*姓</label>
-				<input class="form-control" type="text" name="lastName" th:value="*{lastName}" />
+				<input class="form-control" type="text" name="lastName" th:value="*{lastName}" th:errorclass="border-danger" />
 				<label class="control-label">*名</label>
-				<input class="form-control" type="text" name="firstName" th:value="*{firstName}" />
+				<input class="form-control" type="text" name="firstName" th:value="*{firstName}" th:errorclass="border-danger" />
 				<div th:object="${studentForm}">
 					<span class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
 					<span class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
@@ -24,9 +24,9 @@
 
 			<div class="form-group">
 				<label class="control-label">*せい</label>
-				<input class="form-control" type="text" name="lastNameKana" th:value="*{lastNameKana}" />
+				<input class="form-control" type="text" name="lastNameKana" th:value="*{lastNameKana}" th:errorclass="border-danger" />
 				<label class="control-label">*めい</label>
-				<input class="form-control" type="text" name="firstNameKana" th:value="*{firstNameKana}" />
+				<input class="form-control" type="text" name="firstNameKana" th:value="*{firstNameKana}" th:errorclass="border-danger" />
 				<div th:object="${studentForm}">
 					<span class="text-danger" th:if="${#fields.hasErrors('lastNameKana')}"
 						th:errors="*{lastNameKana}"></span>
@@ -37,9 +37,9 @@
 
 			<div class="form-group">
 				<label class="control-label">*生年月日</label>
-				<input class="form-control" type="date" th:field="*{birth}" />
+				<input class="form-control" type="date" th:field="*{birth}" th:errorclass="border-danger" />
 				<label class="control-label">*性別</label>
-				<select th:field="*{gender}">
+				<select th:field="*{gender}" th:errorclass="border-danger">
 					<option value="1">男</option>
 					<option value="2">女</option>
 					<option value="3">他</option>
@@ -52,9 +52,9 @@
 
 			<div class="form-group">
 				<label class="control-label">保護者1</label>
-				<input class="form-control" type="text" name="family1" th:value="*{family1}" />
+				<input class="form-control" type="text" name="family1" th:value="*{family1}" th:errorclass="border-danger" />
 				<label class="control-label">保護者2</label>
-				<input class="form-control" type="text" name="family2" th:value="*{family2}" />
+				<input class="form-control" type="text" name="family2" th:value="*{family2}" th:errorclass="border-danger" />
 				<div th:object="${studentForm}">
 					<div class="text-danger" th:if="${#fields.hasErrors('family1')}" th:errors="*{family1}"></div>
 					<div class="text-danger" th:unless="${#fields.hasErrors('family1')}">
@@ -65,13 +65,13 @@
 
 			<div class="form-group">
 				<label class="control-label">電話1</label>
-				<input class="form-control" type="tel" name="tel1" th:value="*{tel1}" />
+				<input class="form-control" type="tel" name="tel1" th:value="*{tel1}" th:errorclass="border-danger" />
 				<label class="control-label">電話2</label>
-				<input class="form-control" type="tel" name="tel2" th:value="*{tel2}" />
+				<input class="form-control" type="tel" name="tel2" th:value="*{tel2}" th:errorclass="border-danger" />
 				<label class="control-label">電話3</label>
-				<input class="form-control" type="tel" name="tel3" th:value="*{tel3}" />
+				<input class="form-control" type="tel" name="tel3" th:value="*{tel3}" th:errorclass="border-danger" />
 				<label class="control-label">電話4</label>
-				<input class="form-control" type="tel" name="tel4" th:value="*{tel4}" />
+				<input class="form-control" type="tel" name="tel4" th:value="*{tel4}" th:errorclass="border-danger" />
 				<div th:object="${studentForm}">
 					<div class="text-danger" th:if="${#fields.hasErrors('tel1')}" th:errors="*{tel1}"></div>
 					<div class="text-danger" th:unless="${#fields.hasErrors('tel1')}">
@@ -88,9 +88,9 @@
 
 			<div class="form-group">
 				<label class="control-label">郵便番号</label>
-				<input class="form-control" type="text" name="postalCode" th:value="*{postalCode}" />
+				<input class="form-control" type="text" name="postalCode" th:value="*{postalCode}" th:errorclass="border-danger" />
 				<label class="control-label">住所</label>
-				<input class="form-control" type="textarea" name="adress" th:value="*{adress}" />
+				<input class="form-control" type="textarea" name="adress" th:value="*{adress}" th:errorclass="border-danger" />
 				<div th:object="${studentForm}">
 					<span class="text-danger" th:if="${#fields.hasErrors('postalCode')}"
 						th:errors="*{postalCode}"></span>
@@ -100,7 +100,7 @@
 
 			<div class="form-group">
 				<label class="control-label">メモ</label>
-				<input class="form-control" type="textarea" name="memo" th:value="*{memo}" />
+				<input class="form-control" type="textarea" name="memo" th:value="*{memo}" th:errorclass="border-danger" />
 				<div th:object="${studentForm}">
 					<span class="text-danger" th:if="${#fields.hasErrors('memo')}" th:errors="*{memo}"></span>
 				</div>
@@ -112,21 +112,22 @@
 					th:checked="*{transferred == true}" />
 			</div>
 
-			<button class="btn btn-default" type="submit">更新</button>
+			<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 		</form>
 
 		<th:block th:if="${dataExists == false}">
-			<a class="buttons clearfix" th:href="@{/setting/students/{id}/delete (id=${student.studentId})}">
+			<a class="buttons clearfix" onClick="return checkDelete()"
+				th:href="@{/setting/students/{id}/delete (id=${student.studentId})}">
 				生徒削除
 			</a>
 		</th:block>
 		<th:block th:if="${dataExists == true}">この生徒は削除できません</th:block>
 		<div><a th:href="@{/setting/students/{id} (id=${student.studentId})}">キャンセル</a></div>
 
-		<div><a href="/setting/students">生徒管理にもどる</a>
-			<div>
+		<div><a href="/setting/students">生徒管理にもどる</a></div>
 
-			</div>
+	</div>
+
 </body>
 
 </html>

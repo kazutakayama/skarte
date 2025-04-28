@@ -1,9 +1,9 @@
 package com.example.skarte.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +104,7 @@ public class AttendanceService {
     }
 
     /**
-     * 生徒ごとの1か月分の出欠リストを取得
+     * check生徒ごとの1か月分の出欠リストを取得
      * 
      * @return
      */
@@ -125,14 +125,10 @@ public class AttendanceService {
         }
         List<Attendance> result = attendanceRepository.findAllByStudentId(studentId);
         for (int i = 0; i < result.size(); i++) {
-            Calendar cl = Calendar.getInstance();
-            cl.setTime(result.get(i).getDate());
-//            if (tsuki <= 3) {
-//                nendo = nendo + 1;
-//            }
-            if (cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == tsuki) {
+            LocalDate localDate = result.get(i).getDate();
+            if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki+1) {
                 for (int j = 0; j < days; j++) {
-                    if (cl.get(Calendar.DATE) == j + 1) {
+                    if (localDate.getDayOfMonth() == j + 1) {
                         studentAttendanceMonth.set(j, result.get(i));
                     }
                 }
@@ -142,7 +138,7 @@ public class AttendanceService {
     }
 
     /**
-     * 生徒ごとの1か月分の出欠まとめを取得 [0]登校日数,[1]出席数,[2]欠席数,[3]遅刻数,[4]早退数,[5]出停/忌引数
+     * check生徒ごとの1か月分の出欠まとめを取得 [0]登校日数,[1]出席数,[2]欠席数,[3]遅刻数,[4]早退数,[5]出停/忌引数
      * 
      * @return
      */
@@ -164,9 +160,8 @@ public class AttendanceService {
         List<Attendance> soutai = new ArrayList<>();
         List<Attendance> syuttei = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
-            Calendar cl = Calendar.getInstance();
-            cl.setTime(result.get(i).getDate());
-            if (cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == tsuki) {
+            LocalDate localDate = result.get(i).getDate();
+            if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki+1) {
                 // 欠席
                 if (result.get(i).getKiroku() == 1) {
                     kesseki.add(result.get(i));
@@ -250,12 +245,8 @@ public class AttendanceService {
                 } else {
                     tsuki = j + 3;
                 }
-
-                // お試し
                 studentAttendanceSummary.get(i).add(new ArrayList<>());
-//                ArrayList<Integer> monthSummary = new ArrayList<>();
                 for (int l = 0; l < 6; l++) {
-//                    monthSummary.add(null);
                     studentAttendanceSummary.get(i).get(j).add(0);
                 }
                 List<Attendance> kesseki = new ArrayList<>();
@@ -264,12 +255,8 @@ public class AttendanceService {
                 List<Attendance> syuttei = new ArrayList<>();
 
                 for (int k = 0; k < resultAttendance.size(); k++) {
-//                    // お試し
-//                    studentAttendanceSummary.get(i).get(j).add();
-
-                    Calendar cl = Calendar.getInstance();
-                    cl.setTime(resultAttendance.get(k).getDate());
-                    if (cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == tsuki) {
+                    LocalDate localDate = resultAttendance.get(k).getDate();
+                    if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki+1) {
 
                         // 欠席
                         if (resultAttendance.get(k).getKiroku() == 1) {
@@ -439,11 +426,10 @@ public class AttendanceService {
             }
             List<Attendance> resultAttendance = attendanceRepository.findAllByStudentId(result.get(i).getStudentId());
             for (int k = 0; k < resultAttendance.size(); k++) {
-                Calendar cl = Calendar.getInstance();
-                cl.setTime(resultAttendance.get(k).getDate());
-                if (cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == tsuki) {
+                LocalDate localDate = resultAttendance.get(k).getDate();
+                if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki+1) {
                     for (int l = 0; l < days; l++) {
-                        if (cl.get(Calendar.DATE) == l + 1) {
+                        if (localDate.getDayOfMonth() == l + 1) {
                             studentAttendanceMonth.set(l, resultAttendance.get(k));
                         }
                     }
@@ -494,9 +480,8 @@ public class AttendanceService {
             List<Attendance> soutai = new ArrayList<>();
             List<Attendance> syuttei = new ArrayList<>();
             for (int j = 0; j < resultAttendance.size(); j++) {
-                Calendar cl = Calendar.getInstance();
-                cl.setTime(resultAttendance.get(j).getDate());
-                if (cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == tsuki) {
+                LocalDate localDate = resultAttendance.get(j).getDate();
+                if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki+1) {
                     // 欠席
                     if (resultAttendance.get(j).getKiroku() == 1) {
                         kesseki.add(resultAttendance.get(j));
@@ -557,7 +542,7 @@ public class AttendanceService {
     public void update(String userId, AttendanceForm attendanceForm) {
         List<Long> attendanceIds = attendanceForm.getAttendanceIds();
         List<String> studentIds = attendanceForm.getStudentIds();
-        List<Date> dates = attendanceForm.getDates();
+        List<LocalDate> dates = attendanceForm.getDates();
         List<Integer> kirokus = attendanceForm.getKirokus();
 
         for (int i = 0; i < studentIds.size(); i++) {

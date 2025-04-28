@@ -23,9 +23,9 @@
 							th:errors="*{contents}"></span>
 					</div>
 				</div>
-				<button class="btn btn-default" type="submit">更新</button>
+				<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 			</form>
-			<a class="buttons clearfix" th:href="@{/notices/{id}/delete (id=${notice.noticeId})}">
+			<a class="buttons clearfix" onClick="return checkDelete()" th:href="@{/notices/{id}/delete (id=${notice.noticeId})}">
 				削除
 			</a>
 
@@ -55,7 +55,7 @@
 					<td th:text="${notice.title}"></td>
 					<td th:text="${notice.contents}"></td>
 					<td th:text="${updateUser[__notice.updatedBy__]}"></td>
-					<td th:text="${#dates.format(notice.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
+					<td th:text="${#temporals.format(notice.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
 
 				</tr>
 			</tbody>

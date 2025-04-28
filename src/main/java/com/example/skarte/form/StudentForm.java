@@ -1,6 +1,6 @@
 package com.example.skarte.form;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Range;
@@ -69,7 +69,7 @@ public class StudentForm extends EntityBase { // EntityBase
     /** 生年月日 */
     @NotNull(message = "「生年月日」を入力してください")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth;
+    private LocalDate birth;
 
     /** 性別 */
     @NotNull(message = "「性別」を入力してください")
@@ -168,15 +168,15 @@ public class StudentForm extends EntityBase { // EntityBase
 
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private List<Date> births;
+    private List<LocalDate> births;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public List<Date> getBirths() {
+    public List<LocalDate> getBirths() {
         return births;
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public void setBirths(List<Date> births) {
+    public void setBirths(List<LocalDate> births) {
         this.births = births;
     }
 

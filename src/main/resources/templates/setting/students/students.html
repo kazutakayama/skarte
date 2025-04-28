@@ -69,7 +69,8 @@
 						<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
 								th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 						<td th:text="${student.lastNameKana} + ' ' + ${student.firstNameKana}"></td>
-						<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+						<!--<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>-->
+						<td th:text="${student.birth}">
 						<td th:text="${gender[__student.gender__]}"></td>
 					</tr>
 				</tbody>

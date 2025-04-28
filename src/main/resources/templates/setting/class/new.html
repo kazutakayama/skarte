@@ -7,7 +7,7 @@
 
 		<h2>クラス個別登録</h2>
 		<div>転入生徒を追加する場合は、この処理をおこなってください。</div>
-		<div>登録された生徒には、一番最後の出席番号が割り当てられます。</div>
+		<div>追加された生徒には、一番最後の出席番号が割り当てられます。</div>
 
 		<form th:action="@{/setting/class/list}" th:method="get">
 			<input type="hidden" name="year" th:value="${year}" />
@@ -39,7 +39,7 @@
 						<div th:each="student : ${studentYear.students}">
 							<td th:text="${student.lastName + ' ' + student.firstName}"></td>
 							<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+							<td th:text="${student.birth}"></td>
 							<td th:text="${gender[__student.gender__]}"></td>
 						</div>
 					</tr>
@@ -70,13 +70,13 @@
 								<input type="hidden" name="nen" th:value="${nen}" />
 								<input type="hidden" name="kumi" th:value="${kumi}" />
 								<input type="hidden" name="studentId" th:value="${student.studentId}" />
-								<button class="btn btn-default" type="submit">追加</button>
+								<button class="btn btn-default"  onClick="return checkAddClass()"　 type="submit">追加</button>
 							</form>
 						</td>
 						<td th:text="${student.studentId}"></td>
 						<td th:text="${student.lastName + ' ' + student.firstName}"></td>
 						<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-						<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+						<td th:text="${student.birth}"></td>
 						<td th:text="${gender[__student.gender__]}"></td>
 						<th:block th:each="studentYear : ${student.studentsYear}">
 							<td th:text="${studentYear.year + '年度' + studentYear.nen + '年' + studentYear.kumi + '組'}">

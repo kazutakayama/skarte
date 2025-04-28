@@ -1,5 +1,6 @@
 package com.example.skarte.form;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +27,7 @@ public class KarteForm extends EntityBase {
     /** 日付 */
     @NotNull(message = "「日付」を入力してください")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    private LocalDate date;
 
     /** 内容 */
     @NotBlank(message = "「内容」を入力してください")

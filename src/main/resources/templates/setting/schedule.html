@@ -9,28 +9,28 @@
 		<form th:action="@{/setting/schedule/year}" th:method="get">
 			<select name="year">
 				<option value="2023"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2023') || year == 2023}">
+					th:selected="${(year == null && nendo == 2023) || year == 2023}">
 					2023年度</option>
 				<option value="2024"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024') || year == 2024}">
+					th:selected="${(year == null && nendo == 2024) || year == 2024}">
 					2024年度</option>
 				<option value="2025"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025') || year == 2025}">
+					th:selected="${(year == null && nendo == 2025) || year == 2025}">
 					2025年度</option>
 				<option value="2026"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026') || year == 2026}">
+					th:selected="${(year == null && nendo == 2026) || year == 2026}">
 					2026年度</option>
 				<option value="2027"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027') || year == 2027}">
+					th:selected="${(year == null && nendo == 2027) || year == 2027}">
 					2027年度</option>
 				<option value="2028"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028') || year == 2028}">
+					th:selected="${(year == null && nendo == 2028) || year == 2028}">
 					2028年度</option>
 				<option value="2029"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029') || year == 2029}">
+					th:selected="${(year == null && nendo == 2029) || year == 2029}">
 					2029年度</option>
 				<option value="2030"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030') || year == 2030}">
+					th:selected="${(year == null && nendo == 2030) || year == 2030}">
 					2030年度</option>
 			</select>
 			<button class="btn btn-default" type="submit">表示</button>
@@ -52,20 +52,20 @@
 				年間登校日数:<span th:text="${count}" />日
 				<form th:action="@{/setting/schedule/update}" th:method="post">
 					<input class="form-control" type="hidden" name="year" th:value="${year}" />
-					<button class="btn btn-default" type="submit">更新</button>
+					<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 					<br>
 					<table border="1" style="border-collapse: collapse" th:each="scheduleM, stat : ${schedule}">
 						<tr>
-							<th rowspan="2" 　th:text="${#dates.format(scheduleM[0].date, 'M月')}"></th>
+							<th rowspan="2" 　th:text="${#temporals.format(scheduleM[0].date, 'M月')}"></th>
 							<th:block th:each="scheduleD : ${scheduleM}">
 								<th>
-									<div th:text="${#dates.format(scheduleD.date, 'd')}"></div>
+									<div th:text="${#temporals.format(scheduleD.date, 'd')}"></div>
 								</th>
 							</th:block>
 						</tr>
 						<tr>
 							<th:block th:each="scheduleD : ${scheduleM}">
-								<th th:text="${#dates.format(scheduleD.date, 'E')}"></th>
+								<th th:text="${#temporals.format(scheduleD.date, 'E')}"></th>
 							</th:block>
 						</tr>
 						<tr>

@@ -121,11 +121,11 @@
 											<input class="form-control" type="hidden" name="month"
 												th:value="${month}" />
 											<input class="form-control" type="hidden" name="day"
-												th:value="${#dates.format(schedule.date, 'd')}" />
+												th:value="${#temporals.format(schedule.date, 'd')}" />
 											<button class="btn btn-default" type="submit">🖉</button>
 										</form>
 									</th:block>
-									<th:block th:text="${#dates.format(schedule.date, 'd')}"></th:block>
+									<th:block th:text="${#temporals.format(schedule.date, 'd')}"></th:block>
 								</th>
 							</th:block>
 							<th rowspan="2">登校日数</th>
@@ -137,7 +137,7 @@
 						</tr>
 						<tr>
 							<th:block th:each="schedule : ${schedule}">
-								<th th:text="${#dates.format(schedule.date, 'E')}"></th>
+								<th th:text="${#temporals.format(schedule.date, 'E')}"></th>
 							</th:block>
 						</tr>
 					</thead>

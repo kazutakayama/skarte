@@ -10,7 +10,7 @@
 
 		<div><a th:href="@{/students/{id}/grade (id=${student.studentId})}">キャンセル</a></div>
 		<form th:action="@{/students/{id}/grade/update (id=${student.studentId})}" th:method="post">
-			<button class="btn btn-default" type="submit">更新</button>
+			<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 			<table border="1" style="border-collapse: collapse">
 				<thead>
 					<tr>
