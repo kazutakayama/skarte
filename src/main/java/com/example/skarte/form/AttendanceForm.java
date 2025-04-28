@@ -1,6 +1,6 @@
 package com.example.skarte.form;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +20,7 @@ public class AttendanceForm extends EntityBase {
     private String studentId = null;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date = null;
+    private LocalDate date = null;
 
     private Integer kiroku = null;
 
@@ -46,15 +46,15 @@ public class AttendanceForm extends EntityBase {
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private List<Date> dates;
+    private List<LocalDate> dates;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public List<Date> getDates() {
+    public List<LocalDate> getDates() {
         return dates;
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    public void setDates(List<Date> dates) {
+    public void setDates(List<LocalDate> dates) {
         this.dates = dates;
     }
 

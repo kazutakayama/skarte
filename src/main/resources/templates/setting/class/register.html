@@ -39,7 +39,7 @@
 						<div th:each="student : ${studentYear.students}">
 							<td th:text="${student.lastName + ' ' + student.firstName}"></td>
 							<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+							<td th:text="${student.birth}"></td>
 							<td th:text="${gender[__student.gender__]}"></td>
 						</div>
 					</tr>
@@ -56,7 +56,7 @@
 				<input type="hidden" name="year" th:value="${year}" />
 				<input type="hidden" name="nen" th:value="${nen}" />
 				<input type="hidden" name="kumi" th:value="${kumi}" />
-				<button class="btn btn-default" type="submit">一括追加</button>
+				<button class="btn btn-default" onClick="return checkCreateClass()" type="submit">一括追加</button>
 				<table border="1" style="border-collapse: collapse">
 					<thead>
 						<tr>
@@ -76,7 +76,7 @@
 							<td th:text="${student.studentId}"></td>
 							<td th:text="${student.lastName + ' ' + student.firstName}"></td>
 							<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-							<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+							<td th:text="${student.birth}"></td>
 							<td th:text="${gender[__student.gender__]}"></td>
 						</tr>
 					</tbody>

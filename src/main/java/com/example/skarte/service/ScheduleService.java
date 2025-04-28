@@ -1,5 +1,9 @@
 package com.example.skarte.service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,11 +76,10 @@ public class ScheduleService {
         }
         List<Schedule> result = scheduleRepository.findByOrderByUpdatedAtDesc();
         for (int i = 0; i < result.size(); i++) {
-            Calendar cl = Calendar.getInstance();
-            cl.setTime(result.get(i).getDate());
-            if (cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == tsuki) {
+            LocalDate localDate = result.get(i).getDate();
+            if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki + 1) {
                 for (int j = 0; j < days; j++) {
-                    if (cl.get(Calendar.DATE) == j + 1) {
+                    if (localDate.getDayOfMonth() == j + 1) {
                         monthSchedule.set(j, result.get(i));
                     }
                 }
@@ -99,11 +102,9 @@ public class ScheduleService {
         return monthScheduleSize;
     }
 
-
     // 年度で検索し、１年のスケジュールリストを取得
     public ArrayList<ArrayList<Schedule>> yearSchedule(Long year) {
         ArrayList<ArrayList<Schedule>> yearSchedule = new ArrayList<>();
-
         for (int i = 0; i < 12; i++) {
             ArrayList<Schedule> monthSchedule = new ArrayList<>();
             Calendar cal = Calendar.getInstance();
@@ -114,6 +115,7 @@ public class ScheduleService {
                 nendo = nendo + 1;
                 cal.set(nendo, i - 9, 1);
             }
+            // 月の日数をカウント
             int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
             for (int l = 0; l < days; l++) {
                 monthSchedule.add(null);
@@ -121,20 +123,19 @@ public class ScheduleService {
             // すべてのスケジュールから年度・月(i)に合致するものを探す
             List<Schedule> result = scheduleRepository.findByOrderByUpdatedAtDesc();
             for (int m = 0; m < result.size(); m++) {
-                Calendar cl = Calendar.getInstance();
-                cl.setTime(result.get(m).getDate());
+                LocalDate localDate = result.get(m).getDate();
                 // i=0～8 4月から12月の場合
-                if (i <= 8 && cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == i + 3) {
+                if (i <= 8 && localDate.getYear() == nendo && localDate.getMonthValue() == i + 4) {
                     for (int j = 0; j < days; j++) {
-                        if (cl.get(Calendar.DATE) == j + 1) {
+                        if (localDate.getDayOfMonth() == j + 1) {
                             monthSchedule.set(j, result.get(m));
                         }
                     }
                 }
                 // i=9～11 1月から3月の場合
-                if (i >= 9 && cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) == i - 9) {
+                if (i >= 9 && localDate.getYear() == nendo && localDate.getMonthValue() == i - 8) {
                     for (int j = 0; j < days; j++) {
-                        if (cl.get(Calendar.DATE) == j + 1) {
+                        if (localDate.getDayOfMonth() == j + 1) {
                             monthSchedule.set(j, result.get(m));
                         }
                     }
@@ -149,7 +150,6 @@ public class ScheduleService {
     public List<Integer> yearScheduleSize(Long year) {
         ArrayList<ArrayList<Schedule>> yearSchedule = yearSchedule(year);
         List<Integer> yearScheduleSize = new ArrayList<>();
-//        if (yearSchedule != null) {
         for (int i = 0; i < 12; i++) {
             int monthScheduleSize = 0;
             for (int j = 0; j < yearSchedule.get(i).size(); j++) {
@@ -170,21 +170,33 @@ public class ScheduleService {
     public int yearScheduleCount(Long year) {
         List<Schedule> count = new ArrayList<>();
         int nendo = Integer.valueOf(year.toString());
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.set(nendo, 3, 1, 00, 00, 00);
-        cal1.set(Calendar.MILLISECOND, 000);
-        cal2.set(nendo + 1, 2, 31, 23, 59, 59);
-        cal2.set(Calendar.MILLISECOND, 999);
+
+        LocalDate ld1 = LocalDate.of(nendo, 4, 1);
+        LocalDate ld2 = LocalDate.of(nendo + 1, 3, 31);
+
+//        Calendar cal1 = Calendar.getInstance();
+//        Calendar cal2 = Calendar.getInstance();
+//        cal1.set(nendo, 3, 1, 00, 00, 00);
+//        cal1.set(Calendar.MILLISECOND, 000);
+//        cal2.set(nendo + 1, 2, 31, 23, 59, 59);
+//        cal2.set(Calendar.MILLISECOND, 999);
+
         List<Schedule> result = scheduleRepository.findByOrderByUpdatedAtDesc();
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).isHoliday() == false) {
-                Calendar cl = Calendar.getInstance();
-                cl.setTime(result.get(i).getDate());
-                if ((cl.compareTo(cal1) == 1 || cl.compareTo(cal1) == 0)
-                        && (cl.compareTo(cal2) == -1 || cl.compareTo(cal2) == 0)) {
+
+                LocalDate ld = result.get(i).getDate();
+
+//                Calendar cl = Calendar.getInstance();
+//                cl.setTime(result.get(i).getDate());
+                // 4月1日から翌年の3月31日までの間の要素を取り出す
+                if (ld.compareTo(ld1) >= 0 && ld.compareTo(ld2) <= 0) {
                     count.add(result.get(i));
                 }
+//                if ((ld.compareTo(ld1) == 1 || ld.compareTo(ld1) == 0)
+//                        && (ld.compareTo(ld2) == -1 || ld.compareTo(ld2) == 0)) {
+//                    count.add(result.get(i));
+//                }
             }
         }
         int yearScheduleCount = count.size();
@@ -221,21 +233,22 @@ public class ScheduleService {
                 int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 for (int j = 0; j < days; j++) {
                     cal.set(Calendar.DAY_OF_MONTH, j + 1);
+                    // CalendarをLocalDateに変換
+                    Instant instant = cal.toInstant();
+                    ZoneId zone = ZoneId.systemDefault();
+                    LocalDateTime ldt = LocalDateTime.ofInstant(instant, zone);
+                    LocalDate localDate = LocalDate.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth());
                     // 1:日曜または7:土曜のときholiday==true
                     if (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7) {
-                        Date date = new Date();
-                        date = cal.getTime();
                         Schedule schedule = new Schedule();
-                        schedule.setDate(date);
+                        schedule.setDate(localDate);
                         schedule.setHoliday(true);
                         schedule.setCreatedBy(userId);
                         schedule.setUpdatedBy(userId);
                         scheduleRepository.save(schedule);
                     } else { // 平日のときholiday==false
-                        Date date = new Date();
-                        date = cal.getTime();
                         Schedule schedule = new Schedule();
-                        schedule.setDate(date);
+                        schedule.setDate(localDate);
                         schedule.setHoliday(false);
                         schedule.setCreatedBy(userId);
                         schedule.setUpdatedBy(userId);

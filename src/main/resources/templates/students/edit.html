@@ -83,7 +83,7 @@
 				<span class="text-danger" th:if="${#fields.hasErrors('memo')}" th:errors="*{memo}"></span>
 			</div>
 
-			<button class="btn btn-default" type="submit">更新</button>
+			<button class="btn btn-default" onClick="return checkUpdate()"　type="submit">更新</button>
 		</form>
 
 		<a th:href="@{/students/{id} (id=${student.studentId})}">キャンセル</a>

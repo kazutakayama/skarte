@@ -5,13 +5,14 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class SessionsController {    
-    
+public class SessionsController {
+
     SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @GetMapping("/login")
@@ -23,16 +24,18 @@ public class SessionsController {
     public String loginFailure(Model model) {
         model.addAttribute("hasMessage", true);
         model.addAttribute("class", "alert-danger");
-        model.addAttribute("message", "ユーザーIDまたはパスワードに誤りがあります。");
+        model.addAttribute("message", "ユーザーIDまたはパスワードに誤りがあります");
         return "sessions/login";
     }
 
     @GetMapping("/logout-complete")
-    public String logoutComplete(Model model, Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+    public String logoutComplete(Model model, Authentication authentication, HttpServletRequest request,
+            HttpServletResponse response, RedirectAttributes redirectAttributes) {
         this.logoutHandler.logout(request, response, authentication);
-        model.addAttribute("hasMessage", true);
-        model.addAttribute("class", "alert-info");
-        model.addAttribute("message", "ログアウトしました。");
-        return "sessions/login";
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "ログアウトしました");
+//        return "sessions/login";
+        return "redirect:/login";
     }
 }

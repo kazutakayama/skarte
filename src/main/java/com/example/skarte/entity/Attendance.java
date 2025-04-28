@@ -1,7 +1,6 @@
 package com.example.skarte.entity;
 
-import java.util.Date;
-
+import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -49,7 +48,7 @@ public class Attendance extends EntityBase { // EntityBase
     /** 日付 */
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date = null;
+    private LocalDate date = null;
     
     /** 出欠 */
     // 1:欠席, 2:遅刻, 3:早退, 4:遅刻/早退, 5:出停, 6:忌引

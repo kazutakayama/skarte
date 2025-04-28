@@ -31,7 +31,7 @@
 						<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
 						<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
 						<input class="form-control" type="hidden" name="month" th:value="${month}" />
-						<button class="btn btn-default" type="submit">更新</button>
+						<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 
 						<table border="1" style="border-collapse: collapse">
 							<thead>
@@ -41,7 +41,7 @@
 									<th rowspan="2">番</th>
 									<th rowspan="2">名前</th>
 									<th:block th:each="schedule : ${schedule}">
-										<th th:text="${#dates.format(schedule.date, 'd')}">
+										<th th:text="${#temporals.format(schedule.date, 'd')}">
 										</th>
 									</th:block>
 									<th rowspan="2">登校日数</th>
@@ -53,7 +53,7 @@
 								</tr>
 								<tr>
 									<th:block th:each="schedule : ${schedule}">
-										<th th:text="${#dates.format(schedule.date, 'E')}"></th>
+										<th th:text="${#temporals.format(schedule.date, 'E')}"></th>
 									</th:block>
 								</tr>
 							</thead>

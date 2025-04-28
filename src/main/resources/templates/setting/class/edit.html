@@ -9,6 +9,7 @@
 		<div>削除の処理は年度当初におこなってください。</div>
 		<div>削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。</div>
 		<div>すでに在籍している生徒が、その年の出席簿・成績のデータを持っている場合、その生徒の削除の処理はおこなえません。</div>
+		<div>アップロードできる写真のサイズは最大1MBまでです。</div>
 
 		<form th:action="@{/setting/class/list}" th:method="get">
 			<input type="hidden" name="year" th:value="${studentYear.year}" />
@@ -22,7 +23,7 @@
 				<input type="hidden" name="year" th:value="${studentYear.year}" />
 				<input type="hidden" name="nen" th:value="${studentYear.nen}" />
 				<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
-				<button class="btn btn-default" type="submit">削除</button>
+				<button class="btn btn-default" onClick="return checkDeleteClass()" 　type="submit">削除</button>
 			</form>
 		</th:block>
 		<th:block th:if="${dataExists == true}">
@@ -51,7 +52,7 @@
 				<div th:each="student : ${studentYear.students}">
 					<td th:text="${student.lastName + ' ' + student.firstName}"></td>
 					<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-					<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>
+					<td th:text="${student.birth}"></td>
 					<td th:text="${gender[__student.gender__]}"></td>
 				</div>
 			</tr>
@@ -65,13 +66,15 @@
 				<td>
 					<th:block th:if="${image != null}">
 						<img th:src="${image}" alt="写真" width="100">
-						<a th:href="@{/setting/class/{id}/image/delete (id=${studentYear.studentYearId})}">削除</a>
+						<a class="buttons clearfix" onClick="return checkDelete()"
+							th:href="@{/setting/class/{id}/image/delete (id=${studentYear.studentYearId})}">削除</a>
 					</th:block>
 					<th:block th:if="${studentYear.image == null}">
-						<form method="post" th:action="@{/setting/class/{id}/image/add (id=${studentYear.studentYearId})}"
+						<form method="post"
+							th:action="@{/setting/class/{id}/image/add (id=${studentYear.studentYearId})}"
 							enctype="multipart/form-data">
-							<input type="file" class="form-control-file" name="image" />
-							<button class="btn btn-default" type="submit">追加</button>
+							<input type="file" id="fileInput"　class="form-control-file" name="image" />
+							<button class="btn btn-default" onClick="return uploadFile()" type="submit">登録</button>
 						</form>
 					</th:block>
 				</td>

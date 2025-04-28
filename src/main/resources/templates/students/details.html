@@ -28,7 +28,7 @@
 				<td colspan="3" th:text="${student.studentId}"></td>
 				<td colspan="8" th:text="${student.lastName + ' ' + student.FirstName}"></td>
 				<td colspan="8" th:text="${student.lastNameKana + ' ' + student.FirstNameKana}"></td>
-				<td colspan="4" th:text="${#dates.format(student.birth, 'yyyy年M月d日')}"></td>
+				<td colspan="4" th:text="${student.birth}"></td>
 				<td colspan="1" 　th:text="${gender[__student.gender__]}"></td>
 				<td colspan="8" th:text="${student.family1}"></td>
 			</tr>

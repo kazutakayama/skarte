@@ -1,16 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
-<head>
-	<title>Skarte</title>
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
-	<div th:if="${hasMessage}" class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
-		<span th:text="${message}"></span>
-	</div>
+	<div layout:fragment="content">
+	
 	<div class="users-new-wrapper">
-		<h1>Skarte</h1>
 		<main>
 			<h2>ログイン</h2>
 			<form method="post" th:action="@{/login}">

@@ -38,10 +38,10 @@
 				</thead>
 				<tbody>
 					<tr th:each="karte : ${karte}">
-						<td th:text="${#dates.format(karte.date, 'yyyy/M/d')}"></td>
+						<td th:text="${karte.date}"></td>
 						<td th:text="${karte.contents}"></td>
 						<td th:text="${updateUser[__karte.updatedBy__]}"></td>
-						<td th:text="${#dates.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
+						<td th:text="${#temporals.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
 						<td><a th:href="@{/students/{id}/karte/edit(id=${karte.karteId})}" class="edit">編集</a></td>
 					</tr>
 				</tbody>

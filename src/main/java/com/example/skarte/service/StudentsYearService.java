@@ -1,12 +1,9 @@
 package com.example.skarte.service;
 
-import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -319,10 +316,9 @@ public class StudentsYearService {
         List<Attendance> resultAttendance = new ArrayList<>();
         int nendo = Integer.valueOf(studentYear.getYear().toString());
         for (int i = 0; i < result.size(); i++) {
-            Calendar cl = Calendar.getInstance();
-            cl.setTime(result.get(i).getDate());
-            if ((cl.get(Calendar.YEAR) == nendo && cl.get(Calendar.MONTH) >= 3)
-                    || (cl.get(Calendar.YEAR) == nendo + 1 && cl.get(Calendar.MONTH) < 3)) {
+            LocalDate localDate = result.get(i).getDate();
+            if ((localDate.getYear() == nendo && localDate.getMonthValue() >= 4)
+                    || (localDate.getYear() == nendo + 1 && localDate.getMonthValue() < 4)) {
                 resultAttendance.add(result.get(i));
             }
         }
@@ -337,5 +333,7 @@ public class StudentsYearService {
         }
         return dataExists;
     }
+    
+    // 年度のクラス数
 
 }

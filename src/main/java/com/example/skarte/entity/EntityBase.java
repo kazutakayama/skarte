@@ -1,6 +1,9 @@
 package com.example.skarte.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -16,10 +19,10 @@ import lombok.Data;
 @Data
 public class EntityBase {
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -29,14 +32,14 @@ public class EntityBase {
 
     @PrePersist
     public void onPrePersist() {
-        setCreatedAt(new Date());
-        setUpdatedAt(new Date());
+        setCreatedAt(LocalDateTime.now());
+        setUpdatedAt(LocalDateTime.now());
         
     }
 
     @PreUpdate
     public void onPreUpdate() {
-        setUpdatedAt(new Date());
+        setUpdatedAt(LocalDateTime.now());
     }
 
 }

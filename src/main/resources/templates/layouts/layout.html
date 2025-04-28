@@ -4,34 +4,55 @@
 
 <head>
 	<meta charset="UTF-8">
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+	<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+	<!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">-->
+
+
 	<title>Skarte</title>
 </head>
 
 <body>
 	<div th:if="${hasMessage}" class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
 		<span th:text="${message}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		<style>
+			.alert {
+				margin-bottom: 0px;
+				position: fixed;
+				width: 100%;
+				z-index: 10000;
+			}
+		</style>
 	</div>
 
 	<header>
-		<h1><a href="/top">Skarte</a></h1>
-		<!--<h1>Skarte</h1>
-		<a href="/top">トップ</a>-->
-		<a href="/students">生徒一覧</a>
-		<a href="/attendance">出席簿一覧</a>
-		<a href="/grade">成績一覧</a>
-		<a href="/notices">お知らせ</a>
-		<a href="/setting">管理</a>
-		<span th:text="${#dates.format(#dates.createNow(), 'yyyy年M月d日HH:mm')}"></span>
-		ログインユーザー
-		<span th:text="${user.userId}"></span>
-		<span th:text="${user.lastName + ' ' + user.FirstName}"></span>
-		<a href="/logout-complete">ログアウト</a>
+		<!--<h1><a href="/top">Skarte</a></h1>-->
+		<h1>Skarte</h1>
+		<th:block th:if="${user !=null}">
+			<a href="/top">トップ</a>
+			<a href="/students">生徒一覧</a>
+			<a href="/attendance">出席簿一覧</a>
+			<a href="/grade">成績一覧</a>
+			<a href="/notices">お知らせ</a>
+			<a href="/setting">管理</a>
+			<span th:text="${now}"></span>
+			ログインユーザー
+			<span th:text="${user.userId}"></span>
+			<span th:text="${user.lastName + ' ' + user.FirstName}"></span>
+			<a href="/logout-complete">ログアウト</a>
+		</th:block>
 	</header>
 
-	<!--ここから/studentsの共通ヘッダー-->
 	<div layout:fragment="content">
-		<header>
 
+		<!--ここから/studentsの共通ヘッダー-->
+		<header>
 			<table>
 				<tr>
 					<th th:text="${student.studentId}"></th>
@@ -39,7 +60,7 @@
 					<th th:text="${student.firstName}"></th>
 					<th th:text="${student.lastNameKana}"></th>
 					<th th:text="${student.firstNameKana}"></th>
-					<th th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></th>
+					<th th:text="${student.birth}"></th>
 					<th th:text="${gender[__student.gender__]}"></th>
 				</tr>
 			</table>
@@ -47,12 +68,27 @@
 			<a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
 			<a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出席簿</a>
 			<a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
-
 		</header>
 	</div>
 
 	<div layout:fragment="students"></div>
 
+	<!-- Bootstrap Javascript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.js"
+		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="/scripts/script.js" 　defer></script>
+	<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>-->
 
 </body>
 

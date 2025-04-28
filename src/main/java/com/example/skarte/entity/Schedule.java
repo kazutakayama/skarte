@@ -1,5 +1,6 @@
 package com.example.skarte.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,7 +35,7 @@ public class Schedule extends EntityBase {
     /** 日付 */
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date = null;
+    private LocalDate date = null;
     
     /** 休日 */
     private boolean holiday = false;

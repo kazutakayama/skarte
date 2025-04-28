@@ -1,5 +1,6 @@
 package com.example.skarte.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -51,7 +52,7 @@ public class Karte extends EntityBase { // EntityBase
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private Date date = null;
+    private LocalDate date = null;
 
     /** 内容 */
     @Column
