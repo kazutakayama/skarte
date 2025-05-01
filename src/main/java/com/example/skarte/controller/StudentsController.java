@@ -195,6 +195,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -239,6 +240,15 @@ public class StudentsController {
     private final AttendanceService attendanceService;
     private final GradeService gradeService;
     private final ScheduleService scheduleService;
+    
+//    // 生徒用ヘッダーを表示（共通処理）
+//    @ModelAttribute
+//    public void student(Model model, @PathVariable String id) {
+//        if (id != null) {
+//            model.addAttribute("studentHeader", true);
+//        }
+//    }
+//    
 
     // path: /students
     @GetMapping("")
@@ -277,6 +287,7 @@ public class StudentsController {
         model.addAttribute("student", student);
         List<StudentYear> classList = studentsYearService.classList(id);
         model.addAttribute("studentsYear", classList);
+        model.addAttribute("studentHeader", true);
         return "students/details";
     }
 
@@ -286,6 +297,7 @@ public class StudentsController {
     public String edit(@PathVariable String id, Model model, @ModelAttribute StudentForm form) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
+        model.addAttribute("studentHeader", true);
         return "students/edit";
     }
 
@@ -308,6 +320,7 @@ public class StudentsController {
             model.addAttribute("message", "更新に失敗しました");
             Student student = studentsService.findById(id);
             model.addAttribute("student", student);
+            model.addAttribute("studentHeader", true);
             return "students/edit";
         }
         studentsService.update(id, form, user.getUserId());
@@ -325,6 +338,7 @@ public class StudentsController {
         model.addAttribute("student", student);
         List<Karte> karte = karteService.findAllByStudentId(id);
         model.addAttribute("karte", karte);
+        model.addAttribute("studentHeader", true);
         return "students/karte";
     }
 
@@ -342,6 +356,7 @@ public class StudentsController {
             model.addAttribute("hasMessage", true);
             model.addAttribute("class", "alert-danger");
             model.addAttribute("message", "登録に失敗しました");
+            model.addAttribute("studentHeader", true);
             return "students/karte";
         }
         karteService.add(id, user.getUserId(), karteForm);
@@ -409,6 +424,7 @@ public class StudentsController {
         // 3年分のまとめ
         List<Integer> studentAttendanceTotal = attendanceService.studentAttendanceTotal(id);
         model.addAttribute("AttendanceTotal", studentAttendanceTotal);
+        model.addAttribute("studentHeader", true);
         return "students/attendance";
     }
 
@@ -429,6 +445,7 @@ public class StudentsController {
         model.addAttribute("attendance", studentAttendanceMonth);
         List<Integer> studentAttendanceMonthSummary = attendanceService.studentAttendanceMonthSummary(id, year, month);
         model.addAttribute("attendanceSummary", studentAttendanceMonthSummary);
+        model.addAttribute("studentHeader", true);
         return "students/editAttendance";
     }
 
@@ -462,7 +479,7 @@ public class StudentsController {
         model.addAttribute("studentsYear", studentsYear);
         ArrayList<ArrayList<Grade>> studentGradeAll = gradeService.studentGradeAll(id);
         model.addAttribute("grade", studentGradeAll);
-
+        model.addAttribute("studentHeader", true);
         return "students/grade";
     }
 
@@ -476,6 +493,7 @@ public class StudentsController {
         model.addAttribute("studentsYear", studentsYear);
         ArrayList<ArrayList<Grade>> studentGradeAll = gradeService.studentGradeAll(id);
         model.addAttribute("grade", studentGradeAll);
+        model.addAttribute("studentHeader", true);
         return "students/editGrade";
     }
 

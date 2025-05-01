@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.skarte.repository.UserRepository;
 import com.example.skarte.service.AttendanceService;
@@ -39,13 +40,17 @@ public class PagesController {
     private final UsersService usersService;
 
     @GetMapping("/")
-    public String index() {
+    public String index(RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
 //        return "pages/index";
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message",
+                "こんにちは、" + user.getLastName() + " " + user.getFirstName() + "さん");
         return "redirect:/top";
     }
 
     @GetMapping("/top")
-    public String top() {
+    public String top(Model model) {
         return "pages/index";
     }
 
@@ -84,14 +89,14 @@ public class PagesController {
         kyouka.put(8, "技術家庭");
         kyouka.put(9, "英語");
         model.addAttribute("kyouka", kyouka);
-        // 現在の「年度」       
+        // 現在の「年度」
         LocalDate date = LocalDate.now();
         int nendo;
         if (date.getMonthValue() >= 4) {
             nendo = date.getYear();
-        }else {
+        } else {
             nendo = date.getYear() - 1;
-        }        
+        }
         model.addAttribute("nendo", nendo);
         // 現在日時時刻
         LocalDateTime now = LocalDateTime.now();

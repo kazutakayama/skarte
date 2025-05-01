@@ -62,7 +62,7 @@ public class NoticesService {
     // お知らせ追加
     public void add(String userId, NoticeForm noticeForm) {
             Notice notice = new Notice();
-            notice.setTitle(noticeForm.getTitle());
+//            notice.setTitle(noticeForm.getTitle());
             notice.setContents(noticeForm.getContents());
             notice.setCreatedBy(userId);
             notice.setUpdatedBy(userId);
@@ -70,9 +70,9 @@ public class NoticesService {
     }
 
     // お知らせ更新
-    public void update(Long noticeId, NoticeForm noticeForm, String userId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow();
-        notice.setTitle(noticeForm.getTitle());
+    public void update(Long id, NoticeForm noticeForm, String userId) {
+        Notice notice = noticeRepository.findById(id).orElseThrow();
+//        notice.setTitle(noticeForm.getTitle());
         notice.setContents(noticeForm.getContents());
         notice.setUpdatedBy(userId);
         noticeRepository.save(notice);

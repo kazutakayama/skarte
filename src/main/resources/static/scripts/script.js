@@ -53,6 +53,16 @@ function checkDeleteClass() {
 	}
 }
 
+// スケジュール一括追加の確認
+function checkNewSchedule() {
+	var result = confirm('年間スケジュールを作成してよろしいですか？');
+	if (result == true) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 // アップロード画像のファイルサイズを制限
 const fileInput = document.getElementById('fileInput');
 fileInput.addEventListener('change', function(event) {
@@ -63,4 +73,3 @@ fileInput.addEventListener('change', function(event) {
 		fileInput.value = '';
 	}
 });
-

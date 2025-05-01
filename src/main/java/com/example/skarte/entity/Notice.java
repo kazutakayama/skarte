@@ -38,10 +38,10 @@ public class Notice extends EntityBase { // EntityBase
         this.noticeId = null;
     }
 
-    /** タイトル */
-    @Column
-    @NotEmpty
-    private String title = null;
+//    /** タイトル */
+//    @Column
+//    @NotEmpty
+//    private String title = null;
 
     /** 内容 */
     @Column

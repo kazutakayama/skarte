@@ -16,8 +16,8 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label">内容</label>
-					<input class="form-control" th:object="${notice}" type="textarea" name="contents"
-						th:value="*{contents}" />
+					<textarea class="form-control" th:object="${notice}" name="contents"
+						th:value="*{contents}"></textarea>
 					<div th:object="${noticeForm}">
 						<span class="text-danger" th:if="${#fields.hasErrors('contents')}"
 							th:errors="*{contents}"></span>
@@ -25,7 +25,8 @@
 				</div>
 				<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
 			</form>
-			<a class="buttons clearfix" onClick="return checkDelete()" th:href="@{/notices/{id}/delete (id=${notice.noticeId})}">
+			<a class="buttons clearfix" onClick="return checkDelete()"
+				th:href="@{/notices/{id}/delete (id=${notice.noticeId})}">
 				削除
 			</a>
 
