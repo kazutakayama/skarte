@@ -155,7 +155,7 @@ public class SettingController {
         return "setting/students/details";
     }
 
-    // path: /setting/students/{id}/edit
+    // path: /setting/students/{studentId}/edit
     // 生徒情報編集画面を表示
     @GetMapping("/students/{id}/edit")
     public String edit(@PathVariable String id, Model model, @ModelAttribute StudentForm form) {

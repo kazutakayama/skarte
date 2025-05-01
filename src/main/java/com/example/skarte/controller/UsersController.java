@@ -67,7 +67,7 @@ public class UsersController {
 
         model.addAttribute("hasMessage", true);
         model.addAttribute("class", "alert-info");
-        model.addAttribute("message", "ユーザー登録が完了しました。");
+        model.addAttribute("message", "ユーザー登録が完了しました");
         return "sessions/login";
     }
 }
