@@ -1,6 +1,7 @@
 html {
 	height: 100%;
 	width: 100%;
+
 }
 
 .alert {
@@ -16,59 +17,113 @@ html {
 }
 
 body {
+	height: 100%;
+	width: 100%;
 	background-color: aliceblue
 }
 
-.wrap{
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.wrap {
+	left: 0;
+	right: 0;
+	/*display: flex;*/
+	/*	flex-direction: column;*/
+	height: 100%;
+	width: 100%;
 }
 
 header {
 	top: 0;
-	left: 0;
-	right: 0;
-	padding: 5px 30px;
+	padding: 0px 30px;
 	/*position: fixed;*/
-	position: sticky;
-	width: 100%;
-	/*background-color: aliceblue*/
-	background-color: red
-}
-
-main {
-	/*padding-top: 100px;*/
-	padding: 40px 30px;
-}
-
-footer {
-/*	position: sticky;
-	top: 100vh;*/
-	margin-top: auto;
-	width: 100%;
-	/*background-color: aliceblue*/
-	background-color: red
-}
-
-.title {
-	font-size: 250%;
-}
-
-.headline {
-	font-size: 150%;
-}
-
-.header {
 	position: fixed;
-	padding-left: 30px;
 	width: 100%;
+	height: 50px;
+	/*background-color: aliceblue*/
+	z-index: 1000;
 	background-color: lightblue
 }
 
+.header-main {
+	display: flex;
+	justify-content: space-between;
+}
 
-.select-schedule {
-	font-size: 10px;
+.title {
+	/*text-align: left;*/
+	font-size: 100%;
+	font-weight: bold;
+}
+
+.school {
+	text-align: right;
+}
+
+.menu {
+	display: flex;
+	justify-content: space-between;
+}
+
+.index {
+	width: 40%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.info {
+	width: 30%;
+	display: flex;
+	justify-content: space-between;
+}
+
+
+
+.header-sub {
+	top: 0;
+	position: fixed;
+	margin-top: 50px;
+	padding: 0px 30px;
+	width: 100%;
+	height: 40px;
+	font-size: auto;
+	display: flex;
+	align-items: center;
+	/*background-color: aliceblue*/
+	background-color: lightblue
+}
+
+.headline {
+	font-size: 100%;
+}
+
+.header-sub span {
+	padding-right: 20px;
+}
+
+main {
+
+	/*left: 0;*/
+	/*right: 0;*/
+	/*margin-top: auto;*/
+	margin-top: 90px;
+	padding: 10px 30px;
+	/*height: 100%;*/
+	width: 100%;
+}
+
+
+
+footer {
+	position: fixed;
+	/*	position: sticky;
+	top: 100vh;*/
+	/*margin-top: auto;*/
+	bottom: 0;
+	/*position: sticky;*/
+	width: 100%;
+	text-align: right;
+	padding: 0px 30px;
+	/*background-color: aliceblue*/
+	background-color: lightblue
 }
 
 textarea {
@@ -78,9 +133,19 @@ textarea {
 	resize: none;
 }
 
-.schedule-table {
-	width: 50%;
+/*.schedule-table-wrapper {
+  overflow-x: scroll;
+  width: 100%;
+  height: 70vh;
 }
+
+.schedule-table th:first-child {
+	 横スクロール時に固定する 
+	position: -webkit-sticky;
+	position: sticky;
+	left: 0;
+}*/
+
 
 
 

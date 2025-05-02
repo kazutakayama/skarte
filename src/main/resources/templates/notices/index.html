@@ -6,15 +6,15 @@
 <body>
 	<div layout:fragment="content">
 
-		<div class="header" style="display:inline-flex">
 
-			<div class="headline">お知らせ</div>
-
+		<div class="header-sub">
+			<span class="headline">お知らせ</span>
 			<!--新規登録用Modalを開く-->
-			<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newModal"
-				style="--bs-btn-padding-y: .5rem; --bs-btn-padding-x: .5rem;">
-				お知らせ新規登録
+			<span>
+			<button type="button" class="btn btn-primary py-0 px-3" data-bs-toggle="modal" data-bs-target="#newModal">
+				新規登録
 			</button>
+			</span>
 		</div>
 
 		<!--<a class="btn btn-primary" th:href="@{/notices/new}">
@@ -51,9 +51,9 @@
 			</div>
 		</div>
 
-
-
 		<main>
+
+
 			<th:block th:if="${#lists.size(notices)==0}">お知らせはありません</th:block>
 
 			<th:block th:if="${#lists.size(notices)!=0}">
@@ -61,28 +61,28 @@
 
 
 				<table class="table table-striped">
-					<thead>
+					<!--<thead>
 						<tr>
-							<th scope="col" style="width: 10%"><!--更新日時--></th>
-							<th scope="col" style="width: 75%"><!--内容--></th>
-							<th scope="col" style="width: 10%"><!--更新者--></th>
-							<th scope="col" style="width: 5%"><!--編集--></th>
+							<th scope="col" style="width: 10%">更新日時</th>
+							<th scope="col" style="width: 75%">内容</th>
+							<th scope="col" style="width: 10%">更新者</th>
+							<th scope="col" style="width: 5%">編集</th>
 						</tr>
-					</thead>
+					</thead>-->
 					<tbody>
 						<tr th:each="notice : ${notices}">
 							<!--<td><a th:href="@{/notices/contents/{id}(id=${notice.noticeId})}" 　th:text="${notice.title}"></a>
 					</td>-->
 							<!--<td th:text="${notice.title}"></td>-->
-							<td>
+							<td scope="col" style="width: 10%">
 								<div th:text="${#temporals.format(notice.updatedAt, 'yyyy-M-d')}"></div>
 								<div th:text="${#temporals.format(notice.updatedAt, 'HH:mm:ss')}"></div>
 							</td>
-							<td th:text="${notice.contents}"></td>
-							<td th:text="${updateUser[__notice.updatedBy__]}"></td>
+							<td scope="col" style="width: 75%" th:text="${notice.contents}"></td>
+							<td scope="col" style="width: 10%" th:text="${updateUser[__notice.updatedBy__]}"></td>
 
 
-							<td>
+							<td scope="col" style="width: 5%">
 								<!--<a class="buttons clearfix" th:href="@{/notices/{id}/edit (id=${notice.noticeId})}">
 							編集
 						</a>-->
@@ -169,6 +169,7 @@
 					</tbody>
 				</table>
 			</th:block>
+
 
 		</main>
 
