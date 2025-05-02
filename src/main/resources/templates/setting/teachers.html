@@ -5,21 +5,29 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>教師一覧</h2>
-		<table border="1" style="border-collapse: collapse">
-			<thead>
-				<tr>
-					<th>ユーザーID</th>
-					<th>名前</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="teacher : ${teachers}">
-					<td th:text="${teacher.userId}"></td>
-					<td th:text="${teacher.lastName} + ' ' + ${teacher.firstName}"></td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="header-sub">
+			<span class="headline">管理>教師一覧</span>
+		</div>
+
+		<main>
+			<div class="center-block">
+				<table class="table table-striped">
+					<!--<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">氏名</th>
+					</tr>
+				</thead>-->
+					<tbody>
+						<tr th:each="teacher : ${teachers}" class="row">
+							<td class="col-1" style="text-align:center" th:text="${teacher.userId}"></td>
+							<td class="col-2" style="text-align:center"
+								th:text="${teacher.lastName} + ' ' + ${teacher.firstName}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
 
 	</div>
 </body>

@@ -100,7 +100,7 @@ public class PagesController {
         model.addAttribute("nendo", nendo);
         // 現在日時時刻
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy年M月d日 HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy年M月d日HH:mm");
         model.addAttribute("now", now.format(dtf));
     }
 
