@@ -5,87 +5,121 @@
 <body>
 	<div layout:fragment="content">
 
-		<h2>クラス個別登録</h2>
-		<div>転入生徒を追加する場合は、この処理をおこなってください。</div>
-		<div>追加された生徒には、一番最後の出席番号が割り当てられます。</div>
+		<div class="header-sub">
+			<span class="headline">管理>クラス管理>クラス個別追加
+				<a type="button" class="d-inline-block" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
+					data-bs-html="true" title="・転入生徒を追加する場合は、この処理をおこなってください。<br>・追加された生徒には、一番最後の出席番号が割り当てられます。">
+					<i class="bi bi-question-circle" style="color:black;"></i>
+				</a>
+			</span>
 
-		<form th:action="@{/setting/class/list}" th:method="get">
-			<input type="hidden" name="year" th:value="${year}" />
-			<input type="hidden" name="nen" th:value="${nen}" />
-			<input type="hidden" name="kumi" th:value="${kumi}" />
-			<button class="btn btn-default" type="submit">クラス検索にもどる</button>
-		</form>
+			<span th:text="${year + '年度' + nen + '年' + kumi + '組'}" />
 
-		<div><span th:text="${year}" />年度<span th:text="${nen}" />年<span th:text="${kumi}" />組</div>
+			<span>
+				<form th:action="@{/setting/class/list}" th:method="get">
+					<input type="hidden" name="year" th:value="${year}" />
+					<input type="hidden" name="nen" th:value="${nen}" />
+					<input type="hidden" name="kumi" th:value="${kumi}" />
+					<button class="btn btn-secondary btn-sm" type="submit">クラス管理にもどる</button>
+				</form>
+			</span>
 
-		<div>クラス在籍生徒一覧</div>
-		<th:block th:if="${#lists.size(studentsYear) == 0}">在籍している生徒はいません</th:block>
-		<th:block th:if="${#lists.size(studentsYear) > 0}">
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th>出席番号</th>
-						<th>生徒番号</th>
-						<th>名前</th>
-						<th>なまえ</th>
-						<th>生年月日</th>
-						<th>性別</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="studentYear : ${studentsYear}">
-						<th th:text="${studentYear.ban}"></th>
-						<td th:text="${studentYear.studentId}"></td>
-						<div th:each="student : ${studentYear.students}">
-							<td th:text="${student.lastName + ' ' + student.firstName}"></td>
-							<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-							<td th:text="${student.birth}"></td>
-							<td th:text="${gender[__student.gender__]}"></td>
-						</div>
-					</tr>
-				</tbody>
-			</table>
-		</th:block>
+		</div>
 
-		<div>登録可能生徒一覧</div>
-		<th:block th:if="${#lists.size(students) == 0}">登録可能な生徒はいません</th:block>
-		<th:block th:if="${#lists.size(students) > 0}">
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th></th>
-						<th>生徒番号</th>
-						<th>名前</th>
-						<th>なまえ</th>
-						<th>生年月日</th>
-						<th>性別</th>
-						<th colspan="2">登録済クラス</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="student : ${students}">
-						<td>
-							<form th:action="@{/setting/class/add}" th:method="post">
-								<input type="hidden" name="year" th:value="${year}" />
-								<input type="hidden" name="nen" th:value="${nen}" />
-								<input type="hidden" name="kumi" th:value="${kumi}" />
-								<input type="hidden" name="studentId" th:value="${student.studentId}" />
-								<button class="btn btn-default"  onClick="return checkAddClass()"　 type="submit">追加</button>
-							</form>
-						</td>
-						<td th:text="${student.studentId}"></td>
-						<td th:text="${student.lastName + ' ' + student.firstName}"></td>
-						<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-						<td th:text="${student.birth}"></td>
-						<td th:text="${gender[__student.gender__]}"></td>
-						<th:block th:each="studentYear : ${student.studentsYear}">
-							<td th:text="${studentYear.year + '年度' + studentYear.nen + '年' + studentYear.kumi + '組'}">
-							</td>
+
+		<main>
+
+			<div class="container">
+				<div class="row">
+					<div class="col">
+
+						<div style="text-align:center; font-weight:bold">クラス在籍生徒</div>
+						<th:block th:if="${#lists.size(studentsYear) == 0}">
+							<div style="text-align:center;">在籍している生徒はいません</div>
 						</th:block>
-					</tr>
-				</tbody>
-			</table>
-		</th:block>
+						<th:block th:if="${#lists.size(studentsYear) > 0}">
+							<div class="table-sticky">
+								<table class="table table-striped table-sm" style="text-align:center">
+									<thead>
+										<tr>
+											<th style="width: 5%">#</th>
+											<th style="width: 15%">生徒ID</th>
+											<th style="width: 25%">名前</th>
+											<th style="width: 25%">なまえ</th>
+											<th style="width: 20%">生年月日</th>
+											<th style="width: 10%">性別</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="studentYear : ${studentsYear}">
+											<th th:text="${studentYear.ban}"></th>
+											<td th:text="${studentYear.studentId}"></td>
+											<div th:each="student : ${studentYear.students}">
+												<td th:text="${student.lastName + ' ' + student.firstName}"></td>
+												<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
+												</td>
+												<td th:text="${student.birth}"></td>
+												<td th:text="${gender[__student.gender__]}"></td>
+											</div>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</th:block>
+
+					</div>
+					<div class="col">
+
+						<div style="text-align:center; font-weight:bold">登録可能生徒</div>
+						<th:block th:if="${#lists.size(students) == 0}">
+							<div style="text-align:center;">登録可能な生徒はいません</div>
+						</th:block>
+						<th:block th:if="${#lists.size(students) > 0}">
+							<div class="table-sticky">
+								<table class="table table-striped table-sm" style="text-align:center;">
+									<thead>
+										<tr>
+											<th style="width: 5%">
+												<!--<i class="bi bi-arrow-left-square-fill text-primary"></i>-->
+											</th>
+											<th style="width: 15%">生徒ID</th>
+											<th style="width: 25%">名前</th>
+											<th style="width: 25%">なまえ</th>
+											<th style="width: 20%">生年月日</th>
+											<th style="width: 10%">性別</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="student : ${students}">
+											<td>
+												<form th:action="@{/setting/class/add}" th:method="post">
+													<input type="hidden" name="year" th:value="${year}" />
+													<input type="hidden" name="nen" th:value="${nen}" />
+													<input type="hidden" name="kumi" th:value="${kumi}" />
+													<input type="hidden" name="studentId"
+														th:value="${student.studentId}" />
+													<button class="btn py-0 px-2" onClick="return checkAddClass()" 　
+														type="submit"><i
+															class="bi bi-plus-square-fill text-primary"></i></button>
+												</form>
+											</td>
+											<td th:text="${student.studentId}"></td>
+											<td th:text="${student.lastName + ' ' + student.firstName}"></td>
+											<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
+											<td th:text="${student.birth}"></td>
+											<td th:text="${gender[__student.gender__]}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</th:block>
+
+					</div>
+				</div>
+			</div>
+
+		</main>
 
 	</div>
 </body>

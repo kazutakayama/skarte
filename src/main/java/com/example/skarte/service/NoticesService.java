@@ -1,5 +1,6 @@
 package com.example.skarte.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.User;
 import com.example.skarte.form.NoticeForm;
@@ -50,6 +52,15 @@ public class NoticesService {
         return noticeRepository.findById(id).orElseThrow();
     }
 
+    /**
+     * 最近１週間に更新されたカルテを取得
+     */
+    public List<Notice> recentNotice() {
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        List<Notice> recentNotice = noticeRepository.findByUpdatedAtAfter(oneWeekAgo);
+        return recentNotice;
+    }
+
 //    // お知らせ1件にユーザー名をつけて取得
 //    public Map<Notice, String> map(Long id) {
 //        Map<Notice, String> map = new HashMap<>();
@@ -61,12 +72,12 @@ public class NoticesService {
 
     // お知らせ追加
     public void add(String userId, NoticeForm noticeForm) {
-            Notice notice = new Notice();
+        Notice notice = new Notice();
 //            notice.setTitle(noticeForm.getTitle());
-            notice.setContents(noticeForm.getContents());
-            notice.setCreatedBy(userId);
-            notice.setUpdatedBy(userId);
-            noticeRepository.save(notice);
+        notice.setContents(noticeForm.getContents());
+        notice.setCreatedBy(userId);
+        notice.setUpdatedBy(userId);
+        noticeRepository.save(notice);
     }
 
     // お知らせ更新

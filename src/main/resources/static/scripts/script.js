@@ -1,7 +1,11 @@
-// Flashメッセージの表示
+// Flashメッセージ表示
 $(function() {
 	$(".alert").fadeOut(5000);
 });
+
+// tooltip表示
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 // 削除の確認
 function checkDelete() {
@@ -46,6 +50,16 @@ function checkAddClass() {
 // クラス削除の確認
 function checkDeleteClass() {
 	var result = confirm('削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。\r\n削除してよろしいですか？');
+	if (result == true) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// 卒業登録の確認
+function checkGraduate() {
+	var result = confirm('このクラスの在籍生徒全員を卒業登録してよろしいですか？');
 	if (result == true) {
 		return true;
 	} else {

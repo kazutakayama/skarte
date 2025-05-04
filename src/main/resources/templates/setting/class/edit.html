@@ -5,81 +5,113 @@
 <body>
 	<div layout:fragment="content">
 
-		<h2>クラス編集</h2>
-		<div>削除の処理は年度当初におこなってください。</div>
-		<div>削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。</div>
-		<div>すでに在籍している生徒が、その年の出席簿・成績のデータを持っている場合、その生徒の削除の処理はおこなえません。</div>
-		<div>アップロードできる写真のサイズは最大1MBまでです。</div>
+		<div class="header-sub">
+			<span class="headline">管理>クラス管理>編集</span>
 
-		<form th:action="@{/setting/class/list}" th:method="get">
-			<input type="hidden" name="year" th:value="${studentYear.year}" />
-			<input type="hidden" name="nen" th:value="${studentYear.nen}" />
-			<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
-			<button class="btn btn-default" type="submit">クラス検索にもどる</button>
-		</form>
+			<span>
+				<form th:action="@{/setting/class/list}" th:method="get">
+					<input type="hidden" name="year" th:value="${studentYear.year}" />
+					<input type="hidden" name="nen" th:value="${studentYear.nen}" />
+					<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
+					<button class="btn btn-secondary btn-sm" type="submit">クラス管理にもどる</button>
+				</form>
+			</span>
 
-		<th:block th:if="${dataExists == false}">
-			<form th:action="@{/setting/class/{id}/delete (id=${studentYear.studentYearId})}" th:method="post">
-				<input type="hidden" name="year" th:value="${studentYear.year}" />
-				<input type="hidden" name="nen" th:value="${studentYear.nen}" />
-				<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
-				<button class="btn btn-default" onClick="return checkDeleteClass()" 　type="submit">削除</button>
-			</form>
-		</th:block>
-		<th:block th:if="${dataExists == true}">
-			この生徒は削除できません
-		</th:block>
+		</div>
 
-		<table border="1" style="border-collapse: collapse">
-			<tr>
-				<th>年度</th>
-				<th>年</th>
-				<th>組</th>
-				<th>出席番号</th>
-				<th>生徒番号</th>
-				<th>名前</th>
-				<th>なまえ</th>
-				<th>生年月日</th>
-				<th>性別</th>
+		<main>
 
-			</tr>
-			<tr>
-				<td th:text="${studentYear.year}"></td>
-				<td th:text="${studentYear.nen}"></td>
-				<td th:text="${studentYear.kumi}"></td>
-				<td th:text="${studentYear.ban}"></td>
-				<td th:text="${studentYear.studentId}"></td>
-				<div th:each="student : ${studentYear.students}">
-					<td th:text="${student.lastName + ' ' + student.firstName}"></td>
-					<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
-					<td th:text="${student.birth}"></td>
-					<td th:text="${gender[__student.gender__]}"></td>
-				</div>
-			</tr>
-		</table>
-		<br>
-		<table border="1" style="border-collapse: collapse">
-			<tr>
-				<th>写真</th>
-			</tr>
-			<tr>
-				<td>
-					<th:block th:if="${image != null}">
-						<img th:src="${image}" alt="写真" width="100">
-						<a class="buttons clearfix" onClick="return checkDelete()"
-							th:href="@{/setting/class/{id}/image/delete (id=${studentYear.studentYearId})}">削除</a>
-					</th:block>
-					<th:block th:if="${studentYear.image == null}">
-						<form method="post"
-							th:action="@{/setting/class/{id}/image/add (id=${studentYear.studentYearId})}"
-							enctype="multipart/form-data">
-							<input type="file" id="fileInput"　class="form-control-file" name="image" />
-							<button class="btn btn-default" onClick="return uploadFile()" type="submit">登録</button>
-						</form>
-					</th:block>
-				</td>
-			</tr>
-		</table>
+
+
+			<table class="table table-striped" style="text-align:center; vertical-align: middle;">
+				<tr>
+					<th>クラス</th>
+					<th>生徒ID</th>
+					<th>名前</th>
+					<th>なまえ</th>
+					<th>生年月日</th>
+					<th>性別</th>
+					<th>
+						<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+							data-bs-custom-class="custom-tooltip" data-bs-html="true"
+							title="・削除の処理は年度当初におこなってください。<br>・削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。<br>・在籍している生徒が、その年のカルテ・出席簿・成績のデータを持っている場合、その生徒の削除の処理はおこなえません。">
+							<i class="bi bi-question-circle" style="color:black;"></i>
+						</a>
+					</th>
+				</tr>
+				<tr>
+					<td
+						th:text="${studentYear.year + '年度' + ' ' + studentYear.nen + '年' + ' ' + studentYear.kumi + '組' + ' ' + studentYear.ban + '番'}">
+					</td>
+					<td th:text="${studentYear.studentId}"></td>
+					<div th:each="student : ${studentYear.students}">
+						<td th:text="${student.lastName + ' ' + student.firstName}"></td>
+						<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}"></td>
+						<td th:text="${student.birth}"></td>
+						<td th:text="${gender[__student.gender__]}"></td>
+						<td>
+							<th:block th:if="${dataExists == false}">
+								<form th:action="@{/setting/class/{id}/delete (id=${studentYear.studentYearId})}"
+									th:method="post">
+									<input type="hidden" name="year" th:value="${studentYear.year}" />
+									<input type="hidden" name="nen" th:value="${studentYear.nen}" />
+									<input type="hidden" name="kumi" th:value="${studentYear.kumi}" />
+									<button class="btn btn-danger" onClick="return checkDeleteClass()"
+										　type="submit">削除</i></button>
+								</form>
+							</th:block>
+							<th:block th:if="${dataExists == true}">
+								削除不可
+							</th:block>
+						</td>
+					</div>
+				</tr>
+			</table>
+
+
+
+			<table class="table table-striped" style="text-align:center; width: 50%;">
+				<tr>
+					<th>写真
+						<span><a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+								data-bs-custom-class="custom-tooltip" data-bs-html="true"
+								title="・アップロードできる写真のサイズは最大1MBまでです。">
+								<i class="bi bi-question-circle" style="color:black;"></i>
+							</a></span>
+					</th>
+				</tr>
+				<tr>
+					<td style="vertical-align: top;">
+						<th:block th:if="${image != null}">
+							<img th:src="${image}" alt="写真" width="200">
+
+							<!--<a type="button" class="d-inline-block" data-bs-toggle="tooltip" data-bs-html="true"
+								title="&lt;img th:src=&quot;${image}&quot;&gt;">
+								<i class="bi bi-question-circle" style="color:black;"></i>
+							</a>-->
+							<a class="btn btn-danger" onClick="return checkDelete()"
+								th:href="@{/setting/class/{id}/image/delete (id=${studentYear.studentYearId})}">削除</a>
+						</th:block>
+						<th:block th:if="${studentYear.image == null}">
+							<form method="post"
+								th:action="@{/setting/class/{id}/image/add (id=${studentYear.studentYearId})}"
+								enctype="multipart/form-data">
+
+								<input class="form-control" type="file" id="fileInput" name="image" />
+
+								<button class="btn btn-primary" onClick="return uploadFile()" type="submit">登録</button>
+							</form>
+						</th:block>
+					</td>
+				</tr>
+			</table>
+
+
+
+
+			<br>
+
+		</main>
 
 	</div>
 </body>

@@ -10,19 +10,18 @@
 		</div>
 
 		<main>
-			<div class="center-block">
-				<table class="table table-striped">
-					<!--<thead>
-					<tr>
-						<th scope="col">ID</th>
-						<th scope="col">氏名</th>
-					</tr>
-				</thead>-->
+			<div class="table-sticky">
+				<table class="table table-striped table-sm" style="text-align:center; width: 40%">
+					<thead>
+						<tr>
+							<th style="width: 20%">ユーザーID</th>
+							<th style="width: 20%">氏名</th>
+						</tr>
+					</thead>
 					<tbody>
-						<tr th:each="teacher : ${teachers}" class="row">
-							<td class="col-1" style="text-align:center" th:text="${teacher.userId}"></td>
-							<td class="col-2" style="text-align:center"
-								th:text="${teacher.lastName} + ' ' + ${teacher.firstName}"></td>
+						<tr th:each="teacher : ${teachers}">
+							<td th:text="${teacher.userId}"></td>
+							<td th:text="${teacher.lastName} + ' ' + ${teacher.firstName}"></td>
 						</tr>
 					</tbody>
 				</table>

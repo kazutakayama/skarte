@@ -6,7 +6,205 @@
 <body>
 	<div layout:fragment="content">
 
-		<h1>トップページ</h1>
+		<div class="header-sub">
+			<span class="headline">Skarte トップ</span>
+
+
+
+
+		</div>
+
+		<main>
+
+			<div class="container">
+
+
+				<div style="font-weight:bold">クラス一覧・生徒数</div>
+				<table class="table table-bordered table-striped table-sm" style="width: 100%; text-align:center;">
+					<thead>
+						<tr>
+							<th class="col-2">
+								<th:block th:if="${year == null}">
+									<span th:text="${nendo + '年度'}"></span>
+								</th:block>
+								<th:block th:if="${year != null}">
+									<span th:text="${year + '年度'}"></span>
+								</th:block>
+								<span class="dropdown">
+									<a class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+										aria-expanded="false"></a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2023})}">2023年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2024})}">2024年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2025})}">2025年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2026})}">2026年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2027})}">2027年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2028})}">2028年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2029})}">2029年度</a>
+										</li>
+										<li><a class="dropdown-item" th:href="@{/top/year(year=${2030})}">2030年度</a>
+										</li>
+									</ul>
+								</span>
+							</th>
+							<div th:each="nen, stat : ${yearClassList}">
+								<div th:each="kumi : ${nen}">
+									<th th:text="${stat.index +1 + '-' + kumi}"></th>
+								</div>
+								<th th:text="${stat.index +1 + '計'}"></th>
+							</div>
+							<th>合計</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<th>登録生徒</th>
+							<div th:each="nen, stat : ${classStudentsRegistered}">
+								<div th:each="kumi : ${nen}">
+									<td th:text="${kumi}"></td>
+								</div>
+								<div th:each="sum : ${classSummary[0][__${stat.index}__]}">
+									<td th:text="${sum}"></td>
+								</div>
+							</div>
+							<div th:each="sum : ${classSummary[0][3]}">
+								<td th:text="${sum}"></td>
+							</div>
+						</tr>
+
+						<tr>
+							<th>在籍生徒</th>
+							<div th:each="nen, stat : ${classStudentsExists}">
+								<div th:each="kumi : ${nen}">
+									<td th:text="${kumi}"></td>
+								</div>
+								<div th:each="sum : ${classSummary[1][__${stat.index}__]}">
+									<td th:text="${sum}"></td>
+								</div>
+							</div>
+							<div th:each="sum : ${classSummary[1][3]}">
+								<td th:text="${sum}"></td>
+							</div>
+						</tr>
+
+						<tr>
+							<th>転出/卒業生徒</th>
+							<div th:each="nen, stat : ${classStudentsTransferred}">
+								<div th:each="kumi : ${nen}">
+									<td th:text="${kumi}"></td>
+								</div>
+								<div th:each="sum : ${classSummary[2][__${stat.index}__]}">
+									<td th:text="${sum}"></td>
+								</div>
+							</div>
+							<div th:each="sum : ${classSummary[2][3]}">
+								<td th:text="${sum}"></td>
+							</div>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="row">
+					<div class="col">
+						<div style="text-align:center; font-weight:bold">最近１週間に更新されたカルテ</div>
+						<div style="max-height: 250px; overflow-y: auto;">
+							<table class="table table-striped table-sm" style="text-align:center;">
+								<tbody>
+									<tr th:each="recentKarte : ${recentKarte}">
+										<th:block th:each="student : ${recentKarte.students}">
+											<td style="width: 40%"
+												th:text="${#temporals.format(recentKarte.updatedAt, 'yyyy-M-d HH:mm:ss')}">
+											</td>
+											<td>
+												<a th:href="@{/students/{id}/karte (id=${student.studentId})}"
+													data-bs-toggle="tooltip" th:title="${recentKarte.contents}">
+													<div th:text="${student.lastName + ' ' + student.firstName}"></div>
+												</a>
+											</td>
+										</th:block>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="col">
+						<div style="text-align:center; font-weight:bold">最近１週間に更新されたお知らせ</div>
+						<div style="max-height: 250px; overflow-y: auto;">
+							<table class="table table-striped table-bordered table-sm" style="text-align:center;">
+								<tbody>
+									<tr th:each="recentNotice : ${recentNotice}">
+										<td style="width: 20%">
+											<div th:text="${#temporals.format(recentNotice.updatedAt, 'yyyy-M-d')}">
+											</div>
+											<div th:text="${#temporals.format(recentNotice.updatedAt, 'HH:mm:ss')}">
+											</div>
+											<div th:text="${updateUser[__recentNotice.updatedBy__]}"></div>
+										</td>
+										<td style="text-align: left;" th:text="${recentNotice.contents}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</main>
+
+		<!--サマリー
+		<div th:each="nen : ${classSummary}">
+			<table>
+				<tr>
+					<td th:text="${nen}"></td>
+				</tr>
+			</table>
+		</div>
+
+		クラスのリスト
+		<div th:each="nen : ${yearClassList}">
+			<table>
+				<tr>
+					<td th:text="${nen}"></td>
+				</tr>
+			</table>
+		</div>
+
+		登録人数
+		<div th:each="nen : ${classStudentsRegistered}">
+			<table>
+				<tr>
+					<td th:text="${nen}"></td>
+				</tr>
+			</table>
+		</div>
+
+		在籍人数
+		<div th:each="nen : ${classStudentsExists}">
+			<table>
+				<tr>
+					<td th:text="${nen}"></td>
+				</tr>
+			</table>
+		</div>
+
+		転出/卒業人数
+		<div th:each="t : ${classStudentsTransferred}">
+			<table>
+				<tr>
+					<td th:text="${t}"></td>
+				</tr>
+			</table>
+		</div>-->
+
+
 
 		<footer>Skarte&emsp;v1.0.0</footer>
 

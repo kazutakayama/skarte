@@ -108,25 +108,25 @@
 					</div>
 				</div>-->
 
-
-		<div th:if="${studentHeader == true}">
-			<table>
-				<tr>
-					<th th:text="${student.studentId}"></th>
-					<th th:text="${student.lastName}"></th>
-					<th th:text="${student.firstName}"></th>
-					<th th:text="${student.lastNameKana}"></th>
-					<th th:text="${student.firstNameKana}"></th>
-					<th th:text="${student.birth}"></th>
-					<th th:text="${gender[__student.gender__]}"></th>
-					<th><a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a></th>
-					<th><a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a></th>
-					<th><a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出席簿</a></th>
-					<th><a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a></th>
-				</tr>
-			</table>
-		</div>
-
+		
+			<div th:if="${studentHeader == true}">
+				<table>
+					<tr>
+						<th th:text="${student.studentId}"></th>
+						<th th:text="${student.lastName}"></th>
+						<th th:text="${student.firstName}"></th>
+						<th th:text="${student.lastNameKana}"></th>
+						<th th:text="${student.firstNameKana}"></th>
+						<th th:text="${student.birth}"></th>
+						<th th:text="${gender[__student.gender__]}"></th>
+						<th><a th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a></th>
+						<th><a th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a></th>
+						<th><a th:href="@{/students/{id}/attendance (id=${student.studentId})}">出席簿</a></th>
+						<th><a th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a></th>
+					</tr>
+				</table>
+			</div>
+		
 
 
 
