@@ -112,7 +112,7 @@ public class StudentForm extends EntityBase { // EntityBase
     @Size(max=500, message = "「メモ」は500文字以内で入力してください")
     private String memo;
 
-    /** 転出 */
+    /** 転出・卒業 */
     private boolean transferred;
 
     // リスト

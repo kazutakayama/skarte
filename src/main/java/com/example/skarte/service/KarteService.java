@@ -1,5 +1,7 @@
 package com.example.skarte.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,15 @@ public class KarteService {
      */
     public Karte findById(Long id) {
         return karteRepository.findById(id).orElseThrow();
+    }
+
+    /**
+     * 最近１週間に更新されたカルテを取得
+     */
+    public List<Karte> recentKarte() {
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        List<Karte> recentKarte = karteRepository.findByUpdatedAtAfter(oneWeekAgo);
+        return recentKarte;
     }
 
     /**

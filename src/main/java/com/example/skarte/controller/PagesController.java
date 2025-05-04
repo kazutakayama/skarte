@@ -3,8 +3,10 @@ package com.example.skarte.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.skarte.repository.UserRepository;
 import com.example.skarte.service.AttendanceService;
 import com.example.skarte.service.GradeService;
+import com.example.skarte.service.KarteService;
+import com.example.skarte.service.NoticesService;
 import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
@@ -27,6 +31,8 @@ import com.example.skarte.service.UsersService;
 
 import lombok.RequiredArgsConstructor;
 
+import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.User;
 
@@ -38,6 +44,9 @@ import com.example.skarte.entity.User;
 public class PagesController {
 
     private final UsersService usersService;
+    private final StudentsYearService studentsYearService;
+    private final KarteService karteService;
+    private final NoticesService noticesService;
 
     @GetMapping("/")
     public String index(RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
@@ -49,8 +58,66 @@ public class PagesController {
         return "redirect:/top";
     }
 
+    // トップページ
     @GetMapping("/top")
     public String top(Model model) {
+        // 現在の「年度」
+        LocalDate date = LocalDate.now();
+        int nendo;
+        if (date.getMonthValue() >= 4) {
+            nendo = date.getYear();
+        } else {
+            nendo = date.getYear() - 1;
+        }
+        Long year = (long) nendo;
+        // クラスのリスト
+        ArrayList<ArrayList<Long>> yearClassList = studentsYearService.yearClassList(year);
+        model.addAttribute("yearClassList", yearClassList);
+        // クラスの登録人数
+        ArrayList<ArrayList<Long>> classStudentsRegistered = studentsYearService.classStudentsRegistered(year);
+        // クラスの在籍人数
+        model.addAttribute("classStudentsRegistered", classStudentsRegistered);
+        ArrayList<ArrayList<Long>> classStudentsExists = studentsYearService.classStudentsExists(year);
+        model.addAttribute("classStudentsExists", classStudentsExists);
+        // クラスの転出/卒業人数
+        ArrayList<ArrayList<Long>> classStudentsTransferred = studentsYearService.classStudentsTransferred(year);
+        model.addAttribute("classStudentsTransferred", classStudentsTransferred);
+        // 合計数の計算
+        ArrayList<ArrayList<Long>> classSummary = studentsYearService.classSummary(year);
+        model.addAttribute("classSummary", classSummary);
+        // 最近のカルテを取得
+        List<Karte> recentKarte = karteService.recentKarte();
+        model.addAttribute("recentKarte", recentKarte);
+        // 最近のお知らせを取得
+        List<Notice> recentNotice = noticesService.recentNotice();
+        model.addAttribute("recentNotice", recentNotice);
+        return "pages/index";
+    }
+
+    // トップページ（年度でクラス一覧・生徒数表示）
+    @GetMapping("/top/year")
+    public String year(Model model, @ModelAttribute("year") Long year) {
+        // クラスのリスト
+        ArrayList<ArrayList<Long>> yearClassList = studentsYearService.yearClassList(year);
+        model.addAttribute("yearClassList", yearClassList);
+        // クラスの登録人数
+        ArrayList<ArrayList<Long>> classStudentsRegistered = studentsYearService.classStudentsRegistered(year);
+        // クラスの在籍人数
+        model.addAttribute("classStudentsRegistered", classStudentsRegistered);
+        ArrayList<ArrayList<Long>> classStudentsExists = studentsYearService.classStudentsExists(year);
+        model.addAttribute("classStudentsExists", classStudentsExists);
+        // クラスの転出/卒業人数
+        ArrayList<ArrayList<Long>> classStudentsTransferred = studentsYearService.classStudentsTransferred(year);
+        model.addAttribute("classStudentsTransferred", classStudentsTransferred);
+        // 合計数の計算
+        ArrayList<ArrayList<Long>> classSummary = studentsYearService.classSummary(year);
+        model.addAttribute("classSummary", classSummary);
+        // 最近のカルテを取得
+        List<Karte> recentKarte = karteService.recentKarte();
+        model.addAttribute("recentKarte", recentKarte);
+        // 最近のお知らせを取得
+        List<Notice> recentNotice = noticesService.recentNotice();
+        model.addAttribute("recentNotice", recentNotice);
         return "pages/index";
     }
 

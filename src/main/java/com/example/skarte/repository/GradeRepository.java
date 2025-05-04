@@ -21,6 +21,7 @@ public interface GradeRepository extends JpaRepository<Grade, Long>, JpaSpecific
     // 生徒IDでリストを取得
     List<Grade> findAllByStudentId(String studentId);
     
+    // 年度でリストを取得
     List<Grade> findAllByYear(Long year);
 
 //    List<Grade> findAllByStudentId(String studentId, Specification<Grade> year);

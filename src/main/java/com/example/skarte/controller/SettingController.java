@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -323,6 +324,10 @@ public class SettingController {
             @ModelAttribute("kumi") Long kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
+        if (result.size() != 0) {
+            List<String> imageList = studentsYearService.imageList(result);
+            model.addAttribute("images", imageList);
+        }
         return "setting/class/class";
     }
 
@@ -344,25 +349,32 @@ public class SettingController {
     public String createClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
             @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, StudentYearForm studentYearForm,
             @AuthenticationPrincipal User user) {
-        List<String> create = studentsYearService.create(user.getUserId(), studentYearForm, year, nen, kumi);
-        studentsYearService.sort(year, nen, kumi, user.getUserId());
-        redirectAttributes.addFlashAttribute("year", year);
-        redirectAttributes.addFlashAttribute("nen", nen);
-        redirectAttributes.addFlashAttribute("kumi", kumi);
-        if (create != null) {
-            redirectAttributes.addFlashAttribute("hasMessage", true);
-            redirectAttributes.addFlashAttribute("class", "alert-info");
-            redirectAttributes.addFlashAttribute("message",
-                    create.size() + "人の生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
-            return "redirect:/setting/class/list";
+        boolean isDuplicated = studentsYearService.isDuplicated(studentYearForm, year, nen, kumi);
+        if (isDuplicated == false) {
+            List<String> create = studentsYearService.create(user.getUserId(), studentYearForm, year, nen, kumi);
+            studentsYearService.sort(year, nen, kumi, user.getUserId());
+            redirectAttributes.addFlashAttribute("year", year);
+            redirectAttributes.addFlashAttribute("nen", nen);
+            redirectAttributes.addFlashAttribute("kumi", kumi);
+            if (create != null) {
+                redirectAttributes.addFlashAttribute("hasMessage", true);
+                redirectAttributes.addFlashAttribute("class", "alert-info");
+                redirectAttributes.addFlashAttribute("message",
+                        create.size() + "人の生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
+                return "redirect:/setting/class/list";
+            } else {
+                return "redirect:/setting/class/register";
+            }
         } else {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "生徒の重複があるため登録できませんでした");
             return "redirect:/setting/class/register";
         }
-
     }
 
     // path: /setting/class/new
-    // クラス個別登録画面を表示
+    // クラス個別追加画面を表示
     @GetMapping("/class/new")
     public String newClass(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
             @ModelAttribute("kumi") Long kumi) {
@@ -374,11 +386,13 @@ public class SettingController {
     }
 
     // path: /setting/class/add
-    // クラス個別登録画面から生徒1名追加
+    // クラス個別追加画面から生徒1名追加
     @PostMapping("/class/add")
     public String addClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
             @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, StudentYearForm studentYearForm,
             @AuthenticationPrincipal User user) {
+        boolean isDuplicated = studentsYearService.isDuplicated(studentYearForm, year, nen, kumi);
+        if (isDuplicated == false) {
         studentsYearService.add(user.getUserId(), studentYearForm, year, nen, kumi);
         redirectAttributes.addFlashAttribute("year", year);
         redirectAttributes.addFlashAttribute("nen", nen);
@@ -387,6 +401,12 @@ public class SettingController {
         redirectAttributes.addFlashAttribute("class", "alert-info");
         redirectAttributes.addFlashAttribute("message", "生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
         return "redirect:/setting/class/list";
+        }else {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "生徒の重複があるため追加できませんでした");
+            return "redirect:/setting/class/new";
+        }
     }
 
     // path: /setting/class/{studentYearId}
@@ -417,6 +437,9 @@ public class SettingController {
             redirectAttributes.addFlashAttribute("year", year);
             redirectAttributes.addFlashAttribute("nen", nen);
             redirectAttributes.addFlashAttribute("kumi", kumi);
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-info");
+            redirectAttributes.addFlashAttribute("message", "生徒を" + year + "年度" + nen + "年" + kumi + "組から削除しました");
         }
         return "redirect:/setting/class/list";
     }
@@ -465,6 +488,31 @@ public class SettingController {
         redirectAttributes.addFlashAttribute("class", "alert-info");
         redirectAttributes.addFlashAttribute("message", "写真を削除しました");
         return "redirect:/setting/class/" + id;
+    }
+
+    // path: /setting/class/graduated
+    // クラス管理から3年生クラスの生徒を卒業登録する
+    @GetMapping("/class/graduated")
+    public String graduated(Model model, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes,
+            @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi) {
+        // 現在の「年度」
+        LocalDate date = LocalDate.now();
+        int nendo;
+        if (date.getMonthValue() >= 4) {
+            nendo = date.getYear();
+        } else {
+            nendo = date.getYear() - 1;
+        }
+        if (nen == 3 && year <= (long) nendo) {
+            studentsService.graduated(user.getUserId(), year, nen, kumi);
+            redirectAttributes.addFlashAttribute("year", year);
+            redirectAttributes.addFlashAttribute("nen", nen);
+            redirectAttributes.addFlashAttribute("kumi", kumi);
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-info");
+            redirectAttributes.addFlashAttribute("message", "卒業登録が完了しました");
+        }
+        return "redirect:/setting/class/list";
     }
 
     // path: /setting/schedule

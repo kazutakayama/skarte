@@ -30,11 +30,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.skarte.bean.StudentsCsv;
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
+import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.repository.AttendanceRepository;
 import com.example.skarte.repository.GradeRepository;
+import com.example.skarte.repository.KarteRepository;
 import com.example.skarte.repository.StudentRepository;
 import com.example.skarte.repository.StudentYearRepository;
 import com.example.skarte.specification.StudentSpecification;
@@ -65,6 +67,7 @@ public class StudentsService {
 
     private final StudentRepository studentRepository;
     private final StudentYearRepository studentYearRepository;
+    private final KarteRepository karteRepository;
     private final AttendanceRepository attendanceRepository;
     private final GradeRepository gradeRepository;
     private final StudentSpecification studentSpecification;
@@ -350,6 +353,23 @@ public class StudentsService {
         }
         return studentList;
     }
+    
+    
+    // 3年生クラスを卒業登録する
+    public void graduated(String userId, Long year, Long nen, Long kumi) {
+        List<StudentYear> result = studentsYearService.search(year, nen, kumi);
+        if (result.size()>0) {
+            for (int i = 0; i < result.size(); i++) {
+                Student student = findByStudentId(result.get(i).getStudentId());
+                student.setTransferred(true);
+                student.setUpdatedBy(userId);
+                studentRepository.save(student);
+                
+            }
+        }
+    }
+    
+    
 
 //        if (errorList.size() == 0) {
 //            for (int i = 0; i < studentFormList.size(); i++) {
@@ -451,13 +471,14 @@ public class StudentsService {
 //     } 
 
     // 生徒が削除可能か判定する
-    // 生徒IDに紐づけられたクラス、出席簿、成績のデータがあるかどうか確認
+    // 生徒IDに紐づけられたクラス、カルテ、出席簿、成績のデータがあるかどうか確認
     public boolean dataExists(String id) {
         boolean dataExists = false;
         List<StudentYear> studentYear = studentYearRepository.findAllByStudentIdOrderByYearAsc(id);
+        List<Karte> karte = karteRepository.findAllByStudentIdOrderByDateDesc(id);
         List<Attendance> attendance = attendanceRepository.findAllByStudentId(id);
         List<Grade> grade = gradeRepository.findAllByStudentId(id);
-        if (studentYear.size() > 0 || attendance.size() > 0 || grade.size() > 0) {
+        if (studentYear.size() > 0 || karte.size() > 0 || attendance.size() > 0 || grade.size() > 0) {
             dataExists = true;
         }
         return dataExists;
