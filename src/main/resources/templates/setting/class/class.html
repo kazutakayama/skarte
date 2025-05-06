@@ -6,7 +6,7 @@
 	<div layout:fragment="content">
 
 		<div class="header-sub">
-			<span class="headline">管理>クラス管理</span>
+			<span class="headline">管理 > クラス管理</span>
 
 			<span>
 				<form th:action="@{/setting/class/list}" th:method="get">
@@ -41,15 +41,17 @@
 						<option value="5" th:selected="${kumi == 5}">5組</option>
 						<option value="6" th:selected="${kumi == 6}">6組</option>
 					</select>
-					<button class="btn btn-secondary btn-sm" type="submit">クラス検索</button>
+					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
 				</form>
 			</span>
 
 			<th:block th:if="${kumi > 0}">
 				<span th:text="${year + '年度' + nen + '年' + kumi + '組'}" />
-				<th:block th:if="${#lists.size(studentsYear) == 0}"><span>在籍している生徒はいません</span></th:block>
+				<th:block th:if="${#lists.size(studentsYear) == 0}"><span>登録されている生徒はいません</span></th:block>
 				<th:block th:if="${#lists.size(studentsYear) > 0}">
-					<span th:text="${#lists.size(studentsYear) + '名'}" />
+					<span th:text="${'登録:' + #lists.size(studentsYear) + '名'}" />
+					<span th:text="${'転出/卒業:' + #lists.size(transferred) + '名'}" />
+					<span th:text="${'在籍:' + #lists.size(exists) + '名'}" />
 				</th:block>
 				<span>&emsp;</span>
 
@@ -72,19 +74,21 @@
 				</span>
 				<span>&emsp;</span>
 
-				<span>
-					<form th:action="@{/setting/class/graduated}" th:method="get">
-						<input type="hidden" name="year" th:value="${year}" />
-						<input type="hidden" name="nen" th:value="${nen}" />
-						<input type="hidden" name="kumi" th:value="${kumi}" />
-						<button onClick="return checkGraduate()" class="btn btn-warning btn-sm" type="submit">卒業登録</button>
-						<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
-							data-bs-custom-class="custom-tooltip" data-bs-html="true" title="・クラス全員を卒業済にします。">
-							<i class="bi bi-question-circle" style="color:black;"></i>
-						</a>
-					</form>
-
-				</span>
+				<th:block th:if="${nen==3 && year <= nendo}">
+					<span>
+						<form th:action="@{/setting/class/graduated}" th:method="get">
+							<input type="hidden" name="year" th:value="${year}" />
+							<input type="hidden" name="nen" th:value="${nen}" />
+							<input type="hidden" name="kumi" th:value="${kumi}" />
+							<button onClick="return checkGraduate()" class="btn btn-warning btn-sm"
+								type="submit">卒業登録</button>
+							<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+								data-bs-custom-class="custom-tooltip" data-bs-html="true" title="・クラス全員を卒業済にします。">
+								<i class="bi bi-question-circle" style="color:black;"></i>
+							</a>
+						</form>
+					</span>
+				</th:block>
 
 			</th:block>
 		</div>
@@ -97,7 +101,7 @@
 
 
 
-				<div><span style="font-weight:bold">クラス在籍生徒</span>
+				<div><span style="font-weight:bold">登録済生徒</span>
 					<span>
 						<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
 							data-bs-custom-class="custom-tooltip" data-bs-html="true" title="・転出済/卒業生徒は黄色で表示されます。">
@@ -110,14 +114,6 @@
 
 						<thead>
 							<tr>
-								<!--<th class="col-1">#</th>
-							<th class="col-1">生徒ID</th>
-							<th class="col-1">名前</th>
-							<th class="col-1">なまえ</th>
-							<th class="col-1">生年月日</th>
-							<th class="col-1">性別</th>
-							<th class="col-1">写真</th>
-							<th class="col-1"></th>-->
 								<th style="width: 10%">#</th>
 								<th style="width: 10%">生徒ID</th>
 								<th style="width: 20%">名前</th>
@@ -140,8 +136,8 @@
 											<td th:text="${studentYear.ban}"></td>
 											<td th:text="${studentYear.studentId}"></td>
 
-											<td th:text="${student.lastName} + ' ' + ${student.firstName}"></a>
-											</td>
+											<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
+													th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 											<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
 											</td>
 											<td th:text="${student.birth}"></td>
@@ -156,8 +152,8 @@
 												</th:block>
 											</td>
 											<td>
-												<a th:href="@{/setting/class/{id} (id=${studentYear.studentYearId})}"><i
-														class="bi bi-pencil-square text-success"></i></a>
+												<a th:href="@{/setting/class/{id} (id=${studentYear.studentYearId})}">
+													<i class="bi bi-pencil-square text-success"></i></a>
 											</td>
 
 										</tr>
@@ -169,8 +165,8 @@
 											<td th:text="${studentYear.ban}"></td>
 											<td th:text="${studentYear.studentId}"></td>
 
-											<td th:text="${student.lastName} + ' ' + ${student.firstName}"></a>
-											</td>
+											<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
+													th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 											<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
 											</td>
 											<td th:text="${student.birth}"></td>

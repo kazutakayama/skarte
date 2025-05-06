@@ -21,5 +21,5 @@ public interface KarteRepository extends JpaRepository<Karte, Long> {
     List<Karte> findAllByStudentIdOrderByDateDesc(String studentId);
     
     // 更新日時でリストを取得（指定日時以降）
-    List<Karte> findByUpdatedAtAfter(LocalDateTime dateTime);
+    List<Karte> findByUpdatedAtAfterOrderByUpdatedAtDesc(LocalDateTime dateTime);
 }

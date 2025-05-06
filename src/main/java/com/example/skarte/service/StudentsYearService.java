@@ -250,7 +250,7 @@ public class StudentsYearService {
         return classSummary;
     }
 
-    // クラス検索
+    // クラス検索（登録生徒）
     public List<StudentYear> search(Long year, Long nen, Long kumi) {
         List<StudentYear> result;
         if (kumi == 0) {
@@ -263,6 +263,32 @@ public class StudentsYearService {
                     Sort.by(Sort.Direction.ASC, "ban"));
         }
         return result;
+    }
+
+    // クラス検索（転出/卒業生徒）
+    public List<StudentYear> transferred(Long year, Long nen, Long kumi) {
+        List<StudentYear> transferred = new ArrayList<>();
+        List<StudentYear> result = search(year, nen, kumi);
+        for (int i = 0; i < result.size(); i++) {
+            Student student = studentRepository.findByStudentId(result.get(i).getStudentId());
+            if (student.isTransferred()) {
+                transferred.add(result.get(i));
+            }
+        }
+        return transferred;
+    }
+
+    // クラス検索（在籍生徒）
+    public List<StudentYear> exists(Long year, Long nen, Long kumi) {
+        List<StudentYear> exists = new ArrayList<>();
+        List<StudentYear> result = search(year, nen, kumi);
+        for (int i = 0; i < result.size(); i++) {
+            Student student = studentRepository.findByStudentId(result.get(i).getStudentId());
+            if (!(student.isTransferred())) {
+                exists.add(result.get(i));
+            }
+        }
+        return exists;
     }
 
     // クラスに登録できる候補の生徒のリストを取得
@@ -294,7 +320,12 @@ public class StudentsYearService {
         // リストの差分を取得する
         studentsOption.removeAll(resultStudents);
         // 転出済生徒を取り除く
-
+        for (int i = studentsOption.size() - 1; i >= 0; i--) {
+            Student student = studentRepository.findByStudentId(studentsOption.get(i).getStudentId());
+            if (student.isTransferred()) {
+                studentsOption.remove(i);
+            }
+        }
         // 生徒番号昇順で並び替え
         studentsOption.sort(Comparator.comparing(Student::getStudentId));
         return studentsOption;

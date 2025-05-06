@@ -4,49 +4,228 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>カルテ</h2>
-		<form th:action="@{/students/{id}/karte/add (id=${student.studentId})}" th:method="post"
-			th:object="${karteForm}">
-			<div class="form-group">
-				<label class="control-label">日付</label>
-				<input class="form-control" type="date" th:field="*{date}" th:errorclass="border-danger" />
-				<div class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">
+
+		<div class="header-sub">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/students/{id}/attendance (id=${student.studentId})}">出席簿</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
+				</li>
+			</ul>
+
+			<span></span>
+			<th:block th:if="${student.transferred == false}">
+				<span style="font-weight: bold; padding: 2px 4px;"
+					th:text="${student.studentId + ' ' + student.lastName + student.firstName}"></span>
+			</th:block>
+			<th:block th:if="${student.transferred == true}">
+				<span style="background-color: #fff3cd; font-weight: bold; padding: 2px 4px;"
+					th:text="${student.studentId + ' ' + student.lastName + student.firstName}"></span>
+			</th:block>
+			<span></span>
+			<span class="headline">生徒 > カルテ</span>
+
+			<!--新規登録用Modalを開く-->
+			<span>
+				<button type="button" class="btn btn-primary py-1 px-2" data-bs-toggle="modal"
+					data-bs-target="#newModal">
+					新規登録
+				</button>
+			</span>
+		</div>
+
+		<!--新規登録用Modal-->
+		<div class="modal fade" id="newModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="newModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form th:action="@{/students/{id}/karte/add (id=${student.studentId})}" th:method="post"
+						th:object="${karteForm}">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="newModalLabel">カルテ新規登録</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<label class="control-label">日付&emsp;</label><span class="text-danger"
+								th:if="${#fields.hasErrors('date')}" th:errors="*{date}">
+							</span>
+							<input class="form-control w-25" type="date" th:field="*{date}"
+								th:errorclass="border-danger"></input>
+
+							<label class="control-label">内容&emsp;</label><span class="text-danger"
+								th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}">
+							</span>
+							<textarea class="form-control" id="textarea" th:field="*{contents}"
+								th:errorclass="border-danger"></textarea>
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+							<button type="submit" class="btn btn-primary">登録</button>
+						</div>
+					</form>
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="control-label">内容</label>
-				<input class="form-control" type="textarea" name="contents" th:value="*{contents}"
-					th:errorclass="border-danger" />
-				<div class="text-danger" th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}">
+		</div>
+
+
+		<main>
+
+			<th:block th:if="${#lists.size(karte) == 0}">カルテはありません</th:block>
+
+			<th:block th:if="${#lists.size(karte) != 0}">
+				<span th:text="${#lists.size(karte)}" />件のカルテが見つかりました
+
+				<div class="table-sticky">
+					<table class="table table-striped table-sm">
+						<thead>
+							<tr style="text-align:center;">
+								<th style="width: 10%">日付</th>
+								<th style="width: 65%">内容</th>
+								<th style="width: 10%">更新者</th>
+								<th style="width: 10%">更新日時</th>
+								<th style="width: 5%"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="vertical-align: middle;" th:each="karte : ${karte}">
+								<td style="text-align:center;" th:text="${karte.date}"></td>
+								<td th:text="${karte.contents}"></td>
+								<td style="text-align:center;" th:text="${updateUser[__karte.updatedBy__]}"></td>
+								<td style="text-align:center;">
+									<div th:text="${#temporals.format(karte.updatedAt, 'yyyy-M-d')}"></div>
+									<div th:text="${#temporals.format(karte.updatedAt, 'HH:mm:ss')}"></div>
+								</td>
+								<td>
+									<!--更新用Modalを開く-->
+									<a th:href="@{/students/karte/{id}/edit (id=${karte.karteId})}">
+										<i class="bi bi-pencil-square text-success"></i>
+									</a>
+
+									<!--更新用Modal-->
+									<div class="modal fade" id="editModal" data-bs-backdrop="static"
+										data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel"
+										aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+
+												<form
+													th:action="@{/students/karte/{id}/update(id=${targetKarte.karteId})}"
+													th:method="post" th:object="${targetKarte}">
+													<div class="modal-header">
+														<h1 class="modal-title fs-5" id="editModalLabel">カルテ編集</h1>
+														<button type="button" class="btn-close" data-bs-dismiss="modal"
+															aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<input class="form-control" type="hidden" th:field="*{karteId}" />
+														<input class="form-control" type="hidden"
+															th:field="*{studentId}" />
+														<label class="control-label">日付&emsp;</label>
+														<th:block th:object="${karteForm}">
+															<span class="text-danger"
+																th:if="${#fields.hasErrors('date')}"
+																th:errors="*{date}">
+															</span>
+														</th:block>
+														<input class="form-control w-25" type="date" th:field="*{date}"
+															th:errorclass="border-danger"></input>
+
+														<label class="control-label">内容&emsp;</label>
+														<th:block th:object="${karteForm}">
+															<span class="text-danger"
+																th:if="${#fields.hasErrors('contents')}"
+																th:errors="*{contents}">
+															</span>
+														</th:block>
+														<textarea class="form-control" id="textarea"
+															th:field="*{contents}"
+															th:errorclass="border-danger"></textarea>
+														<div
+															th:text="${student.studentId + ' ' + student.lastName + student.firstName}">
+														</div>
+
+
+														</th>
+														<div class="modal-footer">
+															<a class="btn btn-danger" onClick="return checkDelete()"
+																th:href="@{/students/karte/{id}/delete(id=${targetKarte.karteId})}">
+																削除
+															</a>
+															<button type="button" class="btn btn-secondary"
+																data-bs-dismiss="modal">キャンセル</button>
+															<button onClick="return checkUpdate()" type="submit"
+																class="btn btn-success">更新</button>
+														</div>
+												</form>
+
+											</div>
+										</div>
+									</div>
+
+
+									<!--<div class="modal fade" id="editModal" data-bs-backdrop="static"
+										data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel"
+										aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<form th:action="@{/students/karte/{id}/update (id=${id})}" th:method="post"
+													th:object="${karte}">
+													<div class="modal-header">
+														<h1 class="modal-title fs-5" id="editModalLabel">カルテ編集</h1>
+														<button type="button" class="btn-close" data-bs-dismiss="modal"
+															aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<input class="form-control" type="hidden" name="karteId" th:value="${id}"
+															th:errorclass="border-danger" />
+														<label class="control-label">内容</label>
+														<textarea class="form-control" id="textarea"
+															th:field="*{contents}"
+															th:errorclass="border-danger"></textarea>
+														<div th:object="${form}">
+															<span class="text-danger"
+																th:if="${#fields.hasErrors('contents')}"
+																th:errors="*{contents}"></span>
+														</div>
+														<div
+															th:text="${'更新日時: ' + #temporals.format(notice.updatedAt, 'yyyy-M-d HH:mm:ss')}">
+														</div>
+														<div th:text="${'更新者: ' + updateUser[__notice.updatedBy__]}">
+														</div>
+													</div>
+													<div class="modal-footer">
+														<a class="btn btn-danger" onClick="return checkDelete()"
+															th:href="@{/students/karte/{id}/delete (id=${id})}">
+															削除
+														</a>
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">キャンセル</button>
+														<button onClick="return checkUpdate()" type="submit"
+															class="btn btn-success">更新</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>-->
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-			</div>
-			<button class="btn btn-default" type="submit">登録</button>
-		</form>
 
-		<th:block th:if="${#lists.size(karte) == 0}">カルテはありません</th:block>
-
-		<th:block th:if="${#lists.size(karte) > 0}">
-			<span th:text="${#lists.size(karte)}" />件のカルテがみつかりました
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th>日付</th>
-						<th>内容</th>
-						<th>更新者</th>
-						<th>更新日時</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="karte : ${karte}">
-						<td th:text="${karte.date}"></td>
-						<td th:text="${karte.contents}"></td>
-						<td th:text="${updateUser[__karte.updatedBy__]}"></td>
-						<td th:text="${#temporals.format(karte.updatedAt, 'yyyy-M-d HH:mm:ss')}"></td>
-						<td><a th:href="@{/students/{id}/karte/edit(id=${karte.karteId})}" class="edit">編集</a></td>
-					</tr>
-				</tbody>
-			</table> 　　　　　　　　
-		</th:block>
+				　　　　　　　　
+			</th:block>
+		</main>
 
 	</div>
 </body>

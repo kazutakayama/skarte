@@ -19,5 +19,5 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     List<Notice> findByOrderByUpdatedAtDesc();
 
     // 更新日時でリストを取得（指定日時以降）
-    List<Notice> findByUpdatedAtAfter(LocalDateTime dateTime);
+    List<Notice> findByUpdatedAtAfterOrderByUpdatedAtDesc(LocalDateTime dateTime);
 }

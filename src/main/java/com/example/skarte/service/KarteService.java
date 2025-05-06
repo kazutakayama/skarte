@@ -53,7 +53,7 @@ public class KarteService {
      */
     public List<Karte> recentKarte() {
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
-        List<Karte> recentKarte = karteRepository.findByUpdatedAtAfter(oneWeekAgo);
+        List<Karte> recentKarte = karteRepository.findByUpdatedAtAfterOrderByUpdatedAtDesc(oneWeekAgo);
         return recentKarte;
     }
 

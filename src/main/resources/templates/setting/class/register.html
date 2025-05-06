@@ -6,7 +6,7 @@
 	<div layout:fragment="content">
 
 		<div class="header-sub">
-			<span class="headline">管理>クラス管理>クラス一括登録
+			<span class="headline">管理 > クラス管理 > クラス一括登録
 				<a type="button" class="d-inline-block" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
 					data-bs-html="true"
 					title="・この処理は年度当初におこなってください。<br>・追加する生徒にチェックをいれてください。<br>・一括登録後、自動で在籍生徒に名前の順で出席番号が割り当てられます。">
@@ -28,7 +28,6 @@
 			<span>
 				<button class="btn btn-primary  py-1 px-2" onClick="return checkCreateClass()" type="submit"
 					form="createClass">一括登録</button>
-
 			</span>
 
 		</div>
@@ -40,9 +39,17 @@
 				<div class="row">
 					<div class="col">
 
-						<div style="text-align:center; font-weight:bold">クラス在籍生徒</div>
+						<div style="text-align:center;"><span style="font-weight:bold">登録済生徒</span>
+							<span>
+								<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+									data-bs-custom-class="custom-tooltip" data-bs-html="true"
+									title="・転出済/卒業生徒は黄色で表示されます。">
+									<i class="bi bi-question-circle" style="color:black;"></i>
+								</a>
+							</span>
+						</div>
 						<th:block th:if="${#lists.size(studentsYear) == 0}">
-							<div style="text-align:center;">在籍している生徒はいません</div>
+							<div style="text-align:center;">登録されている生徒はいません</div>
 						</th:block>
 						<th:block th:if="${#lists.size(studentsYear) > 0}">
 							<div class="table-sticky">
@@ -104,7 +111,15 @@
 					</div>
 					<div class="col">
 
-						<div style="text-align:center; font-weight:bold">登録可能生徒</div>
+						<div style="text-align:center;"><span style="font-weight:bold">登録可能生徒</span>
+							<span>
+								<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+									data-bs-custom-class="custom-tooltip" data-bs-html="true"
+									title="・登録可能生徒は次の条件を満たしている必要があります。<br>&emsp;1年:登録1年以内<br>&emsp;2年:登録2年以内<br>&emsp;3年:登録3年以内<br>&emsp;転出済/卒業済でない">
+									<i class="bi bi-question-circle" style="color:black;"></i>
+								</a>
+							</span>
+						</div>
 						<th:block th:if="${#lists.size(students) == 0}">
 							<div style="text-align:center;">登録可能な生徒はいません</div>
 						</th:block>

@@ -5,171 +5,267 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>出席簿一覧</h2>
+		<div class="header-sub">
+			<span class="headline">出席簿一覧
+				<!--<a type="button" class="d-inline-block" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
+					data-bs-html="true"
+					title="／ :欠席<br>× :遅刻<br>○ :早退<br>● :遅刻/早退<br>テ :出停<br>キ :忌引">
+					<i class="bi bi-question-circle" style="color:black;"></i>
+				</a>-->
+			</span>
 
-		<form th:action="@{/attendance/search}" th:method="get">
-			<select type="number" name="year" th:value="${year}">
-				<option value="2023"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2023' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2023}">
-					2023</option>
-				<option value="2024"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2024}">
-					2024</option>
-				<option value="2025"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2025}">
-					2025</option>
-				<option value="2026"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2026}">
-					2026</option>
-				<option value="2027"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2027}">
-					2027</option>
-				<option value="2028"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2028}">
-					2028</option>
-				<option value="2029"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2029}">
-					2029</option>
-				<option value="2030"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2031' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2030}">
-					2030</option>
-			</select>
-			<label class="control-label">年度</label>
-			<select type="number" name="month">
-				<option value="3"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='4') || month == 3}">4
-				</option>
-				<option value="4"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='5') || month == 4}">5
-				</option>
-				<option value="5"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='6') || month == 5}">6
-				</option>
-				<option value="6"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='7') || month == 6}">7
-				</option>
-				<option value="7"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='8') || month == 7}">8
-				</option>
-				<option value="8"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='9') || month == 8}">9
-				</option>
-				<option value="9"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='10') || month == 9}">10
-				</option>
-				<option value="10"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='11') || month == 10}">11
-				</option>
-				<option value="11"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='12') || month == 11}">12
-				</option>
-				<option value="0"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='1') || month == 0}">1
-				</option>
-				<option value="1"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='2') || month == 1}">2
-				</option>
-				<option value="2"
-					th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='3') || month == 2}">3
-				</option>
-			</select>
-			<label class="control-label">月</label>
-			<select type="number" name="nen">
-				<option value="1" th:selected="${nen == 1}">1</option>
-				<option value="2" th:selected="${nen == 2}">2</option>
-				<option value="3" th:selected="${nen == 3}">3</option>
-			</select>
-			<label class="control-label">年</label>
-			<select type="number" name="kumi">
-				<option value="0" th:selected="${kumi == 0}"></option>
-				<option value="1" th:selected="${kumi == 1}">1</option>
-				<option value="2" th:selected="${kumi == 2}">2</option>
-				<option value="3" th:selected="${kumi == 3}">3</option>
-				<option value="4" th:selected="${kumi == 4}">4</option>
-				<option value="5" th:selected="${kumi == 5}">5</option>
-				<option value="6" th:selected="${kumi == 6}">6</option>
-			</select>
-			<label class="control-label">組</label>
-			<button class="btn btn-default" type="submit">検索</button>
-		</form>
+			<span>
+				<form th:action="@{/attendance/search}" th:method="get">
+					<select name="year" th:value="${year}">
+						<option value="2023" th:selected="${(year == null && nendo == 2023) || year == 2023}">
+							2023年度</option>
+						<option value="2024" th:selected="${(year == null && nendo == 2024) || year == 2024}">
+							2024年度</option>
+						<option value="2025" th:selected="${(year == null && nendo == 2025) || year == 2025}">
+							2025年度</option>
+						<option value="2026" th:selected="${(year == null && nendo == 2026) || year == 2026}">
+							2026年度</option>
+						<option value="2027" th:selected="${(year == null && nendo == 2027) || year == 2027}">
+							2027年度</option>
+						<option value="2028" th:selected="${(year == null && nendo == 2028) || year == 2028}">
+							2028年度</option>
+						<option value="2029" th:selected="${(year == null && nendo == 2029) || year == 2029}">
+							2029年度</option>
+						<option value="2030" th:selected="${(year == null && nendo == 2030) || year == 2030}">
+							2030年度</option>
+					</select>
 
-		<th:block th:if="${year > 0}">
-			<div><span th:if="${year > 0}"><label th:text="${year}"></label>年度</span>
-				<span th:if="${month >= 0}"><label th:text="${month}+1"></label>月</span>
-				<span th:if="${nen > 0}"><label th:text="${nen}"></label>年</span>
-				<span th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</span>
-			</div>
-			<div th:if="${schedule[0] == null}">スケジュールが登録されていません</div>
-			<div th:if="${#lists.size(studentsYear) == 0}">在籍している生徒はいません</div>
+					<select name="nen">
+						<option value="1" th:selected="${nen == 1}">1年</option>
+						<option value="2" th:selected="${nen == 2}">2年</option>
+						<option value="3" th:selected="${nen == 3}">3年</option>
+					</select>
 
+					<select name="kumi">
+						<option value="0" th:selected="${kumi == 0}"></option>
+						<option value="1" th:selected="${kumi == 1}">1組</option>
+						<option value="2" th:selected="${kumi == 2}">2組</option>
+						<option value="3" th:selected="${kumi == 3}">3組</option>
+						<option value="4" th:selected="${kumi == 4}">4組</option>
+						<option value="5" th:selected="${kumi == 5}">5組</option>
+						<option value="6" th:selected="${kumi == 6}">6組</option>
+					</select>
 
-			<th:block th:if="${schedule[0] != null && #lists.size(studentsYear) > 0}">
-				<table border="1" style="border-collapse: collapse">
-					<thead>
-						<tr>
-							<th rowspan="2">年</th>
-							<th rowspan="2">組</th>
-							<th rowspan="2">番</th>
-							<th rowspan="2">名前</th>
-							<th:block th:each="schedule : ${schedule}">
-								<th>
-									<th:block th:if="${schedule.holiday == false}">
-										<form th:action="@{/attendance/edit}" th:method="get">
-											<input class="form-control" type="hidden" name="year" th:value="${year}" />
-											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-											<input class="form-control" type="hidden" name="month"
-												th:value="${month}" />
-											<input class="form-control" type="hidden" name="day"
-												th:value="${#temporals.format(schedule.date, 'd')}" />
-											<button class="btn btn-default" type="submit">🖉</button>
-										</form>
-									</th:block>
-									<th:block th:text="${#temporals.format(schedule.date, 'd')}"></th:block>
-								</th>
-							</th:block>
-							<th rowspan="2">登校日数</th>
-							<th rowspan="2">出席数</th>
-							<th rowspan="2">欠席数</th>
-							<th rowspan="2">遅刻数</th>
-							<th rowspan="2">早退数</th>
-							<th rowspan="2">出停/忌引数</th>
-						</tr>
-						<tr>
-							<th:block th:each="schedule : ${schedule}">
-								<th th:text="${#temporals.format(schedule.date, 'E')}"></th>
-							</th:block>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="studentYear, stat : ${studentsYear}">
-							<td th:text="${studentYear.nen}"></td>
-							<td th:text="${studentYear.kumi}"></td>
-							<td th:text="${studentYear.ban}"></td>
-							<div th:each="student : ${studentYear.students}">
-								<td><a th:href="@{/students/{id}/attendance (id=${student.studentId})}"
-										th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-							</div>
-							<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
-								<td>
-									<th:block th:if="${attendance?.kiroku==1}">／</th:block>
-									<th:block th:if="${attendance?.kiroku==2}">×</th:block>
-									<th:block th:if="${attendance?.kiroku==3}">○</th:block>
-									<th:block th:if="${attendance?.kiroku==4}">○×</th:block>
-									<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
-									<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
-								</td>
-							</th:block>
-							<th:block th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
-								<td>
-									<th:block th:text="${attendanceSummary}"></th:block>
-								</td>
-							</th:block>
-						</tr>
-					</tbody>
-				</table>
+					<select name="month">
+						<option value="3"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='4') || month == 3}">
+							4月
+						</option>
+						<option value="4"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='5') || month == 4}">
+							5月
+						</option>
+						<option value="5"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='6') || month == 5}">
+							6月
+						</option>
+						<option value="6"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='7') || month == 6}">
+							7月
+						</option>
+						<option value="7"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='8') || month == 7}">
+							8月
+						</option>
+						<option value="8"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='9') || month == 8}">
+							9月
+						</option>
+						<option value="9"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='10') || month == 9}">
+							10月
+						</option>
+						<option value="10"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='11') || month == 10}">
+							11月
+						</option>
+						<option value="11"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='12') || month == 11}">
+							12月
+						</option>
+						<option value="0"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='1') || month == 0}">
+							1月
+						</option>
+						<option value="1"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='2') || month == 1}">
+							2月
+						</option>
+						<option value="2"
+							th:selected="${(month == null && #dates.format(#dates.createNow(), 'M')=='3') || month == 2}">
+							3月
+						</option>
+					</select>
+
+					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
+				</form>			
+			</span>
+
+			<th:block th:if="${year > 0}">
+				<span th:if="${kumi == 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + month + '月'}" />
+				</span>
+				<span th:if="${kumi > 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組 ' + month + '月'}" />
+				</span>
+				<span th:if="${schedule[0] == null}">スケジュールが登録されていません</span>
+				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
 			</th:block>
-		</th:block>
+			
+			<span>／ :欠席&emsp;× :遅刻&emsp;○ :早退&emsp;● :遅刻/早退&emsp;テ :出停&emsp;キ :忌引</span>
+
+		</div>
+
+		<main>
+
+			<th:block th:if="${year > 0}">
+
+				<th:block th:if="${schedule[0] != null && #lists.size(studentsYear) > 0}">
+
+					<div class="table-attendance">
+
+						<table class="table table-striped table-sm"
+							style="table-layout: fixed;width: max-content; border-collapse: separate; border-spacing: 0; text-align:center;">
+							<thead>
+								<tr>
+									<th rowspan="2" class="sticky-col sticky-col-1" style="width: 30px; height: 114px">年
+									</th>
+									<th rowspan="2" class="sticky-col sticky-col-2" style="width: 30px; height: 114px">組
+									</th>
+									<th rowspan="2" class="sticky-col sticky-col-3" style="width: 30px; height: 114px">番
+									</th>
+									<th rowspan="2" class="sticky-col sticky-col-4" style="width: 120px; height: 114px">
+										名前</th>
+
+									<th:block th:each="schedule : ${schedule}">
+										<th:block th:if="${schedule.holiday == false}">
+											<th style="width: 80px; height: 76px; z-index: 1;">
+												<form th:action="@{/attendance/edit}" th:method="get">
+													<input class="form-control" type="hidden" name="year"
+														th:value="${year}" />
+													<input class="form-control" type="hidden" name="nen"
+														th:value="${nen}" />
+													<input class="form-control" type="hidden" name="kumi"
+														th:value="${kumi}" />
+													<input class="form-control" type="hidden" name="month"
+														th:value="${month}" />
+													<input class="form-control" type="hidden" name="day"
+														th:value="${#temporals.format(schedule.date, 'd')}" />
+													<button class="btn btn-default" type="submit"><i
+															class="bi bi-pencil-square text-success"></i></button>
+												</form>
+												<th:block th:text="${#temporals.format(schedule.date, 'd')}"></th:block>
+											</th>
+										</th:block>
+										<th:block th:if="${schedule.holiday == true}">
+											<th
+												style="background-color: #f8d7da; width: 30px; height: 76px; z-index: 1;">
+												<th:block th:text="${#temporals.format(schedule.date, 'd')}"></th:block>
+											</th>
+										</th:block>
+									</th:block>
+									<th rowspan="2" class="vertical-text"
+										style="font-size: 12px; width: 30px; height: 114px">登校日数</th>
+									<th rowspan="2" class="vertical-text"
+										style="font-size: 12px; width: 30px; height: 114px">出席数</th>
+									<th rowspan="2" class="vertical-text"
+										style="font-size: 12px; width: 30px; height: 114px">欠席数</th>
+									<th rowspan="2" class="vertical-text"
+										style="font-size: 12px; width: 30px; height: 114px">遅刻数</th>
+									<th rowspan="2" class="vertical-text"
+										style="font-size: 12px; width: 30px; height: 114px">早退数</th>
+									<th rowspan="2" class="vertical-text"
+										style="font-size: 12px; width: 30px; height: 114px">出停/忌引数</th>
+								</tr>
+								<tr>
+									<th:block th:each="schedule : ${schedule}">
+										<th:block th:if="${schedule.holiday == false}">
+											<th style="width: 80px; height: 38px;"
+												th:text="${#temporals.format(schedule.date, 'E')}"></th>
+										</th:block>
+										<th:block th:if="${schedule.holiday == true}">
+											<th style="background-color: #f8d7da; width: 30px; height: 38px;"
+												th:text="${#temporals.format(schedule.date, 'E')}"></th>
+										</th:block>
+									</th:block>
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:each="studentYear, stat : ${studentsYear}">
+									<th:block th:each="student : ${studentYear.students}">
+
+										<th:block th:if="${student.transferred == false}">
+											<tr>
+												<th class="sticky-col sticky-col-1" th:text="${studentYear.nen}"></th>
+												<th class="sticky-col sticky-col-2" th:text="${studentYear.kumi}"></th>
+												<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}"></th>
+
+												<th class="sticky-col sticky-col-4"
+													th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
+
+												<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
+													<td>
+														<th:block th:if="${attendance?.kiroku==1}">／</th:block>
+														<th:block th:if="${attendance?.kiroku==2}">×</th:block>
+														<th:block th:if="${attendance?.kiroku==3}">○</th:block>
+														<th:block th:if="${attendance?.kiroku==4}">●</th:block>
+														<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
+														<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
+													</td>
+												</th:block>
+												<th:block
+													th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+													<td>
+														<th:block th:text="${attendanceSummary}"></th:block>
+													</td>
+												</th:block>
+											</tr>
+										</th:block>
+
+										<th:block th:if="${student.transferred == true}">
+											<tr class="table-warning">
+												<th class="sticky-col sticky-col-1" th:text="${studentYear.nen}"></th>
+												<th class="sticky-col sticky-col-2" th:text="${studentYear.kumi}"></th>
+												<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}"></th>
+
+												<th class="sticky-col sticky-col-4"
+													th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
+
+												<th:block th:each="attendance : ${attendance[__${stat.index}__]}">
+													<td>
+														<th:block th:if="${attendance?.kiroku==1}">／</th:block>
+														<th:block th:if="${attendance?.kiroku==2}">×</th:block>
+														<th:block th:if="${attendance?.kiroku==3}">○</th:block>
+														<th:block th:if="${attendance?.kiroku==4}">●</th:block>
+														<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
+														<th:block th:if="${attendance?.kiroku==6}">キ</th:block>
+													</td>
+												</th:block>
+												<th:block
+													th:each="attendanceSummary : ${attendanceSummary[__${stat.index}__]}">
+													<td>
+														<th:block th:text="${attendanceSummary}"></th:block>
+													</td>
+												</th:block>
+											</tr>
+										</th:block>
+
+									</th:block>
+								</th:block>
+							</tbody>
+						</table>
+
+					</div>
+
+				</th:block>
+			</th:block>
+
+		</main>
 
 	</div>
 </body>

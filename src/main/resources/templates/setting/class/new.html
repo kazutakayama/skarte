@@ -6,7 +6,7 @@
 	<div layout:fragment="content">
 
 		<div class="header-sub">
-			<span class="headline">管理>クラス管理>クラス個別追加
+			<span class="headline">管理 > クラス管理 > クラス個別追加
 				<a type="button" class="d-inline-block" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
 					data-bs-html="true" title="・転入生徒を追加する場合は、この処理をおこなってください。<br>・追加された生徒には、一番最後の出席番号が割り当てられます。">
 					<i class="bi bi-question-circle" style="color:black;"></i>
@@ -33,9 +33,17 @@
 				<div class="row">
 					<div class="col">
 
-						<div style="text-align:center; font-weight:bold">クラス在籍生徒</div>
+						<div style="text-align:center;"><span style="font-weight:bold">登録済生徒</span>
+							<span>
+								<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+									data-bs-custom-class="custom-tooltip" data-bs-html="true"
+									title="・転出済/卒業生徒は黄色で表示されます。">
+									<i class="bi bi-question-circle" style="color:black;"></i>
+								</a>
+							</span>
+						</div>
 						<th:block th:if="${#lists.size(studentsYear) == 0}">
-							<div style="text-align:center;">在籍している生徒はいません</div>
+							<div style="text-align:center;">登録されている生徒はいません</div>
 						</th:block>
 						<th:block th:if="${#lists.size(studentsYear) > 0}">
 							<div class="table-sticky">
@@ -51,17 +59,44 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="studentYear : ${studentsYear}">
-											<th th:text="${studentYear.ban}"></th>
-											<td th:text="${studentYear.studentId}"></td>
+										<div th:each="studentYear : ${studentsYear}">
 											<div th:each="student : ${studentYear.students}">
-												<td th:text="${student.lastName + ' ' + student.firstName}"></td>
-												<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
-												</td>
-												<td th:text="${student.birth}"></td>
-												<td th:text="${gender[__student.gender__]}"></td>
+
+												<th:block th:if="${student.transferred == false}">
+													<tr>
+														<th th:text="${studentYear.ban}"></th>
+														<td th:text="${studentYear.studentId}"></td>
+														<div th:each="student : ${studentYear.students}">
+															<td th:text="${student.lastName + ' ' + student.firstName}">
+															</td>
+															<td
+																th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
+															</td>
+															<td th:text="${student.birth}"></td>
+															<td th:text="${gender[__student.gender__]}"></td>
+														</div>
+													</tr>
+												</th:block>
+
+												<th:block th:if="${student.transferred == true}">
+													<tr class="table-warning">
+														<th th:text="${studentYear.ban}"></th>
+														<td th:text="${studentYear.studentId}"></td>
+														<div th:each="student : ${studentYear.students}">
+															<td th:text="${student.lastName + ' ' + student.firstName}">
+															</td>
+															<td
+																th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
+															</td>
+															<td th:text="${student.birth}"></td>
+															<td th:text="${gender[__student.gender__]}"></td>
+														</div>
+													</tr>
+												</th:block>
+
 											</div>
-										</tr>
+										</div>
+
 									</tbody>
 								</table>
 							</div>
@@ -70,7 +105,15 @@
 					</div>
 					<div class="col">
 
-						<div style="text-align:center; font-weight:bold">登録可能生徒</div>
+						<div style="text-align:center;"><span style="font-weight:bold">登録可能生徒</span>
+							<span>
+								<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
+									data-bs-custom-class="custom-tooltip" data-bs-html="true"
+									title="・登録可能生徒は次の条件を満たしている必要があります。<br>&emsp;1年:登録1年以内<br>&emsp;2年:登録2年以内<br>&emsp;3年:登録3年以内<br>&emsp;転出済/卒業済でない">
+									<i class="bi bi-question-circle" style="color:black;"></i>
+								</a>
+							</span>
+						</div>
 						<th:block th:if="${#lists.size(students) == 0}">
 							<div style="text-align:center;">登録可能な生徒はいません</div>
 						</th:block>
