@@ -5,95 +5,188 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>成績一覧編集</h2>
 
-		<div><span th:if="${year > 0}"><label th:text="${year}"></label>年度</span>
-			<span th:if="${nen > 0}"><label th:text="${nen}"></label>年</span>
-			<span th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</span>
+		<div class="header-sub">
+			<span class="headline">成績一覧 > 編集
+			</span>
+
+			<th:block th:if="${year > 0}">
+				<span th:if="${kumi == 0}">
+					<span th:text="${year + '年度 ' + nen + '年'}" />
+				</span>
+				<span th:if="${kumi > 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組'}" />
+				</span>
+				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
+			</th:block>
+
+			<span>
+				<form th:action="@{/grade/search}" th:method="get">
+					<input type="hidden" name="year" th:value="${year}" />
+					<input type="hidden" name="nen" th:value="${nen}" />
+					<input type="hidden" name="kumi" th:value="${kumi}" />
+					<button class="btn btn-secondary btn-sm" type="submit">成績一覧にもどる</button>
+				</form>
+			</span>
+
+			<span>
+				<button class="btn btn-success  py-1 px-2" onClick="return checkUpdate()" type="submit"
+					form="update">更新</button>
+			</span>
+
 		</div>
-		<div><span th:if="${term > 0}"><label th:text="${term}"></label>学期</span>
-			<span th:if="${subject > 0}"><label th:text="${kyouka[__${subject}__]}"></label></span>
-		</div>
 
-		<form th:action="@{/grade/search}" th:method="get">
-			<input type="hidden" name="year" th:value="${year}" />
-			<input type="hidden" name="nen" th:value="${nen}" />
-			<input type="hidden" name="kumi" th:value="${kumi}" />
-			<button class="btn btn-default" type="submit">成績一覧にもどる</button>
-		</form>
 
-		<form th:action="@{/grade/update}" th:method="post">
-			<input class="form-control" type="hidden" name="year" th:value="${year}" />
-			<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-			<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-			<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>
+		<main>
 
-			<table border="1" style="border-collapse: collapse">
-				<thead>
-					<tr>
-						<th rowspan="2">年</th>
-						<th rowspan="2">組</th>
-						<th rowspan="2">番</th>
-						<th rowspan="2">名前</th>
-						<th colspan="9" scope="colgroup">1学期</th>
-						<th colspan="9" scope="colgroup">２学期</th>
-						<th colspan="9" scope="colgroup">３学期</th>
-					</tr>
-					<tr>
-						<th:block th:each="kyouka : ${kyouka}">
-							<th th:text="${kyouka.value}"></th>
-						</th:block>
-						<th:block th:each="kyouka : ${kyouka}">
-							<th th:text="${kyouka.value}"></th>
-						</th:block>
-						<th:block th:each="kyouka : ${kyouka}">
-							<th th:text="${kyouka.value}"></th>
-						</th:block>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="studentYear, stat : ${studentsYear}">
-						<td th:text="${studentYear.nen}"></td>
-						<td th:text="${studentYear.kumi}"></td>
-						<td th:text="${studentYear.ban}"></td>
-						<div th:each="student : ${studentYear.students}">
-							<td　th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-						</div>
-						<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
-							<td>
-								<th:block
-									th:if="${term == (stat.index + 9)/9 && subject == (stat.index +((stat.index + 9)/9))%10}">
-									<input class="form-control" type="hidden" name="gradeIds[]"
-										th:value="${grade?.gradeId}" />
-									<input class="form-control" type="hidden" name="studentIds[]"
-										th:value="${studentYear.studentId}" />
-									<input class="form-control" type="hidden" name="years[]" th:value="${year}" />
-									<input class="form-control" type="hidden" name="terms[]"
-										th:value="${(stat.index + 9)/9}" />
-									<input class="form-control" type="hidden" name="subjects[]"
-										th:value="${(stat.index +((stat.index + 9)/9))%10}" />
-									<select name="ratings[]" th:value="${grade?.rating}">
-										<option value=""></option>
-										<option value="1" th:selected="${grade?.rating == 1}">1
-										</option>
-										<option value="2" th:selected="${grade?.rating == 2}">2
-										</option>
-										<option value="3" th:selected="${grade?.rating == 3}">3
-										</option>
-										<option value="4" th:selected="${grade?.rating == 4}">4
-										</option>
-										<option value="5" th:selected="${grade?.rating == 5}">5
-										</option>
-									</select>
-								</th:block>
-								<th:block th:text="${grade?.rating}"></th:block>
-							</td>
+			<th:block th:if="${year > 0}">
 
-						</th:block>
-					</tr>
-				</tbody>
-			</table>
-		</form>
+				<th:block th:if="${#lists.size(studentsYear) > 0}">
+
+					<div class="table-grade">
+						<form id="update" th:action="@{/grade/update}" th:method="post">
+							<input class="form-control" type="hidden" name="year" th:value="${year}" />
+							<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
+							<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
+
+							<table class="table table-striped table-sm"
+								style="table-layout: fixed;width: max-content; border-collapse: separate; border-spacing: 0; text-align:center;">
+								<thead>
+									<tr>
+										<th rowspan="2" class="sticky-col sticky-col-1"
+											style="width: 30px; height: 114px">年
+										</th>
+										<th rowspan="2" class="sticky-col sticky-col-2"
+											style="width: 30px; height: 114px">組
+										</th>
+										<th rowspan="2" class="sticky-col sticky-col-3"
+											style="width: 30px; height: 114px">番
+										</th>
+										<th rowspan="2" class="sticky-col sticky-col-4"
+											style="width: 120px; height: 114px">
+											名前</th>
+										<th colspan="9" scope="colgroup"
+											style="width: 720px; height: 38px; z-index: 1;">1学期
+										</th>
+										<th colspan="9" scope="colgroup"
+											style="width: 720px; height: 38px; z-index: 1;">２学期
+										</th>
+										<th colspan="9" scope="colgroup"
+											style="width: 720px; height: 38px; z-index: 1;">３学期
+										</th>
+									</tr>
+									<tr>
+										<th:block th:each="kyouka : ${kyouka}">
+											<th style="width: 80px; height: 76px;">
+												<th:block th:text="${kyouka.value}"></th:block>
+											</th>
+										</th:block>
+										<th:block th:each="kyouka : ${kyouka}">
+											<th style="width: 80px; height: 76px;">
+												<th:block th:text="${kyouka.value}"></th:block>
+											</th>
+										</th:block>
+										<th:block th:each="kyouka : ${kyouka}">
+											<th style="width: 80px; height: 76px;">
+												<th:block th:text="${kyouka.value}"></th:block>
+											</th>
+										</th:block>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="studentYear, stat : ${studentsYear}">
+										<th:block th:each="student : ${studentYear.students}">
+
+											<th:block th:if="${student.transferred == false}">
+												<tr>
+													<th class="sticky-col sticky-col-1" th:text="${studentYear.nen}">
+													</th>
+													<th class="sticky-col sticky-col-2" th:text="${studentYear.kumi}">
+													</th>
+													<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}">
+													</th>
+
+													<th class="sticky-col sticky-col-4"
+														th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
+
+													<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
+														<td>
+															<th:block
+																th:if="${term == (stat.index + 9)/9 && subject == (stat.index +((stat.index + 9)/9))%10}">
+																<input class="form-control" type="hidden"
+																	name="gradeIds[]" th:value="${grade?.gradeId}" />
+																<input class="form-control" type="hidden"
+																	name="studentIds[]"
+																	th:value="${studentYear.studentId}" />
+																<input class="form-control" type="hidden" name="years[]"
+																	th:value="${year}" />
+																<input class="form-control" type="hidden" name="terms[]"
+																	th:value="${(stat.index + 9)/9}" />
+																<input class="form-control" type="hidden"
+																	name="subjects[]"
+																	th:value="${(stat.index +((stat.index + 9)/9))%10}" />
+																<select name="ratings[]" th:value="${grade?.rating}">
+																	<option value=""></option>
+																	<option value="1"
+																		th:selected="${grade?.rating == 1}">1
+																	</option>
+																	<option value="2"
+																		th:selected="${grade?.rating == 2}">2
+																	</option>
+																	<option value="3"
+																		th:selected="${grade?.rating == 3}">3
+																	</option>
+																	<option value="4"
+																		th:selected="${grade?.rating == 4}">4
+																	</option>
+																	<option value="5"
+																		th:selected="${grade?.rating == 5}">5
+																	</option>
+																</select>
+															</th:block>
+															<th:block
+																th:if="${term != (stat.index + 9)/9 || subject != (stat.index +((stat.index + 9)/9))%10}">
+																<th:block th:text="${grade?.rating}"></th:block>
+															</th:block>
+														</td>
+													</th:block>
+												</tr>
+											</th:block>
+
+											<th:block th:if="${student.transferred == true}">
+												<tr class="table-warning">
+													<th class="sticky-col sticky-col-1" th:text="${studentYear.nen}">
+													</th>
+													<th class="sticky-col sticky-col-2" th:text="${studentYear.kumi}">
+													</th>
+													<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}">
+													</th>
+
+													<th class="sticky-col sticky-col-4"
+														th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
+
+													<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
+														<td>
+															
+															<th:block th:text="${grade?.rating}"></th:block>
+														</td>
+													</th:block>
+												</tr>
+											</th:block>
+
+										</th:block>
+									</th:block>
+
+								</tbody>
+							</table>
+						</form>
+
+					</div>
+
+				</th:block>
+			</th:block>
+
+		</main>
 
 	</div>
 </body>

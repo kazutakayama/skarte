@@ -7,6 +7,7 @@ $(function() {
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+
 // 削除の確認
 function checkDelete() {
 	var result = confirm('削除したデータは元にもどせません。\r\n削除してよろしいですか？');
@@ -49,7 +50,7 @@ function checkAddClass() {
 
 // クラス削除の確認
 function checkDeleteClass() {
-	var result = confirm('削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。\r\n削除してよろしいですか？');
+	var result = confirm('削除後、自動で在籍生徒に名前の順で出席番号が割り当てられます。\r\n削除すると同時に写真も削除されます。\r\n削除してよろしいですか？');
 	if (result == true) {
 		return true;
 	} else {

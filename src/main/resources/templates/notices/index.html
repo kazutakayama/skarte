@@ -13,7 +13,7 @@
 			<span>
 				<button type="button" class="btn btn-primary py-1 px-2" data-bs-toggle="modal"
 					data-bs-target="#newModal">
-					お知らせ新規登録
+					新規登録
 				</button>
 			</span>
 		</div>
@@ -33,15 +33,12 @@
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-							<!--<label class="control-label">タイトル</label>
-							<input class="form-control" type="text" th:field="*{title}" th:errorclass="border-danger" />
-							<div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
-							</div>-->
-							<label class="control-label">内容</label>
+							<label class="control-label">内容&emsp;</label><span class="text-danger"
+								th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}">
+							</span>
 							<textarea class="form-control" id="textarea" th:field="*{contents}"
 								th:errorclass="border-danger"></textarea>
-							<div class="text-danger" th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}">
-							</div>
+
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
@@ -83,14 +80,15 @@
 								<td style="text-align:center;" th:text="${updateUser[__notice.updatedBy__]}"></td>
 
 
-								<td style=" text-align:center;">
+								<td>
 									<!--<a class="buttons clearfix" th:href="@{/notices/{id}/edit (id=${notice.noticeId})}">
 							編集
 						</a>-->
-									<!--更新用Modalを開く-->
-									<a th:href="@{/notices/{id} (id=${notice.noticeId})}">
-										<i class="bi bi-pencil-square text-success"></i>
-									</a>
+										<!--更新用Modalを開く-->
+										<a th:href="@{/notices/{id} (id=${notice.noticeId})}">
+											<i class="bi bi-pencil-square text-success"></i>
+										</a>
+
 									<!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal"
 							data-bs-whatever="${notice.noticeId}">
 							編集

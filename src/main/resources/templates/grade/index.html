@@ -5,144 +5,202 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>成績一覧</h2>
 
-		<form th:action="@{/grade/search}" th:method="get">
-			<label class="control-label">クラス検索</label>
-			<select type="number" name="year" th:value="${year}">
-				<option value="2023"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2023' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2023}">
-					2023</option>
-				<option value="2024"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2024' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2024}">
-					2024</option>
-				<option value="2025"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2025' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2025}">
-					2025</option>
-				<option value="2026"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2026' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2026}">
-					2026</option>
-				<option value="2027"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2027' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2027}">
-					2027</option>
-				<option value="2028"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2028' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2028}">
-					2028</option>
-				<option value="2029"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2029' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2029}">
-					2029</option>
-				<option value="2030"
-					th:selected="${(year == null && #dates.format(#dates.createNow(), 'yyyy')=='2030' && #dates.format(#dates.createNow(), 'M')>='4') || (year == null && #dates.format(#dates.createNow(), 'yyyy')=='2031' && #dates.format(#dates.createNow(), 'M')<= '3') || year == 2030}">
-					2030</option>
-			</select>
-			<label class="control-label">年度</label>
-			<select type="number" name="nen">
-				<option value="1" th:selected="${nen == 1}">1</option>
-				<option value="2" th:selected="${nen == 2}">2</option>
-				<option value="3" th:selected="${nen == 3}">3</option>
-			</select>
-			<label class="control-label">年</label>
-			<select type="number" name="kumi">
-				<option value="0" th:selected="${kumi == 0}"></option>
-				<option value="1" th:selected="${kumi == 1}">1</option>
-				<option value="2" th:selected="${kumi == 2}">2</option>
-				<option value="3" th:selected="${kumi == 3}">3</option>
-				<option value="4" th:selected="${kumi == 4}">4</option>
-				<option value="5" th:selected="${kumi == 5}">5</option>
-				<option value="6" th:selected="${kumi == 6}">6</option>
-			</select>
-			<label class="control-label">組</label>
-			<button class="btn btn-default" type="submit">検索</button>
-		</form>
+		<div class="header-sub">
+			<span class="headline">成績一覧
+			</span>
 
-		<th:block th:if="${year > 0}">
-			<div><span th:if="${year > 0}"><label th:text="${year}"></label>年度</span>
-				<span th:if="${nen > 0}"><label th:text="${nen}"></label>年</span>
-				<span th:if="${kumi > 0}"><label th:if="${kumi > 0}" th:text="${kumi}"></label>組</span>
-			</div>
-			<div th:if="${#lists.size(studentsYear) == 0}">在籍している生徒はいません</div>
+			<span>
+				<form th:action="@{/grade/search}" th:method="get">
+					<select name="year" th:value="${year}">
+						<option value="2023" th:selected="${(year == null && nendo == 2023) || year == 2023}">
+							2023年度</option>
+						<option value="2024" th:selected="${(year == null && nendo == 2024) || year == 2024}">
+							2024年度</option>
+						<option value="2025" th:selected="${(year == null && nendo == 2025) || year == 2025}">
+							2025年度</option>
+						<option value="2026" th:selected="${(year == null && nendo == 2026) || year == 2026}">
+							2026年度</option>
+						<option value="2027" th:selected="${(year == null && nendo == 2027) || year == 2027}">
+							2027年度</option>
+						<option value="2028" th:selected="${(year == null && nendo == 2028) || year == 2028}">
+							2028年度</option>
+						<option value="2029" th:selected="${(year == null && nendo == 2029) || year == 2029}">
+							2029年度</option>
+						<option value="2030" th:selected="${(year == null && nendo == 2030) || year == 2030}">
+							2030年度</option>
+					</select>
+					
+					<select name="nen">
+						<option value="1" th:selected="${nen == 1}">1年</option>
+						<option value="2" th:selected="${nen == 2}">2年</option>
+						<option value="3" th:selected="${nen == 3}">3年</option>
+					</select>
+					
+					<select name="kumi">
+						<option value="0" th:selected="${kumi == 0}"></option>
+						<option value="1" th:selected="${kumi == 1}">1組</option>
+						<option value="2" th:selected="${kumi == 2}">2組</option>
+						<option value="3" th:selected="${kumi == 3}">3組</option>
+						<option value="4" th:selected="${kumi == 4}">4組</option>
+						<option value="5" th:selected="${kumi == 5}">5組</option>
+						<option value="6" th:selected="${kumi == 6}">6組</option>
+					</select>
+					
+					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
+				</form>
+			</span>
 
-			<th:block th:if="${#lists.size(studentsYear) > 0}">
-				<table border="1" style="border-collapse: collapse">
-					<thead>
-						<tr>
-							<th rowspan="2">年</th>
-							<th rowspan="2">組</th>
-							<th rowspan="2">番</th>
-							<th rowspan="2">名前</th>
-							<th colspan="9" scope="colgroup">1学期</th>
-							<th colspan="9" scope="colgroup">２学期</th>
-							<th colspan="9" scope="colgroup">３学期</th>
-						</tr>
-
-						<tr>
-							<th:block th:each="kyouka : ${kyouka}">
-								<th>
-									<form th:action="@{/grade/edit}" th:method="get">
-										<div class="form-group">
-											<input class="form-control" type="hidden" name="year" th:value="${year}" />
-											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-											<input class="form-control" type="hidden" name="term" th:value="1" />
-											<input class="form-control" type="hidden" name="subject"
-												th:value="${kyouka.key}" />
-										</div>
-										<button class="btn btn-default" type="submit">🖉</button>
-									</form>
-									<th:block th:text="${kyouka.value}"></th:block>
-								</th>
-							</th:block>
-							<th:block th:each="kyouka : ${kyouka}">
-								<th>
-									<form th:action="@{/grade/edit}" th:method="get">
-										<div class="form-group">
-											<input class="form-control" type="hidden" name="year" th:value="${year}" />
-											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-											<input class="form-control" type="hidden" name="term" th:value="2" />
-											<input class="form-control" type="hidden" name="subject"
-												th:value="${kyouka.key}" />
-										</div>
-										<button class="btn btn-default" type="submit">🖉</button>
-									</form>
-									<th:block th:text="${kyouka.value}"></th:block>
-								</th>
-							</th:block>
-							<th:block th:each="kyouka : ${kyouka}">
-								<th>
-									<form th:action="@{/grade/edit}" th:method="get">
-										<div class="form-group">
-											<input class="form-control" type="hidden" name="year" th:value="${year}" />
-											<input class="form-control" type="hidden" name="nen" th:value="${nen}" />
-											<input class="form-control" type="hidden" name="kumi" th:value="${kumi}" />
-											<input class="form-control" type="hidden" name="term" th:value="3" />
-											<input class="form-control" type="hidden" name="subject"
-												th:value="${kyouka.key}" />
-										</div>
-										<button class="btn btn-default" type="submit">🖉</button>
-									</form>
-									<th:block th:text="${kyouka.value}"></th:block>
-								</th>
-							</th:block>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="studentYear, stat : ${studentsYear}">
-							<td th:text="${studentYear.nen}"></td>
-							<td th:text="${studentYear.kumi}"></td>
-							<td th:text="${studentYear.ban}"></td>
-							<div th:each="student : ${studentYear.students}">
-								<td><a th:href="@{/students/{id}/grade (id=${student.studentId})}"
-										th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
-							</div>
-							<th:block th:each="grade : ${grade[__${stat.index}__]}">
-								<td th:text="${grade?.rating}"></td>
-							</th:block>
-						</tr>
-					</tbody>
-				</table>
+			<th:block th:if="${year > 0}">
+				<span th:if="${kumi == 0}">
+					<span th:text="${year + '年度 ' + nen + '年'}" />
+				</span>
+				<span th:if="${kumi > 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組'}" />
+				</span>
+				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
 			</th:block>
-		</th:block>
+
+		</div>
+
+		<main>
+
+			<th:block th:if="${year > 0}">
+
+				<th:block th:if="${#lists.size(studentsYear) > 0}">
+
+					<div class="table-grade">
+
+						<table class="table table-striped table-sm"
+							style="table-layout: fixed;width: max-content; border-collapse: separate; border-spacing: 0; text-align:center;">
+							<thead>
+								<tr>
+									<th rowspan="2" class="sticky-col sticky-col-1" style="width: 30px; height: 114px">年
+									</th>
+									<th rowspan="2" class="sticky-col sticky-col-2" style="width: 30px; height: 114px">組
+									</th>
+									<th rowspan="2" class="sticky-col sticky-col-3" style="width: 30px; height: 114px">番
+									</th>
+									<th rowspan="2" class="sticky-col sticky-col-4" style="width: 120px; height: 114px">
+										名前</th>
+									<th colspan="9" scope="colgroup" style="width: 720px; height: 38px; z-index: 1;">1学期
+									</th>
+									<th colspan="9" scope="colgroup" style="width: 720px; height: 38px; z-index: 1;">２学期
+									</th>
+									<th colspan="9" scope="colgroup" style="width: 720px; height: 38px; z-index: 1;">３学期
+									</th>
+								</tr>
+								<tr>
+									<th:block th:each="kyouka : ${kyouka}">
+										<th style="width: 80px; height: 76px;">
+											<form th:action="@{/grade/edit}" th:method="get">
+												<div class="form-group">
+													<input class="form-control" type="hidden" name="year"
+														th:value="${year}" />
+													<input class="form-control" type="hidden" name="nen"
+														th:value="${nen}" />
+													<input class="form-control" type="hidden" name="kumi"
+														th:value="${kumi}" />
+													<input class="form-control" type="hidden" name="term"
+														th:value="1" />
+													<input class="form-control" type="hidden" name="subject"
+														th:value="${kyouka.key}" />
+												</div>
+												<button class="btn btn-default" type="submit"><i
+														class="bi bi-pencil-square text-success"></i></button>
+											</form>
+											<th:block th:text="${kyouka.value}"></th:block>
+										</th>
+									</th:block>
+									<th:block th:each="kyouka : ${kyouka}">
+										<th style="width: 80px; height: 76px;">
+											<form th:action="@{/grade/edit}" th:method="get">
+												<div class="form-group">
+													<input class="form-control" type="hidden" name="year"
+														th:value="${year}" />
+													<input class="form-control" type="hidden" name="nen"
+														th:value="${nen}" />
+													<input class="form-control" type="hidden" name="kumi"
+														th:value="${kumi}" />
+													<input class="form-control" type="hidden" name="term"
+														th:value="2" />
+													<input class="form-control" type="hidden" name="subject"
+														th:value="${kyouka.key}" />
+												</div>
+												<button class="btn btn-default" type="submit"><i
+														class="bi bi-pencil-square text-success"></i></button>
+											</form>
+											<th:block th:text="${kyouka.value}"></th:block>
+										</th>
+									</th:block>
+									<th:block th:each="kyouka : ${kyouka}">
+										<th style="width: 80px; height: 76px;">
+											<form th:action="@{/grade/edit}" th:method="get">
+												<div class="form-group">
+													<input class="form-control" type="hidden" name="year"
+														th:value="${year}" />
+													<input class="form-control" type="hidden" name="nen"
+														th:value="${nen}" />
+													<input class="form-control" type="hidden" name="kumi"
+														th:value="${kumi}" />
+													<input class="form-control" type="hidden" name="term"
+														th:value="3" />
+													<input class="form-control" type="hidden" name="subject"
+														th:value="${kyouka.key}" />
+												</div>
+												<button class="btn btn-default" type="submit"><i
+														class="bi bi-pencil-square text-success"></i></button>
+											</form>
+											<th:block th:text="${kyouka.value}"></th:block>
+										</th>
+									</th:block>
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:each="studentYear, stat : ${studentsYear}">
+									<th:block th:each="student : ${studentYear.students}">
+										<th:block th:if="${student.transferred == false}">
+											<tr>
+												<th class="sticky-col sticky-col-1" th:text="${studentYear.nen}"></th>
+												<th class="sticky-col sticky-col-2" th:text="${studentYear.kumi}">
+												</th>
+												<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}">
+												</th>
+
+												<th class="sticky-col sticky-col-4"
+													th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
+
+												<th:block th:each="grade : ${grade[__${stat.index}__]}">
+													<td th:text="${grade?.rating}"></td>
+												</th:block>
+											</tr>
+										</th:block>
+										<th:block th:if="${student.transferred == true}">
+											<tr class="table-warning">
+												<th class="sticky-col sticky-col-1" th:text="${studentYear.nen}"></th>
+												<th class="sticky-col sticky-col-2" th:text="${studentYear.kumi}">
+												</th>
+												<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}">
+												</th>
+
+												<th class="sticky-col sticky-col-4"
+													th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
+
+												<th:block th:each="grade : ${grade[__${stat.index}__]}">
+													<td th:text="${grade?.rating}"></td>
+												</th:block>
+											</tr>
+										</th:block>
+									</th:block>
+								</th:block>
+							</tbody>
+						</table>
+
+					</div>
+
+				</th:block>
+			</th:block>
+		</main>
 
 	</div>
 </body>

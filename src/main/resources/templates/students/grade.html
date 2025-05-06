@@ -4,46 +4,89 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>成績</h2>
 
-		<table border="1" style="border-collapse: collapse">
-			<thead>
-				<tr>
-					<th rowspan="2">年度</th>
-					<th colspan="9" scope="colgroup">1学期</th>
-					<th colspan="9" scope="colgroup">2学期</th>
-					<th colspan="9" scope="colgroup">3学期</th>
-				</tr>
-				<tr>
-					<th:block th:each="kyouka : ${kyouka}">
-						<th th:text="${kyouka.value}"></th>
-					</th:block>
-					<th:block th:each="kyouka : ${kyouka}">
-						<th th:text="${kyouka.value}"></th>
-					</th:block>
-					<th:block th:each="kyouka : ${kyouka}">
-						<th th:text="${kyouka.value}"></th>
-					</th:block>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="studentYear, stat : ${studentsYear}">
-					<td>
-						<th:block th:text="${studentYear.year}"></th:block>
-						<form th:action="@{/students/{id}/grade/edit (id=${student.studentId})}" th:method="get">
-							<div class="form-group">
-								<input class="form-control" type="hidden" name="year" th:value="${studentYear.year}" />
-							</div>
-							<button class="btn btn-default" type="submit">編集</button>
-						</form>
-					</td>
-					<th:block th:each="grade : ${grade[__${stat.index}__]}">
-						<td th:text="${grade?.rating}"></td>
-					</th:block>
-				</tr>
-			</tbody>
-		</table>
+		<div class="header-sub">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/students/{id} (id=${student.studentId})}">生徒情報</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/students/{id}/karte (id=${student.studentId})}">カルテ</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/students/{id}/attendance (id=${student.studentId})}">出席簿</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" th:href="@{/students/{id}/grade (id=${student.studentId})}">成績</a>
+				</li>
+			</ul>
+			<span></span>
+			<th:block th:if="${student.transferred == false}">
+				<span style="font-weight: bold; padding: 2px 4px;"
+					th:text="${student.studentId + ' ' + student.lastName + student.firstName}"></span>
+			</th:block>
+			<th:block th:if="${student.transferred == true}">
+				<span style="background-color: #fff3cd; font-weight: bold; padding: 2px 4px;"
+					th:text="${student.studentId + ' ' + student.lastName + student.firstName}"></span>
+			</th:block>
+			<span></span>
+			<span class="headline">生徒 > 成績</span>
 
+		</div>
+
+		<main>
+			<table class="table table-striped table-bordered table-sm" style="text-align:center;">
+				<thead>
+					<tr>
+						<th rowspan="2">年度</th>
+						<th colspan="9" scope="colgroup">1学期</th>
+						<th colspan="9" scope="colgroup">2学期</th>
+						<th colspan="9" scope="colgroup">3学期</th>
+					</tr>
+					<tr>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th>
+								<div class="vertical-text-container">
+									<span class="vertical-text-kyouka" th:text="${kyouka.value}"></span>
+								</div>
+							</th>
+						</th:block>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th>
+								<div class="vertical-text-container">
+									<span class="vertical-text-kyouka" th:text="${kyouka.value}"></span>
+								</div>
+							</th>
+						</th:block>
+						<th:block th:each="kyouka : ${kyouka}">
+							<th>
+								<div class="vertical-text-container">
+									<span class="vertical-text-kyouka" th:text="${kyouka.value}"></span>
+								</div>
+							</th>
+						</th:block>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="studentYear, stat : ${studentsYear}">
+						<td>
+							<th:block th:text="${studentYear.year}"></th:block>
+							<form th:action="@{/students/{id}/grade/edit (id=${student.studentId})}" th:method="get">
+								<div class="form-group">
+									<input class="form-control" type="hidden" name="year"
+										th:value="${studentYear.year}" />
+								</div>
+								<button class="btn btn-default" type="submit"><i
+										class="bi bi-pencil-square text-success"></i></button>
+							</form>
+						</td>
+						<th:block th:each="grade : ${grade[__${stat.index}__]}">
+							<td style="vertical-align: middle;" th:text="${grade?.rating}"></td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</main>
 	</div>
 </body>
 

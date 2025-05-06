@@ -57,7 +57,7 @@ public class NoticesService {
      */
     public List<Notice> recentNotice() {
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
-        List<Notice> recentNotice = noticeRepository.findByUpdatedAtAfter(oneWeekAgo);
+        List<Notice> recentNotice = noticeRepository.findByUpdatedAtAfterOrderByUpdatedAtDesc(oneWeekAgo);
         return recentNotice;
     }
 

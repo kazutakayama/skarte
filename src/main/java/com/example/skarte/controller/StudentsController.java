@@ -208,6 +208,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
 import com.example.skarte.entity.Karte;
+import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.Schedule;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
@@ -215,6 +216,7 @@ import com.example.skarte.entity.User;
 import com.example.skarte.form.AttendanceForm;
 import com.example.skarte.form.GradeForm;
 import com.example.skarte.form.KarteForm;
+import com.example.skarte.form.NoticeForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
@@ -240,7 +242,7 @@ public class StudentsController {
     private final AttendanceService attendanceService;
     private final GradeService gradeService;
     private final ScheduleService scheduleService;
-    
+
 //    // 生徒用ヘッダーを表示（共通処理）
 //    @ModelAttribute
 //    public void student(Model model, @PathVariable String id) {
@@ -263,9 +265,14 @@ public class StudentsController {
             @ModelAttribute("kumi") Long kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
-        model.addAttribute("resultSize", result.size());
-        List<Student> students = studentsService.findAll();
-        model.addAttribute("students", students);
+        if (result.size() != 0) {
+            List<String> imageList = studentsYearService.imageList(result);
+            model.addAttribute("images", imageList);
+        }
+//        model.addAttribute("resultSize", result.size());
+//        List<Student> students = studentsService.findAll();
+//        model.addAttribute("students", students);
+
         return "students/index";
     }
 
@@ -287,7 +294,8 @@ public class StudentsController {
         model.addAttribute("student", student);
         List<StudentYear> classList = studentsYearService.classList(id);
         model.addAttribute("studentsYear", classList);
-        model.addAttribute("studentHeader", true);
+        List<String> images = studentsYearService.images(id);
+        model.addAttribute("images", images);
         return "students/details";
     }
 
@@ -297,7 +305,6 @@ public class StudentsController {
     public String edit(@PathVariable String id, Model model, @ModelAttribute StudentForm form) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
-        model.addAttribute("studentHeader", true);
         return "students/edit";
     }
 
@@ -320,7 +327,6 @@ public class StudentsController {
             model.addAttribute("message", "更新に失敗しました");
             Student student = studentsService.findById(id);
             model.addAttribute("student", student);
-            model.addAttribute("studentHeader", true);
             return "students/edit";
         }
         studentsService.update(id, form, user.getUserId());
@@ -333,12 +339,19 @@ public class StudentsController {
     // path: /students/{studentId}/karte
     // カルテを表示
     @GetMapping("/{id}/karte")
-    public String karte(@PathVariable String id, Model model, @ModelAttribute KarteForm karteForm) {
+    public String karte(@PathVariable String id, Model model) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
         List<Karte> karte = karteService.findAllByStudentId(id);
         model.addAttribute("karte", karte);
-        model.addAttribute("studentHeader", true);
+        // Modelに"karteForm"が存在しない時だけ、下記の処理を実行（リダイレクトされたBindingResultが失われないようにする）
+        if (!model.containsAttribute("karteForm")) {
+            model.addAttribute("karteForm", new KarteForm());
+        }
+        // Modelに"targetKarte"が存在しない時だけ、下記の処理を実行
+        if (!model.containsAttribute("targetKarte")) {
+            model.addAttribute("targetKarte", new Karte());
+        }
         return "students/karte";
     }
 
@@ -349,15 +362,21 @@ public class StudentsController {
             BindingResult result, @AuthenticationPrincipal User user, Model model,
             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            Student student = studentsService.findById(id);
-            model.addAttribute("student", student);
-            List<Karte> karte = karteService.findAllByStudentId(id);
-            model.addAttribute("karte", karte);
-            model.addAttribute("hasMessage", true);
-            model.addAttribute("class", "alert-danger");
-            model.addAttribute("message", "登録に失敗しました");
-            model.addAttribute("studentHeader", true);
-            return "students/karte";
+//            Student student = studentsService.findById(id);
+//            model.addAttribute("student", student);
+//            List<Karte> karte = karteService.findAllByStudentId(id);
+//            model.addAttribute("karte", karte);
+//            model.addAttribute("hasMessage", true);
+//            model.addAttribute("class", "alert-danger");
+//            model.addAttribute("message", "登録に失敗しました");
+//            return "students/karte";
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "登録に失敗しました");
+            redirectAttributes.addFlashAttribute("showNewModal", true); // newModal表示
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.karteForm", result);
+            redirectAttributes.addFlashAttribute("karteForm", karteForm);
+            return "redirect:/students/" + id + "/karte";
         }
         karteService.add(id, user.getUserId(), karteForm);
         redirectAttributes.addFlashAttribute("hasMessage", true);
@@ -366,32 +385,49 @@ public class StudentsController {
         return "redirect:/students/" + id + "/karte";
     }
 
-    // path: /students/{karteId}/karte/edit
-    // 編集するカルテを表示
-    @GetMapping("/{id}/karte/edit")
-    public String editKarte(@PathVariable Long id, Model model, @ModelAttribute KarteForm karteForm) {
-        Karte karte = karteService.findById(id);
-        model.addAttribute("karte", karte);
-        Student student = studentsService.findById(karte.getStudentId());
-        model.addAttribute("student", student);
-        return "students/editKarte";
+//    // path: /students/{karteId}/karte/edit
+//    // 編集するカルテを表示
+//    @GetMapping("/{id}/karte/edit")
+//    public String editKarte(@PathVariable Long id, Model model, @ModelAttribute KarteForm karteForm) {
+//        Karte karte = karteService.findById(id);
+//        model.addAttribute("karte", karte);
+//        Student student = studentsService.findById(karte.getStudentId());
+//        model.addAttribute("student", student);
+//        return "students/editKarte";
+//    }
+
+    // path: /students/karte/{karteId}/edit
+    // カルテ編集のModalを表示
+    @GetMapping("/karte/{id}/edit")
+    public String editKarte(@PathVariable Long id, Model model, KarteForm karteForm,
+            RedirectAttributes redirectAttributes) {
+        Karte targetKarte = karteService.findById(id);
+        redirectAttributes.addFlashAttribute("targetKarte", targetKarte);
+        redirectAttributes.addFlashAttribute("showEditModal", true); // editModal表示
+//        redirectAttributes.addFlashAttribute("karteId", karteId);
+//        Student student = studentsService.findById(karte.getStudentId());
+//        model.addAttribute("student", student);
+        return "redirect:/students/" + targetKarte.getStudentId()+ "/karte";
     }
 
-    // path: /students/{karteId}/karte/update
+
+    // path: /students/karte/{karteId}/update
     // カルテを更新
-    @PostMapping("/{id}/karte/update")
+    @PostMapping("/karte/{id}/update")
     public String updateKarte(@PathVariable Long id, @AuthenticationPrincipal User user,
             @Validated @ModelAttribute KarteForm karteForm, BindingResult result, RedirectAttributes redirectAttributes,
             Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("hasMessage", true);
-            model.addAttribute("class", "alert-danger");
-            model.addAttribute("message", "更新に失敗しました");
-            Karte karte = karteService.findById(id);
-            model.addAttribute("karte", karte);
-            Student student = studentsService.findById(karte.getStudentId());
-            model.addAttribute("student", student);
-            return "students/editKarte";
+            
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "更新に失敗しました");
+            redirectAttributes.addFlashAttribute("showEditModal", true); // editModal表示
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.karteForm", result);
+            redirectAttributes.addFlashAttribute("karteForm", karteForm);
+            Karte targetKarte = karteService.findById(id);
+            redirectAttributes.addFlashAttribute("targetKarte", targetKarte);            
+            return "redirect:/students/" + karteForm.getStudentId() + "/karte";
         }
         karteService.update(id, user.getUserId(), karteForm);
         redirectAttributes.addFlashAttribute("hasMessage", true);
@@ -400,12 +436,16 @@ public class StudentsController {
         return "redirect:/students/" + karteForm.getStudentId() + "/karte";
     }
 
-    // path: /students/{karteId}/kartedelete
+    // path: /students/karte/{karteId}/delete
     // カルテを削除
-    @GetMapping("/{id}/karte/delete")
-    public String deleteKarte(@PathVariable Long id) {
+    @GetMapping("/karte/{id}/delete")
+    public String deleteKarte(@PathVariable Long id, RedirectAttributes redirectAttributes,
+            Model modelF) {
         Karte karte = karteService.findById(id);
         karteService.delete(id);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "カルテを削除しました");
         return "redirect:/students/" + karte.getStudentId() + "/karte";
     }
 
@@ -417,14 +457,13 @@ public class StudentsController {
         model.addAttribute("student", student);
         List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);
         model.addAttribute("studentsYear", studentsYear);
-        
+
         ArrayList<ArrayList<ArrayList<Integer>>> studentAttendanceSummary = attendanceService
                 .studentAttendanceSummary(id);
         model.addAttribute("attendanceSummary", studentAttendanceSummary);
         // 3年分のまとめ
         List<Integer> studentAttendanceTotal = attendanceService.studentAttendanceTotal(id);
         model.addAttribute("AttendanceTotal", studentAttendanceTotal);
-        model.addAttribute("studentHeader", true);
         return "students/attendance";
     }
 
@@ -445,7 +484,6 @@ public class StudentsController {
         model.addAttribute("attendance", studentAttendanceMonth);
         List<Integer> studentAttendanceMonthSummary = attendanceService.studentAttendanceMonthSummary(id, year, month);
         model.addAttribute("attendanceSummary", studentAttendanceMonthSummary);
-        model.addAttribute("studentHeader", true);
         return "students/editAttendance";
     }
 
@@ -479,7 +517,6 @@ public class StudentsController {
         model.addAttribute("studentsYear", studentsYear);
         ArrayList<ArrayList<Grade>> studentGradeAll = gradeService.studentGradeAll(id);
         model.addAttribute("grade", studentGradeAll);
-        model.addAttribute("studentHeader", true);
         return "students/grade";
     }
 
@@ -493,7 +530,6 @@ public class StudentsController {
         model.addAttribute("studentsYear", studentsYear);
         ArrayList<ArrayList<Grade>> studentGradeAll = gradeService.studentGradeAll(id);
         model.addAttribute("grade", studentGradeAll);
-        model.addAttribute("studentHeader", true);
         return "students/editGrade";
     }
 

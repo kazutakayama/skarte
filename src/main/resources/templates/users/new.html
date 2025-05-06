@@ -4,44 +4,70 @@
 
 <body>
 	<div layout:fragment="content">
+		<main>
+			<div class="mx-auto" style="width:40%;">
 
-	<div class="users-new-wrapper">
+				<form th:action="@{/users/add}" th:method="post" th:object="${userForm}">
+					<!--<div class="mb-3">
+						<label class="control-label" for="user_lastName">姓</label>
+						<input class="form-control" type="text" name="lastName" th:value="*{lastName}" />
+						<span class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+							th:errors="*{lastName}"></span>
+					</div>
+					<div class="mb-3">
+						<label class="control-label" for="user_firstName">名</label>
+						<input class="form-control" type="text" name="firstName" th:value="*{firstName}" />
+						<span class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+							th:errors="*{firstName}"></span>
+					</div>-->
+					<div class="row mb-2">
+						<div class="col-md-6">
+							<label class="form-label" for="user_lastName">姓</label>
+							<span class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+								th:errors="*{lastName}"></span>
+							<input class="form-control" type="text" id="user_lastName" name="lastName"
+								th:value="*{lastName}" />
 
-			<h2>ユーザー新規登録</h2>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="user_firstName">名</label>
+							<span class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+								th:errors="*{firstName}"></span>
+							<input class="form-control" type="text" id="user_firstName" name="firstName"
+								th:value="*{firstName}" />
 
+						</div>
+					</div>
+					<div class="mb-2">
+						<label class="control-label" for="user_userId">ユーザーID</label>
+						<span class="text-danger" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+						<input class="form-control" type="number" name="userId" th:value="*{userId}" />
 
-			<form th:action="@{/users/add}" th:method="post" th:object="${userForm}">
-				<div class="form-group">
-					<label class="control-label" for="user_lastName">姓</label>
-					<input class="form-control" type="text" name="lastName" th:value="*{lastName}" />
-					<span class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
-				</div>
-				<div class="form-group">
-					<label class="control-label" for="user_firstName">名</label>
-					<input class="form-control" type="text" name="firstName" th:value="*{firstName}" />
-					<span class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-				</div>
-				<div class="form-group">
-					<label class="control-label" for="user_userId">ユーザーID</label>
-					<input class="form-control" type="number" name="userId" th:value="*{userId}" />
-					<span class="text-danger" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
-				</div>
-				<div class="form-group">
-					<label class="control-label" for="user_password">パスワード</label>
-					<input class="form-control" type="password" name="password" />
-					<span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-				</div>
-				<div class="form-group">
-					<label class="control-label" for="user_password_confirmation">パスワード確認</label>
-					<input class="form-control" type="password" name="passwordConfirmation" />
-					<span class="text-danger" th:if="${#fields.hasErrors('passwordConfirmation')}" th:errors="*{passwordConfirmation}"></span>
-				</div>
+					</div>
+					<div class="mb-2">
+						<label class="control-label" for="user_password">パスワード</label>
+						<input class="form-control" type="password" name="password" />
+						<span class="text-danger" th:if="${#fields.hasErrors('password')}"
+							th:errors="*{password}"></span>
+					</div>
+					<div class="mb-2">
+						<label class="control-label" for="user_password_confirmation">パスワード確認</label>
+						<input class="form-control" type="password" name="passwordConfirmation" />
+						<span class="text-danger" th:if="${#fields.hasErrors('passwordConfirmation')}"
+							th:errors="*{passwordConfirmation}"></span>
+					</div>
 
-				<button class="btn btn-default" type="submit">登録</button>
-			</form>
+					<!--<button class="btn btn-default" type="submit">登録</button>-->
 
-			<a href="/login">ログイン画面にもどる</a>
+					<div class="d-flex justify-content-between align-items-center">
+						<span><input type="submit" value="ユーザー新規登録" /></span>
+						<span><a href="/login">ログイン画面にもどる</a></span>
+					</div>
+				</form>
 
+				<!--<a href="/login">ログイン画面にもどる</a>-->
+			</div>
+		</main>
 	</div>
 </body>
 

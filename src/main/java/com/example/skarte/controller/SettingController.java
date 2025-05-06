@@ -179,6 +179,8 @@ public class SettingController {
 //            model.addAttribute("form", form);
             Student student = studentsService.findById(id);
             model.addAttribute("student", student);
+            boolean dataExists = studentsService.dataExists(id);
+            model.addAttribute("dataExists", dataExists);
             return "setting/students/edit";
         }
         studentsService.update(id, form, user.getUserId());
@@ -328,6 +330,10 @@ public class SettingController {
             List<String> imageList = studentsYearService.imageList(result);
             model.addAttribute("images", imageList);
         }
+        List<StudentYear> transferred = studentsYearService.transferred(year, nen, kumi);
+        model.addAttribute("transferred", transferred);
+        List<StudentYear> exists = studentsYearService.exists(year, nen, kumi);
+        model.addAttribute("exists", exists);       
         return "setting/class/class";
     }
 
@@ -393,15 +399,15 @@ public class SettingController {
             @AuthenticationPrincipal User user) {
         boolean isDuplicated = studentsYearService.isDuplicated(studentYearForm, year, nen, kumi);
         if (isDuplicated == false) {
-        studentsYearService.add(user.getUserId(), studentYearForm, year, nen, kumi);
-        redirectAttributes.addFlashAttribute("year", year);
-        redirectAttributes.addFlashAttribute("nen", nen);
-        redirectAttributes.addFlashAttribute("kumi", kumi);
-        redirectAttributes.addFlashAttribute("hasMessage", true);
-        redirectAttributes.addFlashAttribute("class", "alert-info");
-        redirectAttributes.addFlashAttribute("message", "生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
-        return "redirect:/setting/class/list";
-        }else {
+            studentsYearService.add(user.getUserId(), studentYearForm, year, nen, kumi);
+            redirectAttributes.addFlashAttribute("year", year);
+            redirectAttributes.addFlashAttribute("nen", nen);
+            redirectAttributes.addFlashAttribute("kumi", kumi);
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-info");
+            redirectAttributes.addFlashAttribute("message", "生徒を" + year + "年度" + nen + "年" + kumi + "組に追加しました");
+            return "redirect:/setting/class/list";
+        } else {
             redirectAttributes.addFlashAttribute("hasMessage", true);
             redirectAttributes.addFlashAttribute("class", "alert-danger");
             redirectAttributes.addFlashAttribute("message", "生徒の重複があるため追加できませんでした");
