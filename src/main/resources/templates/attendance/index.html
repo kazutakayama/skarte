@@ -100,10 +100,15 @@
 		<main>
 			<th:block th:if="${year > 0}">
 				<span th:if="${kumi == 0}">
-					<span th:text="${year + '年度 ' + nen + '年 ' + month + '月'}" />
+					<label th:text="${year}"></label>年度
+					<label th:text="${nen}"></label>年
+					<label th:text="${month}+1"></label>月
 				</span>
 				<span th:if="${kumi > 0}">
-					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組 ' + month + '月'}" />
+					<label th:text="${year}"></label>年度
+					<label th:text="${nen}"></label>年
+					<label th:text="${kumi}"></label>組
+					<label th:text="${month}+1"></label>月
 				</span>
 				<span th:if="${schedule[0] == null}">スケジュールが登録されていません</span>
 				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
