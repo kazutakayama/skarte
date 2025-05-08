@@ -15,16 +15,19 @@ import lombok.EqualsAndHashCode;
 
 public class AttendanceForm extends EntityBase {
 
+    /** ID */
     private Long attendanceId = null;
 
     private String studentId = null;
 
+    /** 日付 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date = null;
 
+    /** 記録 */
     private Integer kiroku = null;
 
-    // リスト
+    
     private List<Long> attendanceIds;
 
     public List<Long> getAttendanceIds() {

@@ -22,7 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         log.info("userId=" + userId);
         if (userId == null || "".equals(userId)) {
-//            throw new UserIdNotFoundException("UserId is empty");
         }
         User entity = repository.findByUserId(userId);
 

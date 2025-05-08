@@ -13,7 +13,6 @@ import lombok.Value;
 @JsonPropertyOrder({ "生徒ID", "姓", "名", "せい", "めい", "生年月日yyyy-MM-dd", "性別1男2女3他", "保護者1", "保護者2", "電話1", "電話2", "電話3", "電話4", "郵便番号",
         "住所", "メモ" })
 
-// CSVダウンロード用
 public class StudentsCsv {
 
     @JsonProperty("生徒ID")

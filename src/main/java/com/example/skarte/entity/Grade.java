@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "grade")
 @Data
 @EqualsAndHashCode(callSuper = false) // EntityBase
-@Builder // CSV
-@NoArgsConstructor // CSV
-@AllArgsConstructor // CSV
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class Grade extends EntityBase { // EntityBase
 
@@ -30,32 +30,32 @@ public class Grade extends EntityBase { // EntityBase
     @Column
     @SequenceGenerator(name = "grade_gradeId_seq", sequenceName = "grade_gradeId_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grade_gradeId_seq")
-    private Long gradeId = null;
+    private Long gradeId;
 
     public void setId(Long gradeId) {
         this.gradeId = null;
     }
 
     @Column
-    private String studentId = null;
+    private String studentId;
     @ManyToOne
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
     private Student students;
 
     /** 年度 */
     @Column
-    private Long year = null;
+    private Long year;
 
     /** 学期 */
     @Column
-    private Long term = null;
+    private Long term;
 
     /** 教科 */
     @Column
-    private Long subject = null;
+    private Long subject;
 
     /** 評定 */
     @Column
-    private Long rating = null;
+    private Long rating;
 
 }

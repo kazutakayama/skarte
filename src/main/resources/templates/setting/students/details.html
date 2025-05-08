@@ -13,7 +13,7 @@
 			<span><a class="btn btn-success py-1 px-2"
 					th:href="@{/setting/students/{id}/edit (id=${student.studentId})}">
 					編集
-				</a></span>			
+				</a></span>
 		</div>
 
 		<main>
@@ -21,7 +21,6 @@
 				<th:block th:if="${student.transferred == true}">
 					<span style="background-color: #fff3cd; font-weight:bold">この生徒は転出/卒業済みです</span>
 				</th:block>
-
 				<table class="table table-bordered table-sm"
 					style="vertical-align: middle; --bs-border-color: #dee2e6;">
 					<tr style="text-align:center; height:30px">
@@ -42,9 +41,7 @@
 						<td colspan="8" style="width:16%; background-color: #fdede4" th:text="${student.family1}"></td>
 					</tr>
 					<tr style="text-align:center; height:30px">
-
 						<th:block th:each="studentYear : ${studentsYear}">
-
 							<th colspan="8" style="width:28%; background-color: #cce6ff">
 								<th:block th:if="${studentYear != null}">
 									<div
@@ -52,14 +49,11 @@
 									</div>
 								</th:block>
 							</th>
-
 						</th:block>
-
 						<td colspan="8" style="width:16%; background-color: #fdede4" th:text="${student.family2}"></td>
 					</tr>
 					<tr style="text-align:center; height:30px">
 						<th:block th:each="studentYear, stat : ${studentsYear}">
-
 							<td colspan="8" rowspan="5" style="width:28%">
 								<th:block th:if="${studentYear != null}">
 									<th:block th:if="${images[__${stat.index}__] != null}">
@@ -106,58 +100,6 @@
 				</table>
 			</div>
 		</main>
-
-
-
-		<!--以下、管理用-->
-		<!--<div>クラス管理</div>
-
-
-
-		<table>
-			<tr>
-				<td>出席簿管理
-					<table border="1" style="border-collapse: collapse">
-						<tr>
-							<td>ID</td>
-							<td>日付</td>
-							<td>記録</td>
-						</tr>
-						<tr th:each="attendance : ${attendance}">
-							<td th:text="${attendance.attendanceId}"></td>
-							<td th:text="${attendance.date}"></td>
-							<td th:text="${syukketsu[__${attendance.kiroku}__]}"></td>
-							<td><a onClick="return checkDelete()"
-									th:href="@{/setting/students/{id}/attendance/delete (id=${attendance.attendanceId})}">削除</a>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td>成績管理
-					<table border="1" style="border-collapse: collapse">
-						<tr>
-							<td>ID</td>
-							<td>年度</td>
-							<td>学期</td>
-							<td>教科</td>
-							<td>評定</td>
-						</tr>
-						<tr th:each="grade : ${grade}">
-							<td th:text="${grade.gradeId}"></td>
-							<td th:text="${grade.year}"></td>
-							<td th:text="${grade.term}"></td>
-							<td th:text="${kyouka[__${grade.subject}__]}"></td>
-							<td th:text="${grade.rating}"></td>
-							<td><a onClick="return checkDelete()"
-									th:href="@{/setting/students/{id}/grade/delete (id=${grade.gradeId})}">削除</a>
-							</td>
-						</tr>
-
-					</table>
-				</td>
-			</tr>
-
-		</table>-->
 
 	</div>
 </body>

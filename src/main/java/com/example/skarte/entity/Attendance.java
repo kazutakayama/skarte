@@ -22,9 +22,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "attendance")
 @Data
 @EqualsAndHashCode(callSuper = false) // EntityBase
-@Builder // CSV
-@NoArgsConstructor // CSV
-@AllArgsConstructor // CSV
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class Attendance extends EntityBase { // EntityBase
 
@@ -33,14 +33,13 @@ public class Attendance extends EntityBase { // EntityBase
     @Column
     @SequenceGenerator(name = "attendance_attendanceId_seq", sequenceName = "attendance_attendanceId_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attendance_attendanceId_seq")
-    private Long attendanceId = null;
-
+    private Long attendanceId;
     public void setId(Long attendanceId) {
         this.attendanceId = null;
     }
 
     @Column
-    private String studentId = null;
+    private String studentId;
     @ManyToOne
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
     private Student students;
@@ -48,31 +47,11 @@ public class Attendance extends EntityBase { // EntityBase
     /** 日付 */
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date = null;
+    private LocalDate date;
     
     /** 出欠 */
     // 1:欠席, 2:遅刻, 3:早退, 4:遅刻/早退, 5:出停, 6:忌引
     @Column
-    private Integer kiroku = null;
-
-//    /** 遅刻 */
-//    @Column
-//    private Integer chikoku = null;
-//    
-//    /** 早退 */
-//    @Column
-//    private Integer soutai = null;
-//    
-//    /** 欠席 */
-//    @Column
-//    private Integer kesseki = null;
-//    
-//    /** 出停 */
-//    @Column
-//    private Integer syuttei = null;
-//    
-//    /** 忌引 */
-//    @Column
-//    private Integer kibiki = null;
+    private Integer kiroku;
 
 }

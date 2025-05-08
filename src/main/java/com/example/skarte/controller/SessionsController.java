@@ -16,12 +16,14 @@ public class SessionsController {
     SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @GetMapping("/login")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("header", "ログイン");
         return "sessions/login";
     }
 
     @GetMapping("/login-failure")
     public String loginFailure(Model model) {
+        model.addAttribute("header", "ログイン");
         model.addAttribute("hasMessage", true);
         model.addAttribute("class", "alert-danger");
         model.addAttribute("message", "ユーザーIDまたはパスワードに誤りがあります");
@@ -35,7 +37,6 @@ public class SessionsController {
         redirectAttributes.addFlashAttribute("hasMessage", true);
         redirectAttributes.addFlashAttribute("class", "alert-info");
         redirectAttributes.addFlashAttribute("message", "ログアウトしました");
-//        return "sessions/login";
         return "redirect:/login";
     }
 }

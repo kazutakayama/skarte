@@ -3,7 +3,6 @@ package com.example.skarte.specification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
@@ -17,6 +16,7 @@ import jakarta.persistence.criteria.Root;
 @Component
 public class StudentSpecification {
 
+    @SuppressWarnings("serial")
     public static Specification<Student> search(String name) {
         return StringUtils.isEmpty(name) ? null : new Specification<Student>() {
             @Override
@@ -30,6 +30,7 @@ public class StudentSpecification {
         };
     }
 
+    @SuppressWarnings("serial")
     public static Specification<Student> year(String year) {
         return StringUtils.isEmpty(year) ? null : new Specification<Student>() {
             @Override
@@ -39,6 +40,7 @@ public class StudentSpecification {
         };
     }
 
+    @SuppressWarnings("serial")
     public static Specification<StudentYear> year(Long year) {
         return year == null ? null : new Specification<StudentYear>() {
             @Override
@@ -48,6 +50,7 @@ public class StudentSpecification {
         };
     }
 
+    @SuppressWarnings("serial")
     public static Specification<StudentYear> nen(Long nen) {
         return nen == null ? null : new Specification<StudentYear>() {
             @Override
@@ -57,6 +60,7 @@ public class StudentSpecification {
         };
     }
 
+    @SuppressWarnings("serial")
     public static Specification<StudentYear> kumi(Long kumi) {
         return kumi == null ? null : new Specification<StudentYear>() {
             @Override
@@ -66,6 +70,7 @@ public class StudentSpecification {
         };
     }
 
+    @SuppressWarnings("serial")
     public static Specification<Grade> gradeStudentId(String studentId) {
         return StringUtils.isEmpty(studentId) ? null : new Specification<Grade>() {
             @Override
@@ -75,6 +80,7 @@ public class StudentSpecification {
         };
     }
 
+    @SuppressWarnings("serial")
     public static Specification<Grade> gradeYear(Long year) {
         return year == null ? null : new Specification<Grade>() {
             @Override

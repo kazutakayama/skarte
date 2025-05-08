@@ -5,7 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +30,7 @@ public class UsersController {
     // 新規登録ページを表示
     @GetMapping("/new")
     public String newUser(Model model, @ModelAttribute UserForm form) {
+        model.addAttribute("header", "ユーザー新規登録");
         model.addAttribute("form", new UserForm());
         return "users/new";
     }
@@ -50,6 +50,7 @@ public class UsersController {
             model.addAttribute("class", "alert-danger");
             model.addAttribute("message", "そのユーザーIDはすでに使用されています");
             model.addAttribute("form", form);
+            model.addAttribute("header", "ユーザー新規登録");
             return "users/new";
         }
         if (result.hasErrors()) {
@@ -57,6 +58,7 @@ public class UsersController {
             model.addAttribute("class", "alert-danger");
             model.addAttribute("message", "登録に失敗しました");
             model.addAttribute("form", form);
+            model.addAttribute("header", "ユーザー新規登録");
             return "users/new";
         }
 
@@ -64,10 +66,10 @@ public class UsersController {
         entity.setCreatedBy(userId);
         entity.setUpdatedBy(userId);
         repository.saveAndFlush(entity);
-
         model.addAttribute("hasMessage", true);
         model.addAttribute("class", "alert-info");
         model.addAttribute("message", "ユーザー登録が完了しました");
+        model.addAttribute("header", "ログイン");
         return "sessions/login";
     }
 }

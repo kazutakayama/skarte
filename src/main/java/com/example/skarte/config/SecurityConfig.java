@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,7 +17,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import com.example.skarte.filter.FormAuthenticationProvider;
-import com.example.skarte.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -26,17 +24,14 @@ public class SecurityConfig {
 
     @Autowired
     private FormAuthenticationProvider authenticationProvider;
-    @Autowired
-    private UserDetailsServiceImpl UserDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
+    SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
             throws Exception {
         MvcRequestMatcher h2RequestMatcher = new MvcRequestMatcher(introspector, "/**");
         h2RequestMatcher.setServletPath("/h2-console");
 
         RequestMatcher publicMatchers = new OrRequestMatcher(
-//                new AntPathRequestMatcher("/"),
                 new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/h2-console/**"),
                 new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/users/new"),
                 new AntPathRequestMatcher("/users/add"), new AntPathRequestMatcher("/css/**"),

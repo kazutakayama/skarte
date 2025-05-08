@@ -12,9 +12,7 @@
 					<i class="bi bi-question-circle" style="color:black;"></i>
 				</a>
 			</span>
-
 			<span th:text="${year + '年度' + nen + '年' + kumi + '組'}" />
-
 			<span>
 				<form th:action="@{/setting/class/list}" th:method="get">
 					<input type="hidden" name="year" th:value="${year}" />
@@ -23,16 +21,12 @@
 					<button class="btn btn-secondary btn-sm" type="submit">クラス管理にもどる</button>
 				</form>
 			</span>
-
 		</div>
 
-
 		<main>
-
 			<div class="container">
 				<div class="row">
 					<div class="col">
-
 						<div style="text-align:center;"><span style="font-weight:bold">登録済生徒</span>
 							<span>
 								<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
@@ -61,7 +55,6 @@
 									<tbody>
 										<div th:each="studentYear : ${studentsYear}">
 											<div th:each="student : ${studentYear.students}">
-
 												<th:block th:if="${student.transferred == false}">
 													<tr>
 														<th th:text="${studentYear.ban}"></th>
@@ -77,7 +70,6 @@
 														</div>
 													</tr>
 												</th:block>
-
 												<th:block th:if="${student.transferred == true}">
 													<tr class="table-warning">
 														<th th:text="${studentYear.ban}"></th>
@@ -93,18 +85,14 @@
 														</div>
 													</tr>
 												</th:block>
-
 											</div>
 										</div>
-
 									</tbody>
 								</table>
 							</div>
 						</th:block>
-
 					</div>
 					<div class="col">
-
 						<div style="text-align:center;"><span style="font-weight:bold">登録可能生徒</span>
 							<span>
 								<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
@@ -155,13 +143,10 @@
 									</tbody>
 								</table>
 							</div>
-
 						</th:block>
-
 					</div>
 				</div>
 			</div>
-
 		</main>
 
 	</div>

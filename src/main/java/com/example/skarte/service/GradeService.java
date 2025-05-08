@@ -2,20 +2,13 @@ package com.example.skarte.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Grade;
-import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.form.GradeForm;
-import com.example.skarte.form.StudentYearForm;
-import com.example.skarte.repository.AttendanceRepository;
 import com.example.skarte.repository.GradeRepository;
 import com.example.skarte.repository.StudentYearRepository;
 import com.example.skarte.specification.StudentSpecification;
@@ -28,113 +21,34 @@ public class GradeService {
 
     private final GradeRepository gradeRepository;
     private final StudentYearRepository studentYearRepository;
-    private final StudentSpecification studentSpecification;
 
-//    @Autowired
-//    GradeRepository gradeRepository;
-//
-//    StudentYearRepository studentYearRepository;
-//
-//    StudentSpecification studentSpecification;
-
-    /**
-     * 成績全取得
-     * 
-     * @return
-     */
+    /** 成績全取得 */
     public List<Grade> findAll() {
         return gradeRepository.findByOrderByUpdatedAtDesc();
     }
 
-    /**
-     * 成績1件取得
-     * 
-     * @param id
-     * @return
-     */
+    /** 成績1件取得 */
     public Grade findById(Long id) {
         return gradeRepository.findById(id).orElseThrow();
     }
 
-    /**
-     * 生徒IDでリストを取得
-     * 
-     * @return
-     */
+    /** 生徒IDでリストを取得 */
     public List<Grade> findAllByStudentId(String studentId) {
         return gradeRepository.findAllByStudentId(studentId);
     }
 
-//    /**
-//     * 生徒IDでリストを取得お試し！！！！！
-//     * 
-//     * @return
-//     */
-//    public List<StudentYear> findByStudentId(String studentId) {
-//        return studentYearRepository.findAllByStudentIdOrderByYearAsc(studentId);
-//    }
-
-//    // クラス検索
-//    public List<StudentYear> search(Long year, Long nen, Long kumi) {
-//        List<StudentYear> result;
-//        if (kumi == 0) {
-//            result = studentYearRepository.findAll(
-//                    Specification.where(studentSpecification.year(year)).and(studentSpecification.nen(nen)),
-//                    Sort.by(Sort.Direction.ASC, "kumi", "ban"));
-//        } else {
-//            result = studentYearRepository.findAll(Specification.where(studentSpecification.year(year))
-//                    .and(studentSpecification.nen(nen)).and(studentSpecification.kumi(kumi)),
-//                    Sort.by(Sort.Direction.ASC, "ban"));
-//        }
-//        return result;
-//    }
-
-    /**
-     * 年度でリストを取得
-     * 
-     * @return
-     */
+    /** 年度でリストを取得 */
     public List<Grade> year(Long year) {
         return gradeRepository.findAllByYear(year);
     }
 
-//    /**
-//     * 成績一覧用（一年分の生徒全員の成績）　書き換える！！
-//     * 
-//     * @return
-//     */
-//    public List<Grade> allGrade(Long year, GradeForm gradeForm, String studentId, Long year, Long nen, Long kumi) {
-//        ArrayList<ArrayList<Grade>> allGrade = new ArrayList<>();
-//        List<StudentYear> yearResult;
-//        if (kumi == 0) {
-//            yearResult = studentYearRepository.findAll(
-//                    Specification.where(studentSpecification.year(year)).and(studentSpecification.nen(nen)),
-//                    Sort.by(Sort.Direction.ASC, "kumi", "ban"));
-//        } else {
-//            yearResult = studentYearRepository.findAll(Specification.where(studentSpecification.year(year))
-//                    .and(studentSpecification.nen(nen)).and(studentSpecification.kumi(kumi)),
-//                    Sort.by(Sort.Direction.ASC, "ban"));
-//        }
-//        for (int i = 0; i < yearResult.size(); i++) {
-//            gradeRepository.findAllByStudentId(yearResult.get(i).getStudentId());
-//            
-//
-//        }
-//
-//        return allGrade;
-//    }
-
-    /**
-     * 生徒ごとの１年分の成績リストを取得
-     * 
-     * @return
-     */
+    /** 生徒ごとの１年分の成績リストを取得 */
     public List<Grade> studentGrade(String studentId, Long year) {
         List<Grade> studentGrade = new ArrayList<Grade>();
         for (int i = 0; i < 27; i++) {
             studentGrade.add(null);
         }
-        long nendo = year; // これが必要
+        long nendo = year; // 必須
         List<Grade> result = gradeRepository.findAllByStudentId(studentId);
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getYear() == nendo) {
@@ -150,14 +64,9 @@ public class GradeService {
         return studentGrade;
     }
 
-    /**
-     * 生徒ごとの3年分の成績リストを取得
-     * 
-     * @return
-     */
+    /** 生徒ごとの3年分の成績リストを取得 */
     public ArrayList<ArrayList<Grade>> studentGradeAll(String studentId) {
         ArrayList<ArrayList<Grade>> studentGradeAll = new ArrayList<>();
-
         // 生徒IDからクラス登録年度を検索
         List<StudentYear> studentYear = studentYearRepository.findAllByStudentIdOrderByYearAsc(studentId);
         for (int i = 0; i < studentYear.size(); i++) {
@@ -171,7 +80,6 @@ public class GradeService {
             List<Grade> result = gradeRepository.findAllByStudentId(studentId);
             for (int k = 0; k < result.size(); k++) {
                 // クラス登録年度から成績をしぼりこむ
-//                if (result.get(k).getYear() == studentYear.get(i).getYear()) {
                 if (result.get(k).getYear() == nendo) {
                     for (int l = 1; l < 4; l++) { // 学期term
                         for (int m = 1; m < 10; m++) { // 教科subject
@@ -182,7 +90,6 @@ public class GradeService {
                         }
                     }
                 }
-
             }
             // 配列に追加
             studentGradeAll.add(studentGrade);
@@ -190,23 +97,18 @@ public class GradeService {
         return studentGradeAll;
     }
 
-    /**
-     * 成績リスト（クラス（学年）ごとの1年分）を取得
-     * 
-     * @return
-     */
+    /** 成績リスト（クラス（学年）ごとの1年分）を取得 */
     public ArrayList<ArrayList<Grade>> gradeList(Long year, Long nen, Long kumi) {
         ArrayList<ArrayList<Grade>> gradeList = new ArrayList<>();
-
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
         if (kumi == 0) {
             result = studentYearRepository.findAll(
-                    Specification.where(studentSpecification.year(year)).and(studentSpecification.nen(nen)),
+                    Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen(nen)),
                     Sort.by(Sort.Direction.ASC, "kumi", "ban"));
         } else {
-            result = studentYearRepository.findAll(Specification.where(studentSpecification.year(year))
-                    .and(studentSpecification.nen(nen)).and(studentSpecification.kumi(kumi)),
+            result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
+                    .and(StudentSpecification.nen(nen)).and(StudentSpecification.kumi(kumi)),
                     Sort.by(Sort.Direction.ASC, "ban"));
         }
         for (int i = 0; i < result.size(); i++) {
@@ -220,7 +122,6 @@ public class GradeService {
             List<Grade> resultGrade = gradeRepository.findAllByStudentId(result.get(i).getStudentId());
             for (int k = 0; k < resultGrade.size(); k++) {
                 // クラス登録年度から成績をしぼりこむ
-//                if (result.get(k).getYear() == studentYear.get(i).getYear()) {
                 if (resultGrade.get(k).getYear() == nendo) {
                     for (int l = 1; l < 4; l++) { // 学期term
                         for (int m = 1; m < 10; m++) { // 教科subject
@@ -239,43 +140,7 @@ public class GradeService {
         return gradeList;
     }
 
-    /**
-     * 成績追加
-     * 
-     * @param grade
-     * @return
-     */
-    public void addGrade(String userId, String studentId, Grade grade) {
-        grade.setStudentId(grade.getStudentId());
-        grade.setCreatedBy(userId);
-        grade.setUpdatedBy(userId);
-        gradeRepository.save(grade);
-    }
-
-    /**
-     * 成績更新
-     * 
-     * @param grade
-     * @return
-     */
-    public Grade updateGradeOne(Long gradeId, String studentId, Grade grade) {
-        grade.setStudentId(grade.getStudentId());
-        Grade targetGrade = gradeRepository.findById(gradeId).orElseThrow();
-        targetGrade.setYear(grade.getYear());
-        targetGrade.setTerm(grade.getTerm());
-        targetGrade.setSubject(grade.getSubject());
-        targetGrade.setRating(grade.getRating());
-        targetGrade.setUpdatedBy(grade.getUpdatedBy());
-        gradeRepository.save(targetGrade);
-        return targetGrade;
-    }
-
-    /**
-     * 成績一括更新
-     * 
-     * @param grade
-     * @return
-     */
+    /** 成績一括更新 */
     public void update(String userId, GradeForm gradeForm) {
         List<Long> gradeIds = gradeForm.getGradeIds();
         List<String> studentIds = gradeForm.getStudentIds();
@@ -305,23 +170,12 @@ public class GradeService {
                 gradeRepository.save(updateGrade);
             }
             // 削除
-            if ((gradeIds.size() != 0 && ratings.size() != 0 && gradeIds.get(i) != null && ratings.get(i) == null) || (gradeIds.size() != 0 && ratings.size() == 0)) {
+            if ((gradeIds.size() != 0 && ratings.size() != 0 && gradeIds.get(i) != null && ratings.get(i) == null)
+                    || (gradeIds.size() != 0 && ratings.size() == 0)) {
                 Grade deleteGrade = gradeRepository.findById(gradeIds.get(i)).orElseThrow();
                 gradeRepository.delete(deleteGrade);
-
             }
         }
     }
 
-    /**
-     * 成績削除
-     * 
-     * @param grade
-     */
-    public void deleteGrade(Long id) {        
-        Grade grade = gradeRepository.findById(id).orElseThrow();
-        gradeRepository.delete(grade);
-    }
-
 }
-

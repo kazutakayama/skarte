@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.User;
 import com.example.skarte.repository.UserRepository;
 

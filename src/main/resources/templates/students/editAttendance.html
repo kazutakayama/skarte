@@ -53,20 +53,13 @@
 				<span th:text="${student.lastName + student.firstName}"></span>
 				<span>&emsp;&emsp;／ :欠席&emsp;× :遅刻&emsp;○ :早退&emsp;● :遅刻/早退&emsp;テ :出停&emsp;キ :忌引</span>
 			</div>
-
 			<div th:if="${schedule[0] == null}">スケジュールが登録されていません</div>
-
 			<th:block th:if="${schedule[0] != null}">
 				<form id="update" th:action="@{/students/{id}/attendance/update (id=${student.studentId})}"
 					th:method="post">
-					<!--<button class="btn btn-default" onClick="return checkUpdate()" type="submit">更新</button>-->
 					<table class="table table-striped table-sm table-bordered" style="text-align:center;">
 						<thead>
 							<tr>
-								<!--<th rowspan="2">年</th>
-								<th rowspan="2">組</th>
-								<th rowspan="2">番</th>
-								<th rowspan="2">名前</th>-->
 								<th:block th:each="schedule : ${schedule}">
 									<th:block th:if="${schedule.holiday == false}">
 										<th th:text="${#temporals.format(schedule.date, 'd')}">
@@ -78,13 +71,6 @@
 										</th>
 									</th:block>
 								</th:block>
-
-								<!--<th rowspan="2">登校日数</th>
-								<th rowspan="2">出席数</th>
-								<th rowspan="2">欠席数</th>
-								<th rowspan="2">遅刻数</th>
-								<th rowspan="2">早退数</th>
-								<th rowspan="2">出停/忌引数</th>-->
 							</tr>
 							<tr>
 								<th:block th:each="schedule : ${schedule}">
@@ -103,28 +89,9 @@
 						<tbody>
 							<tr th:each="studentYear : ${studentsYear}">
 								<th:block th:if="${studentYear.year == year}">
-									<!--<td th:text="${studentYear.nen}"></td>
-									<td th:text="${studentYear.kumi}"></td>
-									<td th:text="${studentYear.ban}"></td>
-									<div th:each="student : ${studentYear.students}">
-										<td>
-											<th:block th:text="${student.lastName} + ' ' + ${student.firstName}">
-											</th:block>
-										</td>
-									</div>-->
 									<th:block th:each="attendance, stat : ${attendance}">
 										<td>
 											<th:block th:each="schedule : ${schedule[__${stat.index}__]}">
-
-
-												<!--<th:block th:if="${attendance?.kiroku==1}">／</th:block>
-													<th:block th:if="${attendance?.kiroku==2}">×</th:block>
-													<th:block th:if="${attendance?.kiroku==3}">○</th:block>
-													<th:block th:if="${attendance?.kiroku==4}">●</th:block>
-													<th:block th:if="${attendance?.kiroku==5}">テ</th:block>
-													<th:block th:if="${attendance?.kiroku==6}">キ</th:block>-->
-
-
 												<th:block th:if="${schedule.holiday == false}">
 													<input class="form-control" type="hidden" name="attendanceIds[]"
 														th:value="${attendance?.attendanceId}" />
@@ -151,19 +118,14 @@
 											</th:block>
 										</td>
 									</th:block>
-									<!--<th:block th:each="attendanceSummary : ${attendanceSummary}">
-										<td>
-											<th:block th:text="${attendanceSummary}"></th:block>
-										</td>
-									</th:block>-->
 								</th:block>
 							</tr>
 						</tbody>
 					</table>
 				</form>
 			</th:block>
-
 		</main>
+
 	</div>
 </body>
 

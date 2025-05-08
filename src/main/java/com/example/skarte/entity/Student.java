@@ -14,8 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,77 +33,77 @@ public class Student extends EntityBase { // EntityBase
     /** ID */
     @Id
     @Column
-    private String studentId = null;
+    private String studentId;
 
     /** 姓 */
-    @Column(length = 20, nullable = false)
+    @Column
     @NotEmpty
-    private String lastName = null;
+    private String lastName;
 
     /** 名 */
-    @Column(length = 20, nullable = false)
+    @Column
     @NotEmpty
-    private String firstName = null;
+    private String firstName;
 
     /** せい */
-    @Column(length = 20, nullable = false)
+    @Column
     @NotEmpty
-    private String lastNameKana = null;
+    private String lastNameKana;
 
     /** めい */
-    @Column(length = 20, nullable = false)
+    @Column
     @NotEmpty
-    private String firstNameKana = null;
+    private String firstNameKana;
 
     /** 生年月日 */
     @Column
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birth = null;
+    private LocalDate birth;
 
     /** 性別 */
     @Column
     @NotNull
-    private Integer gender = null;
+    private Integer gender;
 
     /** 保護者1 */
     @Column
-    private String family1 = null;
+    private String family1;
 
     /** 保護者2 */
     @Column
-    private String family2 = null;
+    private String family2;
 
     /** 電話1 */
     @Column
-    private String tel1 = null;
+    private String tel1;
 
     /** 電話2 */
     @Column
-    private String tel2 = null;
+    private String tel2;
 
     /** 電話3 */
     @Column
-    private String tel3 = null;
+    private String tel3;
 
     /** 電話4 */
     @Column
-    private String tel4 = null;
+    private String tel4;
 
     /** 郵便番号 */
     @Column
-    private String postalCode = null;
+    private String postalCode;
 
     /** 住所 */
     @Column
-    private String adress = null;
+    private String adress;
 
     /** メモ */
     @Column
-    private String memo = null;
+    private String memo;
 
     /** 転出・卒業 */
-    private boolean transferred = false;
+    private boolean transferred;
     
     @OneToMany
     @JoinColumn(name = "studentId", insertable = false, updatable = false)

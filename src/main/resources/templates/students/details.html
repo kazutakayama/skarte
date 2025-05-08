@@ -3,7 +3,6 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
-
 	<div layout:fragment="content">
 
 		<div class="header-sub">
@@ -39,12 +38,10 @@
 		</div>
 
 		<main>
-
 			<div class="mx-auto" style="width:80%;">
 				<th:block th:if="${student.transferred == true}">
 					<span style="background-color: #fff3cd; font-weight:bold">この生徒は転出/卒業済みです</span>
 				</th:block>
-
 				<table class="table table-bordered table-sm"
 					style="vertical-align: middle; --bs-border-color: #dee2e6;">
 					<tr style="text-align:center; height:30px">
@@ -65,9 +62,7 @@
 						<td colspan="8" style="width:16%; background-color: #fdede4" th:text="${student.family1}"></td>
 					</tr>
 					<tr style="text-align:center; height:30px">
-
 						<th:block th:each="studentYear : ${studentsYear}">
-
 							<th colspan="8" style="width:28%; background-color: #cce6ff">
 								<th:block th:if="${studentYear != null}">
 									<div
@@ -75,14 +70,11 @@
 									</div>
 								</th:block>
 							</th>
-
 						</th:block>
-
 						<td colspan="8" style="width:16%; background-color: #fdede4" th:text="${student.family2}"></td>
 					</tr>
 					<tr style="text-align:center; height:30px">
 						<th:block th:each="studentYear, stat : ${studentsYear}">
-
 							<td colspan="8" rowspan="5" style="width:28%">
 								<th:block th:if="${studentYear != null}">
 									<th:block th:if="${images[__${stat.index}__] != null}">
@@ -129,10 +121,8 @@
 				</table>
 			</div>
 		</main>
+
 	</div>
-
-
-
 </body>
 
 </html>

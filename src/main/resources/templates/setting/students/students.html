@@ -3,13 +3,10 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
 
 <body>
-
 	<div layout:fragment="content">
 
 		<div class="header-sub">
 			<span class="headline">管理 > 生徒管理</span>
-
-
 			<span>
 				<form th:action="@{/setting/students/search}" th:method="get">
 					<input placeholder="生徒名" 　type="text" name="name" th:value="${name}" />
@@ -25,12 +22,10 @@
 						<option value="2029" th:selected="${year == '2029'}">2029年度</option>
 						<option value="2030" th:selected="${year == '2030'}">2030年度</option>
 					</select>
-
 					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
 				</form>
 			</span>
 			<span>&emsp;</span>
-
 			<th:block th:if="${name != null || year != null}">
 				<span>
 					<form method="get" action="/setting/students/download.csv">
@@ -43,13 +38,10 @@
 				</span>
 			</th:block>
 			<span>&emsp;</span>
-
 			<span><a class="btn btn-primary py-1 px-2" href="/setting/students/new">新規登録</a></span>
-
 		</div>
 
 		<main>
-
 			<th:block th:if="${#lists.size(students) > 0}">
 				<div>
 					<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
@@ -75,17 +67,14 @@
 						</thead>
 						<tbody>
 							<div th:each="student : ${students}">
-
 								<th:block th:if="${student.transferred == false}">
 									<tr>
 										<td th:text="${student.studentId}"></td>
 										<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
 												th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 										<td th:text="${student.lastNameKana} + ' ' + ${student.firstNameKana}"></td>
-										<!--<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>-->
 										<td th:text="${student.birth}">
 										<td th:text="${gender[__student.gender__]}"></td>
-
 										<td>
 											<th:block th:each="studentYear : ${student.studentsYear}">
 												<div th:if="${studentYear.nen == 1}">
@@ -115,17 +104,14 @@
 										</td>
 									</tr>
 								</th:block>
-
 								<th:block th:if="${student.transferred == true}">
 									<tr class="table-warning">
 										<td th:text="${student.studentId}"></td>
 										<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
 												th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 										<td th:text="${student.lastNameKana} + ' ' + ${student.firstNameKana}"></td>
-										<!--<td th:text="${#dates.format(student.birth, 'yyyy-MM-dd')}"></td>-->
 										<td th:text="${student.birth}">
 										<td th:text="${gender[__student.gender__]}"></td>
-
 										<td>
 											<th:block th:each="studentYear : ${student.studentsYear}">
 												<div th:if="${studentYear.nen == 1}">
@@ -155,13 +141,13 @@
 										</td>
 									</tr>
 								</th:block>
-
 							</div>
 						</tbody>
 					</table>
 				</div>
 			</th:block>
 		</main>
+
 	</div>
 </body>
 

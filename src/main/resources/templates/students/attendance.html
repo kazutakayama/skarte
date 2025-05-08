@@ -31,12 +31,9 @@
 			</th:block>
 			<span></span>
 			<span class="headline">生徒 > 出席簿</span>
-
 		</div>
 
-
 		<main>
-
 			　<th:block th:each="studentYear, stat : ${studentsYear}">
 				<table class="table table-bordered table-striped table-sm">
 					<tr style="vertical-align: middle; text-align:center;">
@@ -201,17 +198,11 @@
 							<th:block th:text="${attendanceSummary[5]}"></th:block>
 						</td>
 					</tr>
-				</table>
-				　
+				</table> 　
 			</th:block>
-
-
-
 			<th:block th:if="${#lists.size(studentsYear) > 0}">
 				<div style="font-weight: bold;" 　th:text="${#lists.size(studentsYear) + '年間の合計'}"></div>
 			</th:block>
-
-
 			<table class="table table-bordered"
 				style="vertical-align: middle; text-align:center; table-layout: fixed; width: 100%;">
 				<tr>
@@ -229,7 +220,6 @@
 					<td th:text="${AttendanceTotal[5]}"></td>
 				</tr>
 			</table>
-
 		</main>
 
 	</div>
