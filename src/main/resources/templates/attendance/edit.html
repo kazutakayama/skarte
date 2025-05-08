@@ -9,16 +9,6 @@
 		<div class="header-sub">
 			<span class="headline">出席簿一覧 > 編集
 			</span>
-			<th:block th:if="${year > 0}">
-				<span th:if="${kumi == 0}">
-					<span th:text="${year + '年度 ' + nen + '年 ' + month + '月'}" />
-				</span>
-				<span th:if="${kumi > 0}">
-					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組 ' + month + '月'}" />
-				</span>
-				<span th:if="${schedule[0] == null}">スケジュールが登録されていません</span>
-				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
-			</th:block>
 			<span>
 				<form th:action="@{/attendance/search}" th:method="get">
 					<input type="hidden" name="year" th:value="${year}" />
@@ -36,6 +26,16 @@
 		</div>
 
 		<main>
+			<th:block th:if="${year > 0}">
+				<span th:if="${kumi == 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + month + '月'}" />
+				</span>
+				<span th:if="${kumi > 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組 ' + month + '月'}" />
+				</span>
+				<span th:if="${schedule[0] == null}">スケジュールが登録されていません</span>
+				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
+			</th:block>
 			<th:block th:if="${schedule[__${day-1}__].holiday == false}">
 				<th:block th:if="${schedule[0] != null && #lists.size(studentsYear) > 0}">
 					<form id="update" th:action="@{/attendance/update}" th:method="post">

@@ -46,6 +46,9 @@
 					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
 				</form>
 			</span>
+		</div>
+
+		<main>
 			<th:block th:if="${year > 0}">
 				<span th:if="${kumi == 0}">
 					<span th:text="${year + '年度 ' + nen + '年'}" />
@@ -55,9 +58,6 @@
 				</span>
 				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
 			</th:block>
-		</div>
-
-		<main>
 			<th:block th:if="${year > 0}">
 				<th:block th:if="${#lists.size(studentsYear) > 0}">
 					<div class="table-grade">

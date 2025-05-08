@@ -175,7 +175,7 @@ textarea {
 /*成績のテーブル*/
 .table-grade {
 	overflow: auto;
-	max-height: 450px;
+	max-height: 430px;
 	position: relative;
 }
 
@@ -228,7 +228,7 @@ textarea {
 /*出席簿のテーブル*/
 .table-attendance {
 	overflow: auto;
-	max-height: 450px;
+	max-height: 430px;
 	position: relative;
 }
 
