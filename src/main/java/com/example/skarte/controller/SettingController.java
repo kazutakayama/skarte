@@ -4,45 +4,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.skarte.bean.StudentsCsv;
-import com.example.skarte.entity.Attendance;
-import com.example.skarte.entity.Grade;
-import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Schedule;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
@@ -50,17 +30,11 @@ import com.example.skarte.entity.User;
 import com.example.skarte.form.ScheduleForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.form.StudentYearForm;
-import com.example.skarte.repository.UserRepository;
-import com.example.skarte.service.AttendanceService;
-import com.example.skarte.service.GradeService;
 import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 import com.example.skarte.service.UsersService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -74,9 +48,6 @@ public class SettingController {
     private final StudentsYearService studentsYearService;
     private final ScheduleService scheduleService;
     private final UsersService usersService;
-
-    private final AttendanceService attendanceService;
-    private final GradeService gradeService;
 
     // path: /setting
     @GetMapping("")
@@ -111,10 +82,10 @@ public class SettingController {
 
     // path: /setting/students/add
     // 画面で入力された生徒情報を取得して、dbに登録をする
-    // ※BindingResultは必ずバリデーション対象オブジェクトの直後に置く
     @PostMapping("/students/add")
     public String add(@Validated @ModelAttribute StudentForm form, BindingResult result, Model model,
             @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        // ※BindingResultは必ずバリデーション対象オブジェクトの直後に置く
         if (studentsService.findByStudentId(form.getStudentId()) != null) {
             model.addAttribute("hasMessage", true);
             model.addAttribute("class", "alert-danger");
@@ -146,13 +117,6 @@ public class SettingController {
         model.addAttribute("studentsYear", classList);
         List<String> images = studentsYearService.images(id);
         model.addAttribute("images", images);
-
-        // 管理用
-        List<Attendance> attendance = attendanceService.findAllByStudentId(id);
-        model.addAttribute("attendance", attendance);
-        List<Grade> grade = gradeService.findAllByStudentId(id);
-        model.addAttribute("grade", grade);
-
         return "setting/students/details";
     }
 
@@ -176,7 +140,6 @@ public class SettingController {
             model.addAttribute("hasMessage", true);
             model.addAttribute("class", "alert-danger");
             model.addAttribute("message", "更新に失敗しました");
-//            model.addAttribute("form", form);
             Student student = studentsService.findById(id);
             model.addAttribute("student", student);
             boolean dataExists = studentsService.dataExists(id);
@@ -190,15 +153,6 @@ public class SettingController {
         return "redirect:/setting/students/" + id;
     }
 
-//    // path: /setting/students/download.csv
-//    // 生徒をcsvでダウンロードする
-//    @GetMapping(value = "/students/download.csv", params = "download_file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-//            + "; charset=UTF-8; Content-Disposition: attachment")
-//    @ResponseBody
-//    public Object download() throws JsonProcessingException {
-//        return studentsService.download();
-//    }
-
     // path: /setting/students/download.csv
     // 名前、年度で絞り込み後、生徒をcsvでダウンロードする
     @GetMapping(value = "/students/download.csv", params = "download_file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
@@ -209,21 +163,8 @@ public class SettingController {
         return studentsService.download(name, year);
     }
 
-//    // path: /setting/students/upload
-//    // 生徒をcsvでアップロードする ★一旦完成版
-//    @PostMapping(value = "/students/upload", params = "upload_file")
-//    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) throws IOException {
-//        try (BufferedReader br = new BufferedReader(
-//                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-//            studentsService.uploadCsv(user.getUserId(), br);
-//        } catch (IOException e) {
-//            throw new RuntimeException("ファイルが読み込めません", e);
-//        }
-//        return "redirect:/setting/students";
-//    }
-
     // path: /setting/students/upload
-    // 生徒をcsvでアップロードする★★★お試し！
+    // 生徒をcsvでアップロードする
     @PostMapping(value = "/students/upload", params = "upload_file")
     public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user, Model model,
             StudentForm form, RedirectAttributes redirectAttributes) throws Exception {
@@ -253,56 +194,9 @@ public class SettingController {
             return "setting/students/new";
         }
     }
-//        }catch (Exception e) {
-//            model.addAttribute("hasMessage", true);
-//            model.addAttribute("class", "alert-danger");
-//            model.addAttribute("message", "登録に失敗しました" + " " + e.getMessage());
-////            model.addAttribute("form", form);
-//            return "setting/students/new";
-//        }
-
-//        } catch (IOException e) {
-//            throw new RuntimeException("ファイルが読み込めませんでした", e);
-//        } catch (Exception e) {
-//            model.addAttribute("hasMessage", true);
-//            model.addAttribute("class", "alert-danger");
-//            model.addAttribute("message", "登録に失敗しました" + " " + e.getMessage());
-////            model.addAttribute("form", form);
-//            return "setting/students/new";
-//        }
-//        return "redirect:/setting/students";
-//    }
-
-//    // path: /setting/students/upload
-//    // 生徒をcsvでアップロードする
-//    @PostMapping(value = "/students/upload", params = "upload_file")
-//    public String uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user)
-//            throws IOException {
-//        try (BufferedReader br = new BufferedReader(
-//                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-//            String line;
-//            // ヘッダーレコードをとばすためにあらかじめ１行だけ読み取っておく
-//            line = br.readLine();
-//            // 行がNULL（CSVの値がなくなる）になるまで処理を繰り返す
-//            while ((line = br.readLine()) != null) {
-//                // 負の数字を引数に指定し、中身が空でも、全ての要素を取得
-//                String[] split = line.split(",", -1);
-//                Student student = Student.builder().studentId(split[0]).lastName(split[1]).firstName(split[2])
-//                        .lastNameKana(split[3]).firstNameKana(split[4]).birth(Date.valueOf(split[5]))
-//                        .gender((int) Integer.parseInt(split[6])).family1(split[7]).family2(split[8]).tel1(split[9])
-//                        .tel2(split[10]).tel3(split[11]).tel4(split[12]).postalCode(split[13]).adress(split[14])
-//                        .memo(split[15]).build();
-//                studentsService.upload(user.getUserId(), student);
-//            }
-//            br.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException("ファイルが読み込めません", e);
-//        }
-//        return "redirect:/setting/students";
-//    }
 
     // path: /setting/students/{id}/delete
-    // 設定/生徒を削除（物理削除）
+    // 設定/生徒を削除
     @GetMapping("/students/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
         studentsService.delete(id);
@@ -333,7 +227,7 @@ public class SettingController {
         List<StudentYear> transferred = studentsYearService.transferred(year, nen, kumi);
         model.addAttribute("transferred", transferred);
         List<StudentYear> exists = studentsYearService.exists(year, nen, kumi);
-        model.addAttribute("exists", exists);       
+        model.addAttribute("exists", exists);
         return "setting/class/class";
     }
 
@@ -458,7 +352,6 @@ public class SettingController {
             throws IOException {
         // ファイルタイプのバリデーション
         String contentType = studentYearForm.getImage().getContentType();
-//        String contentType = file.getContentType();
         if ((!contentType.startsWith("image/")) && (!(studentYearForm.getImage().isEmpty()))) {
             redirectAttributes.addFlashAttribute("hasMessage", true);
             redirectAttributes.addFlashAttribute("class", "alert-danger");
@@ -577,26 +470,4 @@ public class SettingController {
         model.addAttribute("teachers", teachers);
         return "setting/teachers";
     }
-
-    //
-    // 以下管理用
-
-    // path: /setting/students/{attendanceId}/attendance/delete
-    // 出欠を削除
-    @GetMapping("/students/{id}/attendance/delete")
-    public String deleteAttendance(@PathVariable Long id) {
-        Attendance attendance = attendanceService.findById(id);
-        attendanceService.deleteAttendance(id);
-        return "redirect:/setting/students/" + attendance.getStudentId();
-    }
-
-    // path: /setting/students/{gradeId}/grade/delete
-    // 成績を削除
-    @GetMapping("/students/{id}/grade/delete")
-    public String deleteGrade(@PathVariable Long id) {
-        Grade grade = gradeService.findById(id);
-        gradeService.deleteGrade(id);
-        return "redirect:/setting/students/" + grade.getStudentId();
-    }
-
 }

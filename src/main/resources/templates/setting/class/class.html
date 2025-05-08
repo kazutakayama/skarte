@@ -7,7 +7,6 @@
 
 		<div class="header-sub">
 			<span class="headline">管理 > クラス管理</span>
-
 			<span>
 				<form th:action="@{/setting/class/list}" th:method="get">
 					<select name="year">
@@ -44,17 +43,14 @@
 					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
 				</form>
 			</span>
-
 			<th:block th:if="${kumi > 0}">
 				<span th:text="${year + '年度' + nen + '年' + kumi + '組'}" />
 				<th:block th:if="${#lists.size(studentsYear) == 0}"><span>登録されている生徒はいません</span></th:block>
 				<th:block th:if="${#lists.size(studentsYear) > 0}">
-					<span th:text="${'登録:' + #lists.size(studentsYear) + '名'}" />
-					<span th:text="${'転出/卒業:' + #lists.size(transferred) + '名'}" />
-					<span th:text="${'在籍:' + #lists.size(exists) + '名'}" />
+					<span th:text="${'登録:' + #lists.size(studentsYear)}" />
+					<span th:text="${'転出/卒業:' + #lists.size(transferred)}" />
+					<span th:text="${'在籍:' + #lists.size(exists)}" />
 				</th:block>
-				<span>&emsp;</span>
-
 				<span>
 					<form th:action="@{/setting/class/register}" th:method="get">
 						<input type="hidden" name="year" th:value="${year}" />
@@ -63,7 +59,6 @@
 						<button class="btn btn-primary btn-sm" type="submit">クラス一括登録</button>
 					</form>
 				</span>
-
 				<span>
 					<form th:action="@{/setting/class/new}" th:method="get">
 						<input type="hidden" name="year" th:value="${year}" />
@@ -72,8 +67,6 @@
 						<button class="btn btn-primary btn-sm" type="submit">クラス個別追加</button>
 					</form>
 				</span>
-				<span>&emsp;</span>
-
 				<th:block th:if="${nen==3 && year <= nendo}">
 					<span>
 						<form th:action="@{/setting/class/graduated}" th:method="get">
@@ -89,18 +82,11 @@
 						</form>
 					</span>
 				</th:block>
-
 			</th:block>
 		</div>
 
 		<main>
-
 			<th:block th:if="${kumi > 0 && #lists.size(studentsYear) > 0}">
-
-
-
-
-
 				<div><span style="font-weight:bold">登録済生徒</span>
 					<span>
 						<a type="button" class="d-inline-block" data-bs-toggle="tooltip"
@@ -111,7 +97,6 @@
 				</div>
 				<div class="table-sticky">
 					<table class="table table-striped table-sm" style="width: 100%; text-align:center;">
-
 						<thead>
 							<tr>
 								<th style="width: 10%">#</th>
@@ -122,20 +107,15 @@
 								<th style="width: 10%">性別</th>
 								<th style="width: 10%">写真</th>
 								<th style="width: 10%"></th>
-
 							</tr>
 						</thead>
 						<tbody>
-
 							<div th:each="studentYear, stat : ${studentsYear}">
 								<div th:each="student : ${studentYear.students}">
-
 									<th:block th:if="${student.transferred == false}">
 										<tr>
-
 											<td th:text="${studentYear.ban}"></td>
 											<td th:text="${studentYear.studentId}"></td>
-
 											<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
 													th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 											<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
@@ -155,16 +135,12 @@
 												<a th:href="@{/setting/class/{id} (id=${studentYear.studentYearId})}">
 													<i class="bi bi-pencil-square text-success"></i></a>
 											</td>
-
 										</tr>
 									</th:block>
-
 									<th:block th:if="${student.transferred == true}">
 										<tr class="table-warning">
-
 											<td th:text="${studentYear.ban}"></td>
 											<td th:text="${studentYear.studentId}"></td>
-
 											<td><a th:href="@{/setting/students/{id} (id=${student.studentId})}"
 													th:text="${student.lastName} + ' ' + ${student.firstName}"></a></td>
 											<td th:text="${student.lastNameKana + ' ' + student.firstNameKana}">
@@ -184,24 +160,13 @@
 												<a th:href="@{/setting/class/{id} (id=${studentYear.studentYearId})}"><i
 														class="bi bi-pencil-square text-success"></i></a>
 											</td>
-
 										</tr>
 									</th:block>
-
 								</div>
 							</div>
-
-
 						</tbody>
-
 					</table>
 				</div>
-
-
-
-
-
-
 			</th:block>
 		</main>
 

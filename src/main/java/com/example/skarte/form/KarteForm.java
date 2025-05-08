@@ -1,8 +1,6 @@
 package com.example.skarte.form;
 
 import java.time.LocalDate;
-import java.util.Date;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.skarte.entity.EntityBase;

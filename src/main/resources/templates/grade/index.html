@@ -9,7 +9,6 @@
 		<div class="header-sub">
 			<span class="headline">成績一覧
 			</span>
-
 			<span>
 				<form th:action="@{/grade/search}" th:method="get">
 					<select name="year" th:value="${year}">
@@ -30,13 +29,11 @@
 						<option value="2030" th:selected="${(year == null && nendo == 2030) || year == 2030}">
 							2030年度</option>
 					</select>
-					
 					<select name="nen">
 						<option value="1" th:selected="${nen == 1}">1年</option>
 						<option value="2" th:selected="${nen == 2}">2年</option>
 						<option value="3" th:selected="${nen == 3}">3年</option>
 					</select>
-					
 					<select name="kumi">
 						<option value="0" th:selected="${kumi == 0}"></option>
 						<option value="1" th:selected="${kumi == 1}">1組</option>
@@ -46,11 +43,9 @@
 						<option value="5" th:selected="${kumi == 5}">5組</option>
 						<option value="6" th:selected="${kumi == 6}">6組</option>
 					</select>
-					
 					<button class="btn btn-secondary btn-sm" type="submit">検索</button>
 				</form>
 			</span>
-
 			<th:block th:if="${year > 0}">
 				<span th:if="${kumi == 0}">
 					<span th:text="${year + '年度 ' + nen + '年'}" />
@@ -60,17 +55,12 @@
 				</span>
 				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
 			</th:block>
-
 		</div>
 
 		<main>
-
 			<th:block th:if="${year > 0}">
-
 				<th:block th:if="${#lists.size(studentsYear) > 0}">
-
 					<div class="table-grade">
-
 						<table class="table table-striped table-sm"
 							style="table-layout: fixed;width: max-content; border-collapse: separate; border-spacing: 0; text-align:center;">
 							<thead>
@@ -166,10 +156,8 @@
 												</th>
 												<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}">
 												</th>
-
 												<th class="sticky-col sticky-col-4"
 													th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
-
 												<th:block th:each="grade : ${grade[__${stat.index}__]}">
 													<td th:text="${grade?.rating}"></td>
 												</th:block>
@@ -182,10 +170,8 @@
 												</th>
 												<th class="sticky-col sticky-col-3" th:text="${studentYear.ban}">
 												</th>
-
 												<th class="sticky-col sticky-col-4"
 													th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
-
 												<th:block th:each="grade : ${grade[__${stat.index}__]}">
 													<td th:text="${grade?.rating}"></td>
 												</th:block>
@@ -195,9 +181,7 @@
 								</th:block>
 							</tbody>
 						</table>
-
 					</div>
-
 				</th:block>
 			</th:block>
 		</main>

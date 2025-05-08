@@ -6,20 +6,7 @@
 	<div layout:fragment="content">
 		<main>
 			<div class="mx-auto" style="width:40%;">
-
 				<form th:action="@{/users/add}" th:method="post" th:object="${userForm}">
-					<!--<div class="mb-3">
-						<label class="control-label" for="user_lastName">姓</label>
-						<input class="form-control" type="text" name="lastName" th:value="*{lastName}" />
-						<span class="text-danger" th:if="${#fields.hasErrors('lastName')}"
-							th:errors="*{lastName}"></span>
-					</div>
-					<div class="mb-3">
-						<label class="control-label" for="user_firstName">名</label>
-						<input class="form-control" type="text" name="firstName" th:value="*{firstName}" />
-						<span class="text-danger" th:if="${#fields.hasErrors('firstName')}"
-							th:errors="*{firstName}"></span>
-					</div>-->
 					<div class="row mb-2">
 						<div class="col-md-6">
 							<label class="form-label" for="user_lastName">姓</label>
@@ -27,7 +14,6 @@
 								th:errors="*{lastName}"></span>
 							<input class="form-control" type="text" id="user_lastName" name="lastName"
 								th:value="*{lastName}" />
-
 						</div>
 						<div class="col-md-6">
 							<label class="form-label" for="user_firstName">名</label>
@@ -35,7 +21,6 @@
 								th:errors="*{firstName}"></span>
 							<input class="form-control" type="text" id="user_firstName" name="firstName"
 								th:value="*{firstName}" />
-
 						</div>
 					</div>
 					<div class="mb-2">
@@ -56,16 +41,11 @@
 						<span class="text-danger" th:if="${#fields.hasErrors('passwordConfirmation')}"
 							th:errors="*{passwordConfirmation}"></span>
 					</div>
-
-					<!--<button class="btn btn-default" type="submit">登録</button>-->
-
 					<div class="d-flex justify-content-between align-items-center">
-						<span><input type="submit" value="ユーザー新規登録" /></span>
+						<span><input type="submit" value="登録" /></span>
 						<span><a href="/login">ログイン画面にもどる</a></span>
 					</div>
 				</form>
-
-				<!--<a href="/login">ログイン画面にもどる</a>-->
 			</div>
 		</main>
 	</div>

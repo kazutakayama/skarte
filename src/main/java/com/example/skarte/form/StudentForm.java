@@ -6,20 +6,9 @@ import java.util.List;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.EntityBase;
-import com.example.skarte.entity.Grade;
-import com.example.skarte.entity.Karte;
-import com.example.skarte.entity.Student;
-import com.example.skarte.entity.StudentYear;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -30,19 +19,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-//@Valid
 @Builder // CSV
 @NoArgsConstructor // CSV
 @AllArgsConstructor // CSV
 @EqualsAndHashCode(callSuper = false) // EntityBase
 public class StudentForm extends EntityBase { // EntityBase
     
-//    @Valid
-//    private List<StudentForm> studentFormLista;
 
     /** ID */
-//    @NotEmpty(message = "「生徒ID」を入力してください")
-//    @NotBlank(message = "「生徒ID」を入力してください")
     @Pattern(regexp="^[0-9]{7}$", message = "「生徒ID」は半角数字7桁で入力してください")
     private String studentId;
 
@@ -115,7 +99,7 @@ public class StudentForm extends EntityBase { // EntityBase
     /** 転出・卒業 */
     private boolean transferred;
 
-    // リスト
+    
     private List<String> studentIds;
 
     public List<String> getStudentIds() {

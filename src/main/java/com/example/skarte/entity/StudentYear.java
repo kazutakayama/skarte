@@ -1,7 +1,5 @@
 package com.example.skarte.entity;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,9 +19,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "students_year")
 @Data
 @EqualsAndHashCode(callSuper = false) // EntityBase
-@Builder // CSV
-@NoArgsConstructor // CSV
-@AllArgsConstructor // CSV
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class StudentYear extends EntityBase { // EntityBase
 
@@ -32,25 +30,25 @@ public class StudentYear extends EntityBase { // EntityBase
     @Column
     @SequenceGenerator(name = "studentsYear_studentYearId_seq", sequenceName = "studentsYear_studentYearId_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentsYear_studentYearId_seq")
-    private Long studentYearId = null;
+    private Long studentYearId;
 
     public void setId(Long studentYearId) {
         this.studentYearId = null;
     }
 
     @Column
-    private String studentId = null;
+    private String studentId;
     @ManyToOne
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
     private Student students;
 
     /** 年度 */
     @Column
-    private Long year = null;
+    private Long year;
 
     /** 年 */
     @Column
-    private Long nen = null;
+    private Long nen;
 
 
     public Long getNen() {
@@ -63,15 +61,15 @@ public class StudentYear extends EntityBase { // EntityBase
 
     /** 組 */
     @Column
-    private Long kumi = null;
+    private Long kumi;
 
     /** 番 */
     @Column
-    private Long ban = null;
+    private Long ban;
 
     /** 画像 */
     @Column
-    private byte[] image = null;
+    private byte[] image;
 
 
 }

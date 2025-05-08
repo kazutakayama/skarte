@@ -1,7 +1,6 @@
 package com.example.skarte.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -25,9 +24,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "karte")
 @Data
 @EqualsAndHashCode(callSuper = false) // EntityBase
-@Builder // CSV
-@NoArgsConstructor // CSV
-@AllArgsConstructor // CSV
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class Karte extends EntityBase { // EntityBase
 
@@ -36,14 +35,14 @@ public class Karte extends EntityBase { // EntityBase
     @Column
     @SequenceGenerator(name = "karte_karteId_seq", sequenceName = "karte_karteId_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "karte_karteId_seq")
-    private Long karteId = null;
+    private Long karteId;
 
     public void setId(Long karteId) {
         this.karteId = null;
     }
 
     @Column
-    private String studentId = null;
+    private String studentId;
     @ManyToOne
     @JoinColumn(name = "studentId", insertable = false, updatable = false)
     private Student students;
@@ -52,11 +51,11 @@ public class Karte extends EntityBase { // EntityBase
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private LocalDate date = null;
+    private LocalDate date;
 
     /** 内容 */
     @Column
     @NotEmpty
-    private String contents = null;
+    private String contents;
 
 }

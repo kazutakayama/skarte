@@ -6,15 +6,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.skarte.entity.Attendance;
 import com.example.skarte.entity.Schedule;
 import com.example.skarte.form.ScheduleForm;
-import com.example.skarte.form.StudentForm;
 import com.example.skarte.repository.ScheduleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,40 +22,12 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    // 年ごとのカレンダー
-    public ArrayList<ArrayList<Calendar>> yearCalendar(Long year) {
-        ArrayList<ArrayList<Calendar>> yearCalendar = new ArrayList<>();
-
-        Calendar cal = Calendar.getInstance();
-        int nendo = Integer.valueOf(year.toString());
-        for (int i = 0; i < 12; i++) {
-            ArrayList<Calendar> monthCalendar = new ArrayList<>();
-            if (i <= 8) {
-                cal.set(nendo, i + 3, 1);
-            } else {
-                cal.set(nendo + 1, i - 9, 1);
-            }
-            int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-            for (int j = 0; j < days; j++) {
-                Calendar calendar = Calendar.getInstance();
-                if (i <= 8) {
-                    calendar.set(nendo, i + 3, j + 1);
-                } else {
-                    calendar.set(nendo + 1, i - 9, j + 1);
-                }
-                monthCalendar.add(calendar);
-            }
-            yearCalendar.add(monthCalendar);
-        }
-        return yearCalendar;
-    }
-
-    // すべてのスケジュールを取得
+    /** すべてのスケジュールを取得 */
     public List<Schedule> findAll() {
         return scheduleRepository.findByOrderByUpdatedAtDesc();
     }
 
-    // 年度・月で検索し、１か月のスケジュールリストを取得
+    /** 年度・月で検索し、１か月のスケジュールリストを取得 */
     public List<Schedule> monthSchedule(Long year, Long month) {
         List<Schedule> monthSchedule = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
@@ -70,7 +39,6 @@ public class ScheduleService {
         }
         cal.set(nendo, tsuki, 1);
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
         for (int i = 0; i < days; i++) {
             monthSchedule.add(null);
         }
@@ -88,7 +56,7 @@ public class ScheduleService {
         return monthSchedule;
     }
 
-    // 年度・月でスケジュールリストを取得し、月ごとの登校日数(holiday == false)を数える
+    /** 年度・月でスケジュールリストを取得し、月ごとの登校日数(holiday == false)を数える */
     public int monthScheduleSize(Long year, Long month) {
         int monthScheduleSize = 0;
         List<Schedule> monthSchedule = monthSchedule(year, month);
@@ -102,7 +70,7 @@ public class ScheduleService {
         return monthScheduleSize;
     }
 
-    // 年度で検索し、１年のスケジュールリストを取得
+    /** 年度で検索し、１年のスケジュールリストを取得 */
     public ArrayList<ArrayList<Schedule>> yearSchedule(Long year) {
         ArrayList<ArrayList<Schedule>> yearSchedule = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
@@ -146,7 +114,7 @@ public class ScheduleService {
         return yearSchedule;
     }
 
-    // 年度でスケジュールリストを取得し、月ごとの登校日数(holiday == false)を数え、年度のリストをつくる
+    /** 年度でスケジュールリストを取得し、月ごとの登校日数(holiday == false)を数え、年度のリストをつくる */
     public List<Integer> yearScheduleSize(Long year) {
         ArrayList<ArrayList<Schedule>> yearSchedule = yearSchedule(year);
         List<Integer> yearScheduleSize = new ArrayList<>();
@@ -161,63 +129,31 @@ public class ScheduleService {
             }
             yearScheduleSize.add(monthScheduleSize);
         }
-//        }
         return yearScheduleSize;
 
     }
 
-    // 年度の合計登校日数をカウント
+    /** 年度の合計登校日数をカウント */
     public int yearScheduleCount(Long year) {
         List<Schedule> count = new ArrayList<>();
         int nendo = Integer.valueOf(year.toString());
-
         LocalDate ld1 = LocalDate.of(nendo, 4, 1);
         LocalDate ld2 = LocalDate.of(nendo + 1, 3, 31);
-
-//        Calendar cal1 = Calendar.getInstance();
-//        Calendar cal2 = Calendar.getInstance();
-//        cal1.set(nendo, 3, 1, 00, 00, 00);
-//        cal1.set(Calendar.MILLISECOND, 000);
-//        cal2.set(nendo + 1, 2, 31, 23, 59, 59);
-//        cal2.set(Calendar.MILLISECOND, 999);
-
         List<Schedule> result = scheduleRepository.findByOrderByUpdatedAtDesc();
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).isHoliday() == false) {
-
                 LocalDate ld = result.get(i).getDate();
-
-//                Calendar cl = Calendar.getInstance();
-//                cl.setTime(result.get(i).getDate());
                 // 4月1日から翌年の3月31日までの間の要素を取り出す
                 if (ld.compareTo(ld1) >= 0 && ld.compareTo(ld2) <= 0) {
                     count.add(result.get(i));
                 }
-//                if ((ld.compareTo(ld1) == 1 || ld.compareTo(ld1) == 0)
-//                        && (ld.compareTo(ld2) == -1 || ld.compareTo(ld2) == 0)) {
-//                    count.add(result.get(i));
-//                }
             }
         }
         int yearScheduleCount = count.size();
         return yearScheduleCount;
     }
 
-    //
-
-    // スケジュール1件登録
-    public void add(String userId, ScheduleForm scheduleForm) {
-        if (scheduleForm.getHoliday() == true) {
-            Schedule schedule = new Schedule();
-            schedule.setDate(scheduleForm.getDate());
-            schedule.setHoliday(scheduleForm.getHoliday());
-            schedule.setCreatedBy(userId);
-            schedule.setUpdatedBy(userId);
-            scheduleRepository.save(schedule);
-        }
-    }
-
-    // ※初回 １年分のスケジュールを自動作成 土日はholiday==true
+    /** ※初回 １年分のスケジュールを自動作成 土日はholiday==true */
     public void newSchedule(Long year, String userId) {
         int yearScheduleCount = yearScheduleCount(year);
         if (yearScheduleCount == 0) {
@@ -257,45 +193,17 @@ public class ScheduleService {
                 }
             }
         }
-
     }
 
-    // スケジュール一括更新
+    /** スケジュール一括更新 */
     public void update(String userId, ScheduleForm scheduleForm) {
         List<Long> scheduleIds = scheduleForm.getScheduleIds();
-//        List<Date> dates = scheduleForm.getDates();
         List<Boolean> holidays = scheduleForm.getHolidays();
         for (int i = 0; i < scheduleIds.size(); i++) {
             Schedule updateSchedule = scheduleRepository.findById(scheduleIds.get(i)).orElseThrow();
             updateSchedule.setHoliday(holidays.get(i));
             updateSchedule.setUpdatedBy(userId);
             scheduleRepository.save(updateSchedule);
-//            if (holidays != null) {
-//            // 新規登録
-//            if ((holidays.size() != 0 && scheduleIds.get(i) == null && holidays.get(i) != null)) {
-//                Schedule schedule = new Schedule();
-//                schedule.setDate(dates.get(i));
-//                schedule.setHoliday(holidays.get(i));
-//                schedule.setCreatedBy(userId);
-//                schedule.setUpdatedBy(userId);
-//                scheduleRepository.save(schedule);
-//            }
-//                if ((holidays.size() != 0 && scheduleIds.get(i) == null && holidays.get(i) != 1)) {
-//                    Schedule schedule = new Schedule();
-//                    schedule.setDate(dates.get(i));
-//                    schedule.setHoliday(false);
-//                    schedule.setCreatedBy(userId);
-//                    schedule.setUpdatedBy(userId);
-//                    scheduleRepository.save(schedule);
-//                }
-
-//                // 削除
-//                if ((holidays.size() != 0 && scheduleIds.get(i) != null)) {
-//                    Schedule deleteSchedule = scheduleRepository.findById(scheduleIds.get(i)).orElseThrow();
-//                    scheduleRepository.delete(deleteSchedule);
-//                }
-
-//            }
         }
     }
 

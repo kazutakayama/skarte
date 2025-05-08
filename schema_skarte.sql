@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS users (
 DROP TABLE IF EXISTS notices;
 CREATE TABLE IF NOT EXISTS notices (
  notice_id SERIAL NOT NULL,
- --title TEXT NOT NULL,
  contents TEXT,
  created_by VARCHAR(7) NOT NULL,
  updated_by VARCHAR(7) NOT NULL,

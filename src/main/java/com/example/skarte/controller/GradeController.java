@@ -8,19 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.skarte.entity.Grade;
-import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 import com.example.skarte.entity.User;
 import com.example.skarte.form.GradeForm;
 import com.example.skarte.service.GradeService;
-import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,8 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GradeController {
 
-    // コンストラクタインジェクション
-    private final StudentsService studentsService;
     private final StudentsYearService studentsYearService;
     private final GradeService gradeService;
 
@@ -51,10 +45,8 @@ public class GradeController {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         model.addAttribute("resultSize", result.size());
-
         ArrayList<ArrayList<Grade>> gradeList = gradeService.gradeList(year, nen, kumi);
         model.addAttribute("grade", gradeList);
-
         return "grade/index";
     }
 

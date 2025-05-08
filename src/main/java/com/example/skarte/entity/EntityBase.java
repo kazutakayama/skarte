@@ -1,10 +1,6 @@
 package com.example.skarte.entity;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;

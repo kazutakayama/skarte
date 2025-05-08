@@ -37,7 +37,6 @@
 				<button class="btn btn-success  py-1 px-2" onClick="return checkUpdate()" type="submit"
 					form="update">更新</button>
 			</span>
-
 		</div>
 
 		<main>
@@ -52,7 +51,6 @@
 				</th:block>
 				<span th:text="${student.lastName + student.firstName}"></span>
 			</div>
-
 			<form id="update" th:action="@{/students/{id}/grade/update (id=${student.studentId})}" th:method="post">
 				<table class="table table-striped table-bordered table-sm" style="text-align:center;">
 					<thead>
@@ -91,7 +89,6 @@
 							<td th:text="${studentYear.year}"></td>
 							<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
 								<td>
-
 									<th:block th:if="${studentYear.year == year}">
 										<input class="form-control" type="hidden" name="gradeIds[]"
 											th:value="${grade?.gradeId}" />
@@ -126,6 +123,7 @@
 				</table>
 			</form>
 		</main>
+
 	</div>
 </body>
 

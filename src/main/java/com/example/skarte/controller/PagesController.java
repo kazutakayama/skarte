@@ -4,28 +4,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.skarte.repository.UserRepository;
-import com.example.skarte.service.AttendanceService;
-import com.example.skarte.service.GradeService;
 import com.example.skarte.service.KarteService;
 import com.example.skarte.service.NoticesService;
-import com.example.skarte.service.ScheduleService;
-import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
 import com.example.skarte.service.UsersService;
 
@@ -33,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 
 import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Notice;
-import com.example.skarte.entity.Student;
 import com.example.skarte.entity.User;
 
 @Controller
@@ -50,7 +41,6 @@ public class PagesController {
 
     @GetMapping("/")
     public String index(RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
-//        return "pages/index";
         redirectAttributes.addFlashAttribute("hasMessage", true);
         redirectAttributes.addFlashAttribute("class", "alert-info");
         redirectAttributes.addFlashAttribute("message",

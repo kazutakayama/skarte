@@ -1,7 +1,6 @@
 package com.example.skarte.form;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,14 +14,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ScheduleForm extends EntityBase {
 
+    /** ID */
     private Long scheduleId = null;
 
+    /** 日付 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date = null;
 
+    /** 休日 */
     private Boolean holiday = false;
 
-    // リスト
+
     private List<Long> scheduleIds;
 
     public List<Long> getScheduleIds() {
