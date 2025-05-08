@@ -8,16 +8,6 @@
 		<div class="header-sub">
 			<span class="headline">成績一覧 > 編集
 			</span>
-
-			<th:block th:if="${year > 0}">
-				<span th:if="${kumi == 0}">
-					<span th:text="${year + '年度 ' + nen + '年'}" />
-				</span>
-				<span th:if="${kumi > 0}">
-					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組'}" />
-				</span>
-				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
-			</th:block>
 			<span>
 				<form th:action="@{/grade/search}" th:method="get">
 					<input type="hidden" name="year" th:value="${year}" />
@@ -31,8 +21,17 @@
 					form="update">更新</button>
 			</span>
 		</div>
-		
+
 		<main>
+			<th:block th:if="${year > 0}">
+				<span th:if="${kumi == 0}">
+					<span th:text="${year + '年度 ' + nen + '年'}" />
+				</span>
+				<span th:if="${kumi > 0}">
+					<span th:text="${year + '年度 ' + nen + '年 ' + kumi +'組'}" />
+				</span>
+				<span th:if="${#lists.size(studentsYear) == 0}">登録されている生徒はいません</span>
+			</th:block>
 			<th:block th:if="${year > 0}">
 				<th:block th:if="${#lists.size(studentsYear) > 0}">
 					<div class="table-grade">
@@ -151,7 +150,7 @@
 													<th class="sticky-col sticky-col-4"
 														th:text="${student.lastName} + ' ' + ${student.firstName}"></th>
 													<th:block th:each="grade, stat : ${grade[__${stat.index}__]}">
-														<td>							
+														<td>
 															<th:block th:text="${grade?.rating}"></th:block>
 														</td>
 													</th:block>
