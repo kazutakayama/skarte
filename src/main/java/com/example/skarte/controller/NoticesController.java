@@ -30,7 +30,8 @@ public class NoticesController {
     // お知らせ一覧ページを表示
     @GetMapping("")
     public String index(Model model) {
-        List<Notice> notices = noticesService.findAll();
+//        List<Notice> notices = noticesService.findAll();
+        List<Notice> notices = noticesService.convertUrlsToLinks();
         model.addAttribute("notices", notices);
         // Modelに"form"が存在しない時だけ、下記の処理を実行（リダイレクトされたBindingResultが失われないようにする）
         if (!model.containsAttribute("form")) {

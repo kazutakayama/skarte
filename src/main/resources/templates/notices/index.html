@@ -60,7 +60,7 @@
 									<div th:text="${#temporals.format(notice.updatedAt, 'yyyy-M-d')}"></div>
 									<div th:text="${#temporals.format(notice.updatedAt, 'HH:mm:ss')}"></div>
 								</td>
-								<td th:text="${notice.contents}"></td>
+								<td th:utext="${notice.contents}"></td>
 								<td style="text-align:center;" th:text="${updateUser[__notice.updatedBy__]}"></td>
 								<td>
 									<!--更新用Modalを開く-->
