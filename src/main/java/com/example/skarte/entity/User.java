@@ -58,8 +58,6 @@ public class User extends EntityBase implements UserDetails {
     @Column(nullable = false)
     private String firstName;
 
-    private boolean deleted = false;
-
     @Override
     public String getUsername() {
         return String.valueOf(userId);

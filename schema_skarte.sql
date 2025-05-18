@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS users (
  updated_by VARCHAR(7) NOT NULL,
  created_at TIMESTAMP NULL,
  updated_at TIMESTAMP NULL,
- deleted bool NOT NULL,
  PRIMARY KEY (user_id)
 );
 

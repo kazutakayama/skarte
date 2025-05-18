@@ -51,8 +51,7 @@
 					</div>
 					<div class="info">
 						<span th:text="${now}"></span>
-						<span th:text="${user.userId}"></span>
-						<span th:text="${user.lastName + ' ' + user.firstName}"></span>
+						<span class="text-truncate w-auto" style="max-width: 50%" th:text="${user.userId + ' ' + user.lastName + ' ' + user.firstName}"></span>
 						<span><a href="/logout-complete">ログアウト</a></span>
 					</div>
 				</th:block>
