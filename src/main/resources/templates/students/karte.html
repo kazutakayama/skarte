@@ -81,8 +81,8 @@
 						<thead>
 							<tr style="text-align:center;">
 								<th style="width: 10%">日付</th>
-								<th style="width: 65%">内容</th>
-								<th style="width: 10%">更新者</th>
+								<th style="width: 60%">内容</th>
+								<th style="width: 15%">更新者</th>
 								<th style="width: 10%">更新日時</th>
 								<th style="width: 5%"></th>
 							</tr>
@@ -91,7 +91,7 @@
 							<tr style="vertical-align: middle;" th:each="karte : ${karte}">
 								<td style="text-align:center;" th:text="${karte.date}"></td>
 								<td th:text="${karte.contents}"></td>
-								<td style="text-align:center;" th:text="${updateUser[__karte.updatedBy__]}"></td>
+								<td style="text-align:center;" th:text="${updateUser[karte.updatedBy]}"></td>
 								<td style="text-align:center;">
 									<div th:text="${#temporals.format(karte.updatedAt, 'yyyy-M-d')}"></div>
 									<div th:text="${#temporals.format(karte.updatedAt, 'HH:mm:ss')}"></div>

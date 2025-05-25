@@ -8,6 +8,13 @@
 			<div class="mx-auto" style="width:40%;">
 				<form th:action="@{/users/add}" th:method="post" th:object="${userForm}">
 					<div class="row mb-2">
+						<label class="control-label" for="user_userId">ユーザーID&emsp;※半角数字7桁</label>
+						<span class="text-danger" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+						<div class="col-md-6">
+							<input class="form-control" type="number" name="userId" th:value="*{userId}" />
+						</div>
+					</div>
+					<div class="row mb-2">
 						<div class="col-md-6">
 							<label class="form-label" for="user_lastName">姓</label>
 							<span class="text-danger" th:if="${#fields.hasErrors('lastName')}"
@@ -22,12 +29,6 @@
 							<input class="form-control" type="text" id="user_firstName" name="firstName"
 								th:value="*{firstName}" />
 						</div>
-					</div>
-					<div class="mb-2">
-						<label class="control-label" for="user_userId">ユーザーID</label>
-						<span class="text-danger" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
-						<input class="form-control" type="number" name="userId" th:value="*{userId}" />
-
 					</div>
 					<div class="mb-2">
 						<label class="control-label" for="user_password">パスワード</label>

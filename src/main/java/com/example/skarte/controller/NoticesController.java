@@ -17,6 +17,8 @@ import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.User;
 import com.example.skarte.form.NoticeForm;
 import com.example.skarte.service.NoticesService;
+import com.example.skarte.service.UsersService;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -25,12 +27,12 @@ import lombok.RequiredArgsConstructor;
 public class NoticesController {
 
     private final NoticesService noticesService;
+    private final UsersService usersService;
 
     // path: /notices
     // お知らせ一覧ページを表示
     @GetMapping("")
     public String index(Model model) {
-//        List<Notice> notices = noticesService.findAll();
         List<Notice> notices = noticesService.convertUrlsToLinks();
         model.addAttribute("notices", notices);
         // Modelに"form"が存在しない時だけ、下記の処理を実行（リダイレクトされたBindingResultが失われないようにする）
@@ -38,12 +40,11 @@ public class NoticesController {
             model.addAttribute("form", new NoticeForm());
         }
         // Modelに"notice"が存在しない時だけ、下記の処理を実行
-        if (!model.containsAttribute("notice")) {
-            model.addAttribute("notice", new Notice());
+        if (!model.containsAttribute("targetNotice")) {
+            model.addAttribute("targetNotice", new Notice());
         }
         return "notices/index";
     }
-
 
     // path: /notices/add
     // お知らせ新規登録
@@ -66,18 +67,24 @@ public class NoticesController {
         return "redirect:/notices";
     }
 
-
     // path: /notices/{noticeId}
     // お知らせ編集のModalを表示
     @GetMapping("/{id}")
-    public String edit(@PathVariable Long id, Model model, NoticeForm form, RedirectAttributes redirectAttributes) {
+    public String edit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Notice notice = noticesService.findById(id);
-        redirectAttributes.addFlashAttribute("notice", notice);
+        redirectAttributes.addFlashAttribute("targetNotice", notice);
         redirectAttributes.addFlashAttribute("showEditModal", true); // editModal表示
-        redirectAttributes.addFlashAttribute("id", id);
+        User teacher = usersService.findById(notice.getUpdatedBy());
+        String userName;
+        if (teacher != null) {
+            userName = teacher.getLastName() + " " + teacher.getFirstName();
+        } else {
+            userName = notice.getUpdatedBy();
+        }
+        redirectAttributes.addFlashAttribute("userName", userName);
         return "redirect:/notices";
     }
-    
+
     // path: /notices/{noticeId}/update
     // 編集画面からお知らせを更新する
     @PostMapping("/{id}/update")
@@ -89,10 +96,17 @@ public class NoticesController {
             redirectAttributes.addFlashAttribute("message", "更新に失敗しました");
             redirectAttributes.addFlashAttribute("showEditModal", true); // editModal表示
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.form", result);
-            redirectAttributes.addFlashAttribute("id", id);
             redirectAttributes.addFlashAttribute("form", form);
             Notice notice = noticesService.findById(id);
-            redirectAttributes.addFlashAttribute("notice", notice);
+            redirectAttributes.addFlashAttribute("targetNotice", notice);
+            User teacher = usersService.findById(notice.getUpdatedBy());
+            String userName;
+            if (teacher != null) {
+                userName = teacher.getLastName() + " " + teacher.getFirstName();
+            } else {
+                userName = notice.getUpdatedBy();
+            }
+            redirectAttributes.addFlashAttribute("userName", userName);
             return "redirect:/notices";
         }
         noticesService.update(id, form, user.getUserId());
@@ -101,7 +115,7 @@ public class NoticesController {
         redirectAttributes.addFlashAttribute("message", "お知らせを更新しました");
         return "redirect:/notices";
     }
-    
+
     // path: /notices/{noticeId}/delete
     // お知らせを削除
     @GetMapping("/{id}/delete")

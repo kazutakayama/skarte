@@ -1,5 +1,7 @@
 package com.example.skarte.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -61,15 +63,28 @@ public class UsersController {
             model.addAttribute("header", "ユーザー新規登録");
             return "users/new";
         }
-
-        User entity = new User(userId, lastName, firstName, passwordEncoder.encode(password), Authority.ROLE_USER);
-        entity.setCreatedBy(userId);
-        entity.setUpdatedBy(userId);
-        repository.saveAndFlush(entity);
-        model.addAttribute("hasMessage", true);
-        model.addAttribute("class", "alert-info");
-        model.addAttribute("message", "ユーザー登録が完了しました");
-        model.addAttribute("header", "ログイン");
-        return "sessions/login";
+        List<User> users = repository.findByOrderByUserIdAsc();
+        // 最初に登録したユーザーを管理者にする
+        if (users.isEmpty()) {
+            User entity = new User(userId, lastName, firstName, passwordEncoder.encode(password), Authority.ROLE_ADMIN);
+            entity.setCreatedBy(userId);
+            entity.setUpdatedBy(userId);
+            repository.saveAndFlush(entity);
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-info");
+            model.addAttribute("message", "ユーザー登録が完了しました");
+            model.addAttribute("header", "ログイン");
+            return "sessions/login";
+        } else {
+            User entity = new User(userId, lastName, firstName, passwordEncoder.encode(password), Authority.ROLE_USER);
+            entity.setCreatedBy(userId);
+            entity.setUpdatedBy(userId);
+            repository.saveAndFlush(entity);
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-info");
+            model.addAttribute("message", "ユーザー登録が完了しました");
+            model.addAttribute("header", "ログイン");
+            return "sessions/login";
+        }
     }
 }

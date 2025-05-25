@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+
+<body>
+	<div layout:fragment="content">
+		<div class="header-sub">
+			<span class="headline">ユーザー情報編集</span>
+		</div>
+		<main>
+			<div class="mx-auto" style="width:40%;">
+				<form th:action="@{/users/{id}/update (id=${user.userId})}" th:method="post" th:object="${userEditForm}">
+					<div class="row mb-2">
+						<label class="control-label" for="user_userId">ユーザーID</label>
+						<div class="col-md-6">
+							<input class="form-control" type="number" name="userId" th:value="${teacher.userId}" disabled />
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-md-6">
+							<label class="form-label" for="user_lastName">姓</label>
+							<span class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+								th:errors="*{lastName}"></span>
+							<input class="form-control" type="text" id="user_lastName" name="lastName"
+								th:value="${teacher.lastName}" />
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="user_firstName">名</label>
+							<span class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+								th:errors="*{firstName}"></span>
+							<input class="form-control" type="text" id="user_firstName" name="firstName"
+								th:value="${teacher.firstName}" />
+						</div>
+					</div>
+					<div class="d-flex justify-content-between align-items-center">
+						<span><input onClick="return checkUpdate()" type="submit" value="更新" /></span>
+						<span><a href="/top">キャンセル</a></span>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+</body>
+
+</html>

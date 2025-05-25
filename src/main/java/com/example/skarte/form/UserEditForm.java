@@ -1,17 +1,16 @@
 package com.example.skarte.form;
 
 import com.example.skarte.entity.User.Authority;
-import com.example.skarte.validation.constraints.PasswordEquals;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+//教師情報を編集する用のフォーム
 @Data
-@PasswordEquals
-public class UserForm {
-
+public class UserEditForm {
+    
     @Pattern(regexp="^[0-9]{7}$", message = "「ユーザーID」は半角数字7桁で入力してください")
     private String userId;
     
@@ -22,12 +21,6 @@ public class UserForm {
     @NotBlank(message = "「名」を入力してください")
     @Size(max=20, message = "「名」は20文字以内で入力してください")
     private String firstName;
-
-    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{8,24}$", message = "「パスワード」は大文字アルファベット、小文字アルファベット、数字をすべて含む8~24文字で入力してください")
-    private String password;
-
-    @NotBlank(message = "確認のためもう一度「パスワード」を入力してください")
-    private String passwordConfirmation;
     
     private Authority authority;
 

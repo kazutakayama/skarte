@@ -49,8 +49,8 @@
 						<thead>
 							<tr style="text-align:center;">
 								<th style="width: 10%">更新日時</th>
-								<th style="width: 75%">内容</th>
-								<th style="width: 10%">更新者</th>
+								<th style="width: 70%">内容</th>
+								<th style="width: 15%">更新者</th>
 								<th style="width: 5%"></th>
 							</tr>
 						</thead>
@@ -61,7 +61,7 @@
 									<div th:text="${#temporals.format(notice.updatedAt, 'HH:mm:ss')}"></div>
 								</td>
 								<td th:utext="${notice.contents}"></td>
-								<td style="text-align:center;" th:text="${updateUser[__notice.updatedBy__]}"></td>
+								<td style="text-align:center;" th:text="${updateUser[notice.updatedBy]}"></td>
 								<td>
 									<!--更新用Modalを開く-->
 									<a th:href="@{/notices/{id} (id=${notice.noticeId})}">
@@ -73,8 +73,8 @@
 										aria-hidden="true">
 										<div class="modal-dialog modal-lg">
 											<div class="modal-content">
-												<form th:action="@{/notices/{id}/update (id=${id})}" th:method="post"
-													th:object="${notice}">
+												<form th:action="@{/notices/{id}/update (id=${targetNotice.noticeId})}"
+													th:method="post" th:object="${targetNotice}">
 													<div class="modal-header">
 														<h1 class="modal-title fs-5" id="editModalLabel">お知らせ編集</h1>
 														<button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -93,14 +93,14 @@
 																th:errors="*{contents}"></span>
 														</div>
 														<div
-															th:text="${'更新日時: ' + #temporals.format(notice.updatedAt, 'yyyy-M-d HH:mm:ss')}">
+															th:text="${'更新日時: ' + #temporals.format(targetNotice.updatedAt, 'yyyy-M-d HH:mm:ss')}">
 														</div>
-														<div th:text="${'更新者: ' + updateUser[__notice.updatedBy__]}">
+														<div th:text="${'更新者: ' + userName}">
 														</div>
 													</div>
 													<div class="modal-footer">
 														<a class="btn btn-danger" onClick="return checkDelete()"
-															th:href="@{/notices/{id}/delete (id=${id})}">
+															th:href="@{/notices/{id}/delete (id=${targetNotice.noticeId})}">
 															削除
 														</a>
 														<button type="button" class="btn btn-secondary"
