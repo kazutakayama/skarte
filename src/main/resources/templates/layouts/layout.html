@@ -36,23 +36,35 @@
 						<a href="/attendance">出席簿一覧</a>
 						<a href="/grade">成績一覧</a>
 						<a href="/notices">お知らせ</a>
-						<!--<a href="/setting">管理</a>-->
-						<span class="dropdown">
-							<a class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-								管理
-							</a>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="/setting/students">生徒管理</a></li>
-								<li><a class="dropdown-item" href="/setting/class">クラス管理</a></li>
-								<li><a class="dropdown-item" href="/setting/schedule">スケジュール管理</a></li>
-								<li><a class="dropdown-item" href="/setting/teachers">教師一覧</a></li>
-							</ul>
-						</span>
+						<div sec:authorize="hasRole('ADMIN')">
+							<span class="dropdown">
+								<a class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+									aria-expanded="false">
+									管理
+								</a>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="/setting/students">生徒管理</a></li>
+									<li><a class="dropdown-item" href="/setting/class">クラス管理</a></li>
+									<li><a class="dropdown-item" href="/setting/schedule">スケジュール管理</a></li>
+									<li><a class="dropdown-item" href="/setting/teachers">教師管理</a></li>
+								</ul>
+							</span>
+						</div>
 					</div>
 					<div class="info">
 						<span th:text="${now}"></span>
-						<span class="text-truncate w-auto" style="max-width: 50%" th:text="${user.userId + ' ' + user.lastName + ' ' + user.firstName}"></span>
-						<span><a href="/logout-complete">ログアウト</a></span>
+						<span class="dropdown" style="max-width: 60%">
+							<a class="dropdown-toggle text-truncate" data-bs-toggle="dropdown" role="button"
+								aria-expanded="false"
+								th:text="${user.userId + ' ' + user.lastName + ' ' + user.firstName}"
+								style="max-width: 100%; display: inline-block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" th:href="@{/users/{id}/edit (id=${user.userId})}">ユーザー情報編集</a></li>
+								<li><a class="dropdown-item" th:href="@{/users/{id}/password (id=${user.userId})}">パスワード編集</a></li>
+								<li><a class="dropdown-item" href="/logout-complete">ログアウト</a></li>
+							</ul>
+						</span>
 					</div>
 				</th:block>
 			</div>
@@ -70,7 +82,7 @@
 		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 	<script src="/scripts/script.js" 　defer></script>
 
-	<!--新規登録Modal表示用-->
+	<!--Modal表示用-->
 	<script th:inline="javascript">
 		let showNewModal = /*[[${showNewModal}]]*/ false;
 		if (showNewModal) {

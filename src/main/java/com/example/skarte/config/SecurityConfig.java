@@ -31,16 +31,16 @@ public class SecurityConfig {
         MvcRequestMatcher h2RequestMatcher = new MvcRequestMatcher(introspector, "/**");
         h2RequestMatcher.setServletPath("/h2-console");
 
-        RequestMatcher publicMatchers = new OrRequestMatcher(
-                new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/h2-console/**"),
-                new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/users/new"),
-                new AntPathRequestMatcher("/users/add"), new AntPathRequestMatcher("/css/**"),
-                new AntPathRequestMatcher("/images/**"), new AntPathRequestMatcher("/scripts/**"));
+        RequestMatcher publicMatchers = new OrRequestMatcher(new AntPathRequestMatcher("/error"),
+                new AntPathRequestMatcher("/h2-console/**"), new AntPathRequestMatcher("/login"),
+                new AntPathRequestMatcher("/users/new"), new AntPathRequestMatcher("/users/add"),
+                new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/images/**"),
+                new AntPathRequestMatcher("/scripts/**"));
      // @formatter:off
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(publicMatchers)
-                .permitAll()
-                .anyRequest().authenticated()) // antMatchersで指定したパス以外認証する
+                .requestMatchers(publicMatchers).permitAll() // 誰でもアクセス可
+                .requestMatchers("/setting/**").hasRole("ADMIN") // 管理者のみアクセス可
+                .anyRequest().authenticated()) // それ以外は認証が必要
         .formLogin(login -> login
                 .loginProcessingUrl("/login") // ログイン情報の送信先
                 .loginPage("/login") // ログイン画面

@@ -11,9 +11,13 @@ import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.skarte.service.KarteService;
@@ -26,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 import com.example.skarte.entity.Karte;
 import com.example.skarte.entity.Notice;
 import com.example.skarte.entity.User;
+import com.example.skarte.form.PasswordForm;
+import com.example.skarte.form.UserEditForm;
 
 @Controller
 //コンストラタ生成アノテーション
@@ -109,6 +115,73 @@ public class PagesController {
         List<Notice> recentNotice = noticesService.recentNotice();
         model.addAttribute("recentNotice", recentNotice);
         return "pages/index";
+    }
+
+    // path: /users/{userId}/edit
+    // ユーザー情報編集画面を表示
+    @GetMapping("/users/{id}/edit")
+    public String editUserDetails(@PathVariable String id, Model model, @ModelAttribute UserEditForm form) {
+        User teacher = usersService.findById(id);
+        model.addAttribute("teacher", teacher);
+        return "users/edit";
+    }
+
+    // path: /users/{userId}/update
+    // ユーザー情報更新
+    @PostMapping("/users/{id}/update")
+    public String update(@PathVariable String id, @Validated @ModelAttribute UserEditForm form, BindingResult result,
+            Model model, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "更新に失敗しました");
+            model.addAttribute("userEditForm", form);
+            User teacher = usersService.findById(id);
+            model.addAttribute("teacher", teacher);
+            return "users/edit";
+        }
+        usersService.update(id, form, user.getUserId());
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "ユーザー情報を更新しました");
+        return "redirect:/top";
+    }
+
+    // path: /users/{userId}/password
+    // パスワード編集画面を表示
+    @GetMapping("/users/{id}/password")
+    public String editUserPassword(@PathVariable String id, Model model, @ModelAttribute PasswordForm form) {
+        User teacher = usersService.findById(id);
+        model.addAttribute("teacher", teacher);
+        return "users/password";
+    }
+
+    // path: /users/{userId}/password/update
+    // パスワード更新
+    @PostMapping("/users/{id}/password/update")
+    public String updatePassword(@PathVariable String id, @Validated @ModelAttribute PasswordForm form,
+            BindingResult result, Model model, @AuthenticationPrincipal User user,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("hasMessage", true);
+            model.addAttribute("class", "alert-danger");
+            model.addAttribute("message", "更新に失敗しました");
+            model.addAttribute("passwordForm", form);
+            User teacher = usersService.findById(id);
+            model.addAttribute("teacher", teacher);
+            return "users/password";
+        }
+        boolean updatePassword = usersService.updatePassword(user, form);
+        if (!updatePassword) {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "現在のパスワードが一致していません");
+            return "redirect:/users/" + id + "/password";
+        }
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "パスワードを更新しました");
+        return "redirect:/top";
     }
 
     // 共通処理

@@ -6,7 +6,7 @@
 <body>
 	<div layout:fragment="content">
 		<div class="header-sub">
-			<span class="headline">管理 > 教師一覧</span>
+			<span class="headline">管理 > 教師管理</span>
 		</div>
 
 		<main>
@@ -15,14 +15,97 @@
 					<table class="table table-striped table-sm" style="text-align:center; width: 100%">
 						<thead>
 							<tr>
-								<th style="width: 20%">ユーザーID</th>
+								<th style="width: 10%">ユーザーID</th>
 								<th style="width: 30%">氏名</th>
+								<th style="width: 10%">権限</th>
+								<th style="width: 10%"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="teacher : ${teachers}">
 								<td th:text="${teacher.userId}"></td>
 								<td th:text="${teacher.lastName} + ' ' + ${teacher.firstName}"></td>
+								<td>
+									<span th:if="${teacher.authority.name() == 'ROLE_ADMIN'}">管理者</span>
+								</td>
+								<td>
+									<!--更新用Modalを開く-->
+									<th:block th:if="${teacher.userId != user.userId}">
+										<a href="#" data-bs-toggle="modal"
+											th:attr="data-bs-target='#editModal' + ${teacher.userId}">
+											<i class="bi bi-pencil-square text-success"></i>
+										</a>
+										<!--更新用Modal-->
+										<div class="modal fade" th:id="'editModal' + ${teacher.userId}"
+											data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+											aria-labelledby="editModalLabel" aria-hidden="true">
+											<div class="modal-dialog modal-lg">
+												<div class="modal-content">
+													<form
+														th:action="@{/setting/teachers/{id}/update (id=${teacher.userId})}"
+														th:method="post" th:object="${teacher}">
+														<div class="modal-header">
+															<h1 class="modal-title fs-5" id="editModalLabel">教師編集</h1>
+															<button type="button" class="btn-close"
+																data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body">
+															<div class="mx-auto" style="width:80%;">
+																<div class="row mb-2">
+																	<div class="col-md-3">
+																		<label
+																			class="control-label text-start d-block">ユーザーID</label>
+																		<input class="form-control" type="text"
+																			name="userId" th:value="*{userId}"
+																			disabled />
+																	</div>
+																</div>
+																<div class="row mb-2">
+																	<div class="col-md-6">
+																		<label
+																			class="control-label text-start d-block">姓</label>
+																		<input class="form-control" type="text"
+																			name="lastName" th:value="*{lastName}" />
+																	</div>
+																	<div class="col-md-6">
+																		<label
+																			class="control-label text-start d-block">名</label>
+																		<input class="form-control" type="text"
+																			name="firstName" th:value="*{firstName}" />
+																	</div>
+																</div>
+																<div class="row mb-2">
+																	<div class="col-md-3">
+																		<label
+																			class="control-label text-start d-block">権限</label>
+																		<select class="form-select" name="authority">
+																			<option value="ROLE_USER"
+																				th:selected="${teacher.authority.name() == 'ROLE_USER'}">
+																				一般</option>
+																			<option value="ROLE_ADMIN"
+																				th:selected="${teacher.authority.name() == 'ROLE_ADMIN'}">
+																				管理者</option>
+																		</select>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="modal-footer">
+															<a class="btn btn-danger" onClick="return checkDelete()"
+																th:href="@{/setting/teachers/{id}/delete (id=${teacher.userId})}">
+																削除
+															</a>
+															<button type="button" class="btn btn-secondary"
+																data-bs-dismiss="modal">キャンセル</button>
+															<button onClick="return checkUpdate()" type="submit"
+																class="btn btn-success">更新</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</th:block>
+								</td>
 							</tr>
 						</tbody>
 					</table>

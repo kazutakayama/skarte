@@ -30,6 +30,7 @@ import com.example.skarte.entity.User;
 import com.example.skarte.form.ScheduleForm;
 import com.example.skarte.form.StudentForm;
 import com.example.skarte.form.StudentYearForm;
+import com.example.skarte.form.UserEditForm;
 import com.example.skarte.service.ScheduleService;
 import com.example.skarte.service.StudentsService;
 import com.example.skarte.service.StudentsYearService;
@@ -463,11 +464,43 @@ public class SettingController {
     }
 
     // path: /setting/teachers
-    // 教師一覧ページを表示
+    // 教師管理ページを表示
     @GetMapping("/teachers")
     public String teachers(Model model) {
         List<User> teachers = usersService.findAll();
         model.addAttribute("teachers", teachers);
         return "setting/teachers";
     }
+
+    // path: /setting/teachers/{userId}/update
+    // 教師情報を更新
+    @PostMapping("/teachers/{id}/update")
+    public String updateTeacher(@PathVariable String id, @ModelAttribute @Validated UserEditForm form, BindingResult result,
+            @AuthenticationPrincipal User user, Model model, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("hasMessage", true);
+            redirectAttributes.addFlashAttribute("class", "alert-danger");
+            redirectAttributes.addFlashAttribute("message", "更新に失敗しました");
+            User teacher = usersService.findById(id);
+            redirectAttributes.addFlashAttribute("teacher", teacher);
+            return "redirect:/setting/teachers";
+        }
+        usersService.updateByAdmin(id, form, user.getUserId());
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "教師を更新しました");
+        return "redirect:/setting/teachers";
+    }
+
+    // path: /setting/teachers/{userId}/delete
+    // 教師を削除
+    @GetMapping("/teachers/{id}/delete")
+    public String deleteTeacher(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        usersService.delete(id);
+        redirectAttributes.addFlashAttribute("hasMessage", true);
+        redirectAttributes.addFlashAttribute("class", "alert-info");
+        redirectAttributes.addFlashAttribute("message", "教師を削除しました");
+        return "redirect:/setting/teachers";
+    }
+
 }
