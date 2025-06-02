@@ -75,6 +75,7 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラス数 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> yearClassList(Long year) {
         ArrayList<ArrayList<Long>> yearClassList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -93,6 +94,7 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラスごとの登録済み生徒の人数 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> classStudentsRegistered(Long year) {
         ArrayList<ArrayList<Long>> classStudentsRegistered = new ArrayList<>();
         ArrayList<ArrayList<Long>> yearClassList = yearClassList(year);
@@ -112,6 +114,7 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラスごとの在籍生徒（転出/卒業していない生徒）の人数 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> classStudentsExists(Long year) {
         ArrayList<ArrayList<Long>> classStudentsExists = new ArrayList<>();
         ArrayList<ArrayList<Long>> yearClassList = yearClassList(year);
@@ -138,6 +141,7 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラスごとの転出/卒業済み生徒の人数 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> classStudentsTransferred(Long year) {
         ArrayList<ArrayList<Long>> classStudentsTransferred = new ArrayList<>();
         ArrayList<ArrayList<Long>> yearClassList = yearClassList(year);
@@ -212,6 +216,7 @@ public class StudentsYearService {
     }
 
     /** クラス検索（登録生徒） */
+    @SuppressWarnings("removal")
     public List<StudentYear> search(Long year, Long nen, Long kumi) {
         List<StudentYear> result;
         if (kumi == 0) {
@@ -253,6 +258,7 @@ public class StudentsYearService {
     }
 
     /** クラスに登録できる候補の生徒のリストを取得 */
+    @SuppressWarnings("removal")
     public List<Student> studentsOption(Long year, Long nen) {
         // 1学年は1年分、2学年は2年分、3学年は3年分の生徒番号を一旦すべて取得
         List<Student> studentsOption = new ArrayList<>();
@@ -293,6 +299,7 @@ public class StudentsYearService {
     }
 
     /**クラス個別追加*/
+    @SuppressWarnings("removal")
     public void add(String userId, StudentYearForm studentYearForm, Long year, Long nen, Long kumi) {
         // クラス在籍生徒の人数を数え、一番最後の番号をセットする
         List<StudentYear> result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
@@ -331,6 +338,7 @@ public class StudentsYearService {
     }
 
     /** クラス在籍生徒を名前の順にソートし、出席番号を割り振って更新 */
+    @SuppressWarnings("removal")
     public void sort(Long year, Long nen, Long kumi, String userId) {
         int intYear = Integer.valueOf(year.toString());
         int intNen = Integer.valueOf(nen.toString());
@@ -475,6 +483,7 @@ public class StudentsYearService {
     }
 
     /** クラス在籍生徒が削除可能か判定（紐づいたカルテ・出席簿・成績のデータがないかどうか確認） */
+    @SuppressWarnings("removal")
     public boolean dataExists(Long id) {
         StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
         int nendo = Integer.valueOf(studentYear.getYear().toString());

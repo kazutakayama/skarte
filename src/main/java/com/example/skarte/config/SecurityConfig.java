@@ -18,6 +18,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import com.example.skarte.filter.FormAuthenticationProvider;
 
+@SuppressWarnings("removal")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -25,6 +26,7 @@ public class SecurityConfig {
     @Autowired
     private FormAuthenticationProvider authenticationProvider;
 
+    @SuppressWarnings({ "deprecation" })
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
             throws Exception {
