@@ -18,7 +18,7 @@ public class StudentSpecification {
 
     @SuppressWarnings("serial")
     public static Specification<Student> search(String name) {
-        return StringUtils.isEmpty(name) ? null : new Specification<Student>() {
+        return name == null || name.isEmpty() ? null : new Specification<Student>() {
             @Override
             public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate[] predicates = { cb.like(root.get("lastName"), "%" + name + "%"),
@@ -30,13 +30,22 @@ public class StudentSpecification {
         };
     }
 
-    @SuppressWarnings("serial")
+//    @SuppressWarnings("serial")
+//    public static Specification<Student> year(String year) {
+//        return year == null || year.isEmpty() ? null : new Specification<Student>() {
+//            @Override
+//            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//                return cb.like(root.get("studentId"), year + "%");
+//            }
+//        };
+//    }
+    
     public static Specification<Student> year(String year) {
-        return StringUtils.isEmpty(year) ? null : new Specification<Student>() {
-            @Override
-            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.like(root.get("studentId"), year + "%");
+        return (root, query, cb) -> {
+            if (year == null || year.isEmpty()) {
+                return cb.conjunction();  // 常にtrueの条件
             }
+            return cb.like(root.get("studentId"), year + "%");
         };
     }
 
