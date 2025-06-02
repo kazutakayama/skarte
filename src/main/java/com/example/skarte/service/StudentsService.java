@@ -64,44 +64,15 @@ public class StudentsService {
     }
 
     /** 生徒検索（生徒名、年度） */
-//    @SuppressWarnings("removal")
-//    public List<Student> search(String name, String year) {
-//        List<Student> result;
-//        if ("".equals(name)) {
-//            // すべての生徒
-//            if ("0".equals(year)) {
-//                result = studentRepository.findAll(Sort.by(Sort.Direction.ASC, "studentId"));
-//                // 年度検索
-//            } else {
-//                result = studentRepository.findAll(Specification.where(StudentSpecification.year(year)),
-//                        Sort.by(Sort.Direction.ASC, "studentId"));
-//            }
-//        } else {
-//            // 名前検索
-//            if ("0".equals(year)) {
-//                result = studentRepository.findAll(Specification.where(StudentSpecification.search(name)),
-//                        Sort.by(Sort.Direction.ASC, "studentId"));
-//                // 年度・名前検索
-//            } else {
-//                result = studentRepository.findAll(
-//                        Specification.where(StudentSpecification.search(name)).and(StudentSpecification.year(year)),
-//                        Sort.by(Sort.Direction.ASC, "studentId"));
-//            }
-//        }
-//        return result;
-//    }
-
     public List<Student> search(String name, String year) {
         Specification<Student> spec = (root, query, cb) -> null;
 
         if (!"".equals(name)) {
             spec = spec.and(StudentSpecification.search(name));
         }
-
         if (!"0".equals(year)) {
             spec = spec.and(StudentSpecification.year(year));
         }
-
         return studentRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "studentId"));
     }
 
