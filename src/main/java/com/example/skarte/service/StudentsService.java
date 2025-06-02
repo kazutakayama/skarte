@@ -64,32 +64,47 @@ public class StudentsService {
     }
 
     /** 生徒検索（生徒名、年度） */
-    @SuppressWarnings("removal")
+//    @SuppressWarnings("removal")
+//    public List<Student> search(String name, String year) {
+//        List<Student> result;
+//        if ("".equals(name)) {
+//            // すべての生徒
+//            if ("0".equals(year)) {
+//                result = studentRepository.findAll(Sort.by(Sort.Direction.ASC, "studentId"));
+//                // 年度検索
+//            } else {
+//                result = studentRepository.findAll(Specification.where(StudentSpecification.year(year)),
+//                        Sort.by(Sort.Direction.ASC, "studentId"));
+//            }
+//        } else {
+//            // 名前検索
+//            if ("0".equals(year)) {
+//                result = studentRepository.findAll(Specification.where(StudentSpecification.search(name)),
+//                        Sort.by(Sort.Direction.ASC, "studentId"));
+//                // 年度・名前検索
+//            } else {
+//                result = studentRepository.findAll(
+//                        Specification.where(StudentSpecification.search(name)).and(StudentSpecification.year(year)),
+//                        Sort.by(Sort.Direction.ASC, "studentId"));
+//            }
+//        }
+//        return result;
+//    }
+
     public List<Student> search(String name, String year) {
-        List<Student> result;
-        if ("".equals(name)) {
-            // すべての生徒
-            if ("0".equals(year)) {
-                result = studentRepository.findAll(Sort.by(Sort.Direction.ASC, "studentId"));
-                // 年度検索
-            } else {
-                result = studentRepository.findAll(Specification.where(StudentSpecification.year(year)),
-                        Sort.by(Sort.Direction.ASC, "studentId"));
-            }
-        } else {
-            // 名前検索
-            if ("0".equals(year)) {
-                result = studentRepository.findAll(Specification.where(StudentSpecification.search(name)),
-                        Sort.by(Sort.Direction.ASC, "studentId"));
-                // 年度・名前検索
-            } else {
-                result = studentRepository.findAll(
-                        Specification.where(StudentSpecification.search(name)).and(StudentSpecification.year(year)),
-                        Sort.by(Sort.Direction.ASC, "studentId"));
-            }
+        Specification<Student> spec = (root, query, cb) -> null;
+
+        if (!"".equals(name)) {
+            spec = spec.and(StudentSpecification.search(name));
         }
-        return result;
+
+        if (!"0".equals(year)) {
+            spec = spec.and(StudentSpecification.year(year));
+        }
+
+        return studentRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "studentId"));
     }
+
 
     /** クラス検索をしたあと、Studentのリストを取得 */
     public List<Student> classStudents(Long year, Long nen, Long kumi) {
@@ -161,9 +176,10 @@ public class StudentsService {
         CsvMapper mapper = new CsvMapper();
         // 日付をフォーマット
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addSerializer(LocalDate.class,
+                new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         mapper.registerModule(javaTimeModule);
-        
+
         CsvSchema schema = mapper.schemaFor(StudentsCsv.class).withHeader();
         return mapper.writer(schema).writeValueAsString(csvs);
     }
@@ -180,9 +196,10 @@ public class StudentsService {
         CsvMapper mapper = new CsvMapper();
         // 日付をフォーマット
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addSerializer(LocalDate.class,
+                new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         mapper.registerModule(javaTimeModule);
-        
+
         CsvSchema schema = mapper.schemaFor(StudentsCsv.class).withHeader();
         return mapper.writer(schema).writeValueAsString(csvs);
     }
@@ -265,16 +282,16 @@ public class StudentsService {
         }
         return studentList;
     }
-     
+
     /** 3年生クラスを卒業登録する */
     public void graduated(String userId, Long year, Long nen, Long kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
-        if (result.size()>0) {
+        if (result.size() > 0) {
             for (int i = 0; i < result.size(); i++) {
                 Student student = findByStudentId(result.get(i).getStudentId());
                 student.setTransferred(true);
                 student.setUpdatedBy(userId);
-                studentRepository.save(student);                
+                studentRepository.save(student);
             }
         }
     }
