@@ -29,16 +29,6 @@ public class StudentSpecification {
             };
         };
     }
-
-//    @SuppressWarnings("serial")
-//    public static Specification<Student> year(String year) {
-//        return year == null || year.isEmpty() ? null : new Specification<Student>() {
-//            @Override
-//            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                return cb.like(root.get("studentId"), year + "%");
-//            }
-//        };
-//    }
     
     public static Specification<Student> year(String year) {
         return (root, query, cb) -> {
