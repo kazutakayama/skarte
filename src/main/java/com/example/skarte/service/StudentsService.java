@@ -64,6 +64,7 @@ public class StudentsService {
     }
 
     /** 生徒検索（生徒名、年度） */
+    @SuppressWarnings("removal")
     public List<Student> search(String name, String year) {
         List<Student> result;
         if ("".equals(name)) {

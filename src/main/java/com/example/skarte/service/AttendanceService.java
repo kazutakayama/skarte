@@ -286,6 +286,7 @@ public class AttendanceService {
     }
 
     /** クラス（学年）全員の1か月分の出欠リストを取得 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Attendance>> attendanceMonth(Long year, Long nen, Long kumi, Long month) {
         ArrayList<ArrayList<Attendance>> attendanceMonth = new ArrayList<>();
         // 年・月
@@ -334,6 +335,7 @@ public class AttendanceService {
     }
 
     /** クラス（学年）全員の1か月分の出欠まとめを取得 [0]登校日数,[1]出席数,[2]欠席数,[3]遅刻数,[4]早退数,[5]出停/忌引数 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Integer>> attendanceMonthSummary(Long year, Long nen, Long kumi, Long month) {
         ArrayList<ArrayList<Integer>> attendanceMonthSummary = new ArrayList<>();
         int nendo = Integer.valueOf(year.toString());

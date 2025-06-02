@@ -98,6 +98,7 @@ public class GradeService {
     }
 
     /** 成績リスト（クラス（学年）ごとの1年分）を取得 */
+    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Grade>> gradeList(Long year, Long nen, Long kumi) {
         ArrayList<ArrayList<Grade>> gradeList = new ArrayList<>();
         // 年度、年、組からクラスの生徒リストを取得
