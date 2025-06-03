@@ -286,7 +286,6 @@ public class AttendanceService {
     }
 
     /** クラス（学年）全員の1か月分の出欠リストを取得 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Attendance>> attendanceMonth(Long year, Long nen, Long kumi, Long month) {
         ArrayList<ArrayList<Attendance>> attendanceMonth = new ArrayList<>();
         // 年・月
@@ -301,16 +300,19 @@ public class AttendanceService {
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
-        if (kumi == 0) {
-            result = studentYearRepository.findAll(
-                    Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen(nen)),
-                    Sort.by(Sort.Direction.ASC, "kumi", "ban"));
-        } else {
-            result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
-                    .and(StudentSpecification.nen(nen)).and(StudentSpecification.kumi(kumi)),
-                    Sort.by(Sort.Direction.ASC, "ban"));
+        Specification<StudentYear> spec = (root, query, cb) -> null;
+        if (year != null && year != 0) {
+            spec = spec.and(StudentSpecification.year(year));
         }
-
+        if (nen != null && nen != 0) {
+            spec = spec.and(StudentSpecification.nen(nen));
+        }
+        if (kumi != null && kumi != 0) {
+            spec = spec.and(StudentSpecification.kumi(kumi));
+        }
+        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
+                : Sort.by(Sort.Direction.ASC, "ban");
+        result = studentYearRepository.findAll(spec, sort);
         for (int i = 0; i < result.size(); i++) {
             // 「生徒ごとの月の出欠リスト」
             ArrayList<Attendance> studentAttendanceMonth = new ArrayList<>();
@@ -335,7 +337,6 @@ public class AttendanceService {
     }
 
     /** クラス（学年）全員の1か月分の出欠まとめを取得 [0]登校日数,[1]出席数,[2]欠席数,[3]遅刻数,[4]早退数,[5]出停/忌引数 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Integer>> attendanceMonthSummary(Long year, Long nen, Long kumi, Long month) {
         ArrayList<ArrayList<Integer>> attendanceMonthSummary = new ArrayList<>();
         int nendo = Integer.valueOf(year.toString());
@@ -346,15 +347,19 @@ public class AttendanceService {
         }
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
-        if (kumi == 0) {
-            result = studentYearRepository.findAll(
-                    Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen(nen)),
-                    Sort.by(Sort.Direction.ASC, "kumi", "ban"));
-        } else {
-            result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
-                    .and(StudentSpecification.nen(nen)).and(StudentSpecification.kumi(kumi)),
-                    Sort.by(Sort.Direction.ASC, "ban"));
+        Specification<StudentYear> spec = (root, query, cb) -> null;
+        if (year != null && year != 0) {
+            spec = spec.and(StudentSpecification.year(year));
         }
+        if (nen != null && nen != 0) {
+            spec = spec.and(StudentSpecification.nen(nen));
+        }
+        if (kumi != null && kumi != 0) {
+            spec = spec.and(StudentSpecification.kumi(kumi));
+        }
+        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
+                : Sort.by(Sort.Direction.ASC, "ban");
+        result = studentYearRepository.findAll(spec, sort);
         for (int i = 0; i < result.size(); i++) {
             // 「生徒ごとの月の出欠リスト」
             ArrayList<Integer> studentAttendanceMonthSummary = new ArrayList<>();

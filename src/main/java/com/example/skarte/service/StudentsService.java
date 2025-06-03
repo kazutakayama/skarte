@@ -66,7 +66,6 @@ public class StudentsService {
     /** 生徒検索（生徒名、年度） */
     public List<Student> search(String name, String year) {
         Specification<Student> spec = (root, query, cb) -> null;
-
         if (!"".equals(name)) {
             spec = spec.and(StudentSpecification.search(name));
         }

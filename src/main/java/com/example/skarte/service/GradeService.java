@@ -98,20 +98,23 @@ public class GradeService {
     }
 
     /** 成績リスト（クラス（学年）ごとの1年分）を取得 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Grade>> gradeList(Long year, Long nen, Long kumi) {
         ArrayList<ArrayList<Grade>> gradeList = new ArrayList<>();
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
-        if (kumi == 0) {
-            result = studentYearRepository.findAll(
-                    Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen(nen)),
-                    Sort.by(Sort.Direction.ASC, "kumi", "ban"));
-        } else {
-            result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
-                    .and(StudentSpecification.nen(nen)).and(StudentSpecification.kumi(kumi)),
-                    Sort.by(Sort.Direction.ASC, "ban"));
+        Specification<StudentYear> spec = (root, query, cb) -> null;
+        if (year != null && year != 0) {
+            spec = spec.and(StudentSpecification.year(year));
         }
+        if (nen != null && nen != 0) {
+            spec = spec.and(StudentSpecification.nen(nen));
+        }
+        if (kumi != null && kumi != 0) {
+            spec = spec.and(StudentSpecification.kumi(kumi));
+        }
+        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
+                : Sort.by(Sort.Direction.ASC, "ban");
+        result = studentYearRepository.findAll(spec, sort);
         for (int i = 0; i < result.size(); i++) {
             // 「生徒ごとの１年分の成績リスト」
             ArrayList<Grade> studentGrade = new ArrayList<Grade>();
@@ -133,7 +136,6 @@ public class GradeService {
                         }
                     }
                 }
-
             }
             // 配列に追加
             gradeList.add(studentGrade);
