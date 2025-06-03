@@ -7,85 +7,75 @@ import com.example.skarte.entity.Grade;
 import com.example.skarte.entity.Student;
 import com.example.skarte.entity.StudentYear;
 
-import io.micrometer.common.util.StringUtils;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 
 @Component
 public class StudentSpecification {
 
-    @SuppressWarnings("serial")
     public static Specification<Student> search(String name) {
-        return name == null || name.isEmpty() ? null : new Specification<Student>() {
-            @Override
-            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate[] predicates = { cb.like(root.get("lastName"), "%" + name + "%"),
-                        cb.like(root.get("firstName"), "%" + name + "%"),
-                        cb.like(root.get("lastNameKana"), "%" + name + "%"),
-                        cb.like(root.get("firstNameKana"), "%" + name + "%") };
-                return cb.or(predicates);
-            };
+        return (root, query, cb) -> {
+            if (name == null || name.isEmpty()) {
+                return cb.conjunction(); // 常にtrue
+            }
+            Predicate[] predicates = { cb.like(root.get("lastName"), "%" + name + "%"),
+                    cb.like(root.get("firstName"), "%" + name + "%"),
+                    cb.like(root.get("lastNameKana"), "%" + name + "%"),
+                    cb.like(root.get("firstNameKana"), "%" + name + "%") };
+            return cb.or(predicates);
         };
     }
-    
+
     public static Specification<Student> year(String year) {
         return (root, query, cb) -> {
             if (year == null || year.isEmpty()) {
-                return cb.conjunction();  // 常にtrueの条件
+                return cb.conjunction();
             }
             return cb.like(root.get("studentId"), year + "%");
         };
     }
 
-    @SuppressWarnings("serial")
     public static Specification<StudentYear> year(Long year) {
-        return year == null ? null : new Specification<StudentYear>() {
-            @Override
-            public Predicate toPredicate(Root<StudentYear> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.equal(root.get("year"), year);
+        return (root, query, cb) -> {
+            if (year == null || year == 0) {
+                return cb.conjunction();
             }
+            return cb.equal(root.get("year"), year);
         };
     }
 
-    @SuppressWarnings("serial")
     public static Specification<StudentYear> nen(Long nen) {
-        return nen == null ? null : new Specification<StudentYear>() {
-            @Override
-            public Predicate toPredicate(Root<StudentYear> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.equal(root.get("nen"), nen);
+        return (root, query, cb) -> {
+            if (nen == null || nen == 0) {
+                return cb.conjunction();
             }
+            return cb.equal(root.get("nen"), nen);
         };
     }
 
-    @SuppressWarnings("serial")
     public static Specification<StudentYear> kumi(Long kumi) {
-        return kumi == null ? null : new Specification<StudentYear>() {
-            @Override
-            public Predicate toPredicate(Root<StudentYear> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.equal(root.get("kumi"), kumi);
+        return (root, query, cb) -> {
+            if (kumi == null || kumi == 0) {
+                return cb.conjunction();
             }
+            return cb.equal(root.get("kumi"), kumi);
         };
     }
 
-    @SuppressWarnings("serial")
     public static Specification<Grade> gradeStudentId(String studentId) {
-        return StringUtils.isEmpty(studentId) ? null : new Specification<Grade>() {
-            @Override
-            public Predicate toPredicate(Root<Grade> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.equal(root.get("studentId"), studentId);
+        return (root, query, cb) -> {
+            if (studentId == null || studentId.isEmpty()) {
+                return cb.conjunction();
             }
+            return cb.equal(root.get("studentId"), studentId);
         };
     }
 
-    @SuppressWarnings("serial")
     public static Specification<Grade> gradeYear(Long year) {
-        return year == null ? null : new Specification<Grade>() {
-            @Override
-            public Predicate toPredicate(Root<Grade> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.equal(root.get("year"), year);
+        return (root, query, cb) -> {
+            if (year == null || year == 0) {
+                return cb.conjunction();
             }
+            return cb.equal(root.get("year"), year);
         };
     }
 

@@ -38,22 +38,22 @@ public class StudentsYearService {
     private final AttendanceRepository attendanceRepository;
     private final GradeRepository gradeRepository;
 
-    /**クラス全取得*/
+    /** クラス全取得 */
     public List<StudentYear> findAll() {
         return studentYearRepository.findByOrderByUpdatedAtDesc();
     }
 
-    /**クラス1件取得*/
+    /** クラス1件取得 */
     public StudentYear findById(Long id) {
         return studentYearRepository.findById(id).orElseThrow();
     }
 
-    /**生徒IDでリストを取得*/
+    /** 生徒IDでリストを取得 */
     public List<StudentYear> findAllByStudentId(String studentId) {
         return studentYearRepository.findAllByStudentIdOrderByYearAsc(studentId);
     }
 
-    /**生徒IDでリストを取得（リスト）*/
+    /** 生徒IDでリストを取得（リスト） */
     public List<StudentYear> classList(String studentId) {
         List<StudentYear> classList = new ArrayList<StudentYear>();
         for (int i = 0; i < 3; i++) {
@@ -75,14 +75,11 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラス数 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> yearClassList(Long year) {
         ArrayList<ArrayList<Long>> yearClassList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             HashSet<Long> set = new HashSet<>();
-            List<StudentYear> result = studentYearRepository.findAll(
-                    Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen((long) i + 1)),
-                    Sort.by(Sort.Direction.ASC, "kumi"));
+            List<StudentYear> result = search(year, (long) i + 1, (long) 0);
             for (int j = 0; j < result.size(); j++) {
                 set.add(result.get(j).getKumi());
             }
@@ -94,7 +91,6 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラスごとの登録済み生徒の人数 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> classStudentsRegistered(Long year) {
         ArrayList<ArrayList<Long>> classStudentsRegistered = new ArrayList<>();
         ArrayList<ArrayList<Long>> yearClassList = yearClassList(year);
@@ -102,10 +98,7 @@ public class StudentsYearService {
             ArrayList<Long> studentsCount = new ArrayList<>();
             ArrayList<Long> classList = yearClassList.get(i);
             for (int j = 0; j < classList.size(); j++) {
-                List<StudentYear> result = studentYearRepository.findAll(
-                        Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen((long) i + 1))
-                                .and(StudentSpecification.kumi(classList.get(j))),
-                        Sort.by(Sort.Direction.ASC, "ban"));
+                List<StudentYear> result = search(year, (long) i + 1, classList.get(j));
                 studentsCount.add((long) result.size());
             }
             classStudentsRegistered.add(studentsCount);
@@ -114,7 +107,6 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラスごとの在籍生徒（転出/卒業していない生徒）の人数 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> classStudentsExists(Long year) {
         ArrayList<ArrayList<Long>> classStudentsExists = new ArrayList<>();
         ArrayList<ArrayList<Long>> yearClassList = yearClassList(year);
@@ -122,10 +114,7 @@ public class StudentsYearService {
             ArrayList<Long> studentsCount = new ArrayList<>();
             ArrayList<Long> classList = yearClassList.get(i);
             for (int j = 0; j < classList.size(); j++) {
-                List<StudentYear> result = studentYearRepository.findAll(
-                        Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen((long) i + 1))
-                                .and(StudentSpecification.kumi(classList.get(j))),
-                        Sort.by(Sort.Direction.ASC, "ban"));
+                List<StudentYear> result = search(year, (long) i + 1, classList.get(j));
                 // remove実行後、リストサイズが変わり、１つ前につめられてスキップされてしまうため、逆順ループの処理をおこなう
                 for (int k = result.size() - 1; k >= 0; k--) {
                     Student student = studentRepository.findByStudentId(result.get(k).getStudentId());
@@ -141,7 +130,6 @@ public class StudentsYearService {
     }
 
     /** 年度の各学年のクラスごとの転出/卒業済み生徒の人数 */
-    @SuppressWarnings("removal")
     public ArrayList<ArrayList<Long>> classStudentsTransferred(Long year) {
         ArrayList<ArrayList<Long>> classStudentsTransferred = new ArrayList<>();
         ArrayList<ArrayList<Long>> yearClassList = yearClassList(year);
@@ -149,10 +137,7 @@ public class StudentsYearService {
             ArrayList<Long> studentsCount = new ArrayList<>();
             ArrayList<Long> classList = yearClassList.get(i);
             for (int j = 0; j < classList.size(); j++) {
-                List<StudentYear> result = studentYearRepository.findAll(
-                        Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen((long) i + 1))
-                                .and(StudentSpecification.kumi(classList.get(j))),
-                        Sort.by(Sort.Direction.ASC, "ban"));
+                List<StudentYear> result = search(year, (long) i + 1, classList.get(j));
                 // remove実行後、リストサイズが変わり、１つ前につめられてスキップされてしまうため、逆順ループの処理をおこなう
                 for (int k = result.size() - 1; k >= 0; k--) {
                     Student student = studentRepository.findByStudentId(result.get(k).getStudentId());
@@ -216,19 +201,21 @@ public class StudentsYearService {
     }
 
     /** クラス検索（登録生徒） */
-    @SuppressWarnings("removal")
     public List<StudentYear> search(Long year, Long nen, Long kumi) {
-        List<StudentYear> result;
-        if (kumi == 0) {
-            result = studentYearRepository.findAll(
-                    Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen(nen)),
-                    Sort.by(Sort.Direction.ASC, "kumi", "ban"));
-        } else {
-            result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
-                    .and(StudentSpecification.nen(nen)).and(StudentSpecification.kumi(kumi)),
-                    Sort.by(Sort.Direction.ASC, "ban"));
+        Specification<StudentYear> spec = (root, query, cb) -> null;
+        if (year != null && year != 0) {
+            spec = spec.and(StudentSpecification.year(year));
         }
-        return result;
+        if (nen != null && nen != 0) {
+            spec = spec.and(StudentSpecification.nen(nen));
+        }
+        if (kumi != null && kumi != 0) {
+            spec = spec.and(StudentSpecification.kumi(kumi));
+        }
+        // 組が指定されていないときは組・番でソート、組が指定されているときは番でソート
+        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
+                : Sort.by(Sort.Direction.ASC, "ban");
+        return studentYearRepository.findAll(spec, sort);
     }
 
     /** クラス検索（転出/卒業生徒） */
@@ -258,7 +245,6 @@ public class StudentsYearService {
     }
 
     /** クラスに登録できる候補の生徒のリストを取得 */
-    @SuppressWarnings("removal")
     public List<Student> studentsOption(Long year, Long nen) {
         // 1学年は1年分、2学年は2年分、3学年は3年分の生徒番号を一旦すべて取得
         List<Student> studentsOption = new ArrayList<>();
@@ -266,19 +252,18 @@ public class StudentsYearService {
         String ni = String.valueOf(year - 1);
         String san = String.valueOf(year - 2);
         if (nen == 1) {
-            studentsOption = studentRepository.findAll(Specification.where(StudentSpecification.year(ichi)));
-        }
-        if (nen == 2) {
+            studentsOption = studentRepository.findAll((root, query, cb) -> cb.like(root.get("studentId"), ichi + "%"));
+        } else if (nen == 2) {
+            studentsOption = studentRepository.findAll((root, query, cb) -> cb
+                    .or(cb.like(root.get("studentId"), ichi + "%"), cb.like(root.get("studentId"), ni + "%")));
+        } else if (nen == 3) {
             studentsOption = studentRepository
-                    .findAll(Specification.where(StudentSpecification.year(ichi)).or(StudentSpecification.year(ni)));
-        }
-        if (nen == 3) {
-            studentsOption = studentRepository.findAll(Specification.where(StudentSpecification.year(ichi))
-                    .or(StudentSpecification.year(ni)).or(StudentSpecification.year(san)));
+                    .findAll((root, query, cb) -> cb.or(cb.like(root.get("studentId"), ichi + "%"),
+                            cb.like(root.get("studentId"), ni + "%"), cb.like(root.get("studentId"), san + "%")));
         }
         // 年度にすでに登録済みの生徒を取得する
         List<StudentYear> resultYear = studentYearRepository
-                .findAll(Specification.where(StudentSpecification.year(year)));
+                .findAll((root, query, cb) -> cb.equal(root.get("year"), year));
         List<Student> resultStudents = new ArrayList<>();
         for (int i = 0; i < resultYear.size(); i++) {
             Student student = studentRepository.findById(resultYear.get(i).getStudentId()).orElseThrow();
@@ -298,13 +283,10 @@ public class StudentsYearService {
         return studentsOption;
     }
 
-    /**クラス個別追加*/
-    @SuppressWarnings("removal")
+    /** クラス個別追加 */
     public void add(String userId, StudentYearForm studentYearForm, Long year, Long nen, Long kumi) {
         // クラス在籍生徒の人数を数え、一番最後の番号をセットする
-        List<StudentYear> result = studentYearRepository.findAll(Specification.where(StudentSpecification.year(year))
-                .and(StudentSpecification.nen(nen)).and(StudentSpecification.kumi(kumi)),
-                Sort.by(Sort.Direction.ASC, "ban"));
+        List<StudentYear> result = search(year, nen, kumi);
         Long count = (long) result.size();
         StudentYear studentYear = new StudentYear();
         studentYear.setStudentId(studentYearForm.getStudentId());
@@ -317,7 +299,7 @@ public class StudentsYearService {
         studentYearRepository.save(studentYear);
     }
 
-    /**クラス一括登録*/
+    /** クラス一括登録 */
     public List<String> create(String userId, StudentYearForm studentYearForm, Long year, Long nen, Long kumi) {
         List<String> studentIds = studentYearForm.getStudentIds();
         if (studentIds != null) {
@@ -338,15 +320,12 @@ public class StudentsYearService {
     }
 
     /** クラス在籍生徒を名前の順にソートし、出席番号を割り振って更新 */
-    @SuppressWarnings("removal")
     public void sort(Long year, Long nen, Long kumi, String userId) {
         int intYear = Integer.valueOf(year.toString());
         int intNen = Integer.valueOf(nen.toString());
         int intKumi = Integer.valueOf(kumi.toString());
         // クラスの在籍生徒<StudentYear>を取得
-        List<StudentYear> studentsYear = studentYearRepository
-                .findAll(Specification.where(StudentSpecification.year(year)).and(StudentSpecification.nen(nen))
-                        .and(StudentSpecification.kumi(kumi)));
+        List<StudentYear> studentsYear = search(year, nen, kumi);
         // クラスの在籍生徒<Student>を取得
         List<Student> students = new ArrayList<>();
         for (int i = 0; i < studentsYear.size(); i++) {
@@ -483,7 +462,6 @@ public class StudentsYearService {
     }
 
     /** クラス在籍生徒が削除可能か判定（紐づいたカルテ・出席簿・成績のデータがないかどうか確認） */
-    @SuppressWarnings("removal")
     public boolean dataExists(Long id) {
         StudentYear studentYear = studentYearRepository.findById(id).orElseThrow();
         int nendo = Integer.valueOf(studentYear.getYear().toString());
@@ -509,8 +487,8 @@ public class StudentsYearService {
         }
         // 成績の確認
         List<Grade> resultGrade = gradeRepository
-                .findAll(Specification.where(StudentSpecification.gradeYear(studentYear.getYear()))
-                        .and(StudentSpecification.gradeStudentId(studentYear.getStudentId())));
+                .findAll((root, query, cb) -> cb.and(cb.equal(root.get("year"), studentYear.getYear()),
+                        cb.equal(root.get("studentId"), studentYear.getStudentId())));
         boolean dataExists = false;
         // データがあればtrueを返す
         if (resultKarte.size() > 0 || resultAttendance.size() > 0 || resultGrade.size() > 0) {
