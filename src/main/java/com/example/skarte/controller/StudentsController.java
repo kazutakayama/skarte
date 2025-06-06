@@ -63,8 +63,8 @@ public class StudentsController {
     // path: /students/search
     // クラス検索
     @GetMapping("/search")
-    public String search(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi) {
+    public String search(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         if (result.size() != 0) {
@@ -79,8 +79,8 @@ public class StudentsController {
     @GetMapping(value = "/download.csv", params = "download_file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
             + "; charset=UTF-8; Content-Disposition: attachment")
     @ResponseBody
-    public Object download(@RequestParam("year") Long year, @RequestParam("nen") Long nen,
-            @RequestParam("kumi") Long kumi) throws JsonProcessingException {
+    public Object download(@RequestParam("year") int year, @RequestParam("nen") int nen,
+            @RequestParam("kumi") int kumi) throws JsonProcessingException {
         return studentsService.downloadClass(year, nen, kumi);
     }
 
@@ -237,8 +237,8 @@ public class StudentsController {
     // path: /students/{studentId}/attendance/edit
     // 生徒の出席簿（月ごと・編集用）を表示
     @GetMapping("/{id}/attendance/edit")
-    public String editAttendance(@PathVariable String id, Model model, @ModelAttribute("year") Long year,
-            @ModelAttribute("month") Long month) {
+    public String editAttendance(@PathVariable String id, Model model, @ModelAttribute("year") int year,
+            @ModelAttribute("month") int month) {
         Student student = studentsService.findById(id);
         model.addAttribute("student", student);
         List<StudentYear> studentsYear = studentsYearService.findAllByStudentId(id);

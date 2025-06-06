@@ -77,7 +77,7 @@ public class StudentsService {
 
 
     /** クラス検索をしたあと、Studentのリストを取得 */
-    public List<Student> classStudents(Long year, Long nen, Long kumi) {
+    public List<Student> classStudents(int year, int nen, int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         List<Student> students = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
@@ -155,7 +155,7 @@ public class StudentsService {
     }
 
     /** /students クラスで生徒を絞り込んでCSVダウンロード */
-    public Object downloadClass(Long year, Long nen, Long kumi) throws JsonProcessingException {
+    public Object downloadClass(int year, int nen, int kumi) throws JsonProcessingException {
         List<Student> students = classStudents(year, nen, kumi);
         List<StudentsCsv> csvs = students.stream()
                 .map(e -> new StudentsCsv(e.getStudentId(), e.getLastName(), e.getFirstName(), e.getLastNameKana(),
@@ -254,7 +254,7 @@ public class StudentsService {
     }
 
     /** 3年生クラスを卒業登録する */
-    public void graduated(String userId, Long year, Long nen, Long kumi) {
+    public void graduated(String userId, int year, int nen, int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         if (result.size() > 0) {
             for (int i = 0; i < result.size(); i++) {

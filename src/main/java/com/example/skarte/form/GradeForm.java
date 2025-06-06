@@ -12,21 +12,21 @@ import lombok.EqualsAndHashCode;
 
 public class GradeForm extends EntityBase { // EntityBase {
     /** ID */
-    private Long gradeId = null;
+    private Long gradeId;
 
-    private String studentId = null;
+    private String studentId;
 
     /** 年度 */
-    private Long year = null;
+    private int year;
 
     /** 学期 */
-    private Long term = null;
+    private int term;
 
     /** 教科 */
-    private Long subject = null;
+    private int subject;
 
     /** 評定 */
-    private Long rating = null;
+    private int rating;
 
 
     private List<Long> gradeIds;
@@ -49,43 +49,43 @@ public class GradeForm extends EntityBase { // EntityBase {
         this.studentIds = studentIds;
     }
 
-    private List<Long> years;
+    private List<Integer> years;
 
-    public List<Long> getYears() {
+    public List<Integer> getYears() {
         return years;
     }
 
-    public void setYears(List<Long> years) {
+    public void setYears(List<Integer> years) {
         this.years = years;
     }
 
-    private List<Long> terms;
+    private List<Integer> terms;
 
-    public List<Long> getTerms() {
+    public List<Integer> getTerms() {
         return terms;
     }
 
-    public void setTerms(List<Long> terms) {
+    public void setTerms(List<Integer> terms) {
         this.terms = terms;
     }
 
-    private List<Long> subjects;
+    private List<Integer> subjects;
 
-    public List<Long> getSubjects() {
+    public List<Integer> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<Long> subjects) {
+    public void setSubjects(List<Integer> subjects) {
         this.subjects = subjects;
     }
 
-    private List<Long> ratings;
+    private List<Integer> ratings;
 
-    public List<Long> getRatings() {
+    public List<Integer> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<Long> ratings) {
+    public void setRatings(List<Integer> ratings) {
         this.ratings = ratings;
     }
 

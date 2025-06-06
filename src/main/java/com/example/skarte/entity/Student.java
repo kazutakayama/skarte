@@ -64,7 +64,7 @@ public class Student extends EntityBase { // EntityBase
     /** 性別 */
     @Column
     @NotNull
-    private Integer gender;
+    private int gender;
 
     /** 保護者1 */
     @Column

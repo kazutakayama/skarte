@@ -52,6 +52,6 @@ public class Attendance extends EntityBase { // EntityBase
     /** 出欠 */
     // 1:欠席, 2:遅刻, 3:早退, 4:遅刻/早退, 5:出停, 6:忌引
     @Column
-    private Integer kiroku;
+    private int kiroku;
 
 }

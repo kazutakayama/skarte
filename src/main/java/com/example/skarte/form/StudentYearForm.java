@@ -16,21 +16,21 @@ import lombok.EqualsAndHashCode;
 public class StudentYearForm extends EntityBase { // EntityBase {
     
     /** ID */
-    private Long studentYearId = null;
+    private Long studentYearId;
 
-    private String studentId = null;
+    private String studentId;
 
     /** 年度 */
-    private Long year = null;
+    private int year;
 
     /** 年 */
-    private Long nen = null;
+    private int nen;
 
     /** 組 */
-    private Long kumi = null;
+    private int kumi;
 
     /** 番 */
-    private Long ban = null;
+    private int ban;
 
     /** 画像 */
     private MultipartFile image = null;
@@ -55,43 +55,43 @@ public class StudentYearForm extends EntityBase { // EntityBase {
         this.studentIds = studentIds;
     }
 
-    private List<Long> years;
+    private List<Integer> years;
 
-    public List<Long> getYears() {
+    public List<Integer> getYears() {
         return years;
     }
 
-    public void setYears(List<Long> years) {
+    public void setYears(List<Integer> years) {
         this.years = years;
     }
 
-    private List<Long> nens;
+    private List<Integer> nens;
 
-    public List<Long> getNens() {
+    public List<Integer> getNens() {
         return nens;
     }
 
-    public void setNens(List<Long> nens) {
+    public void setNens(List<Integer> nens) {
         this.nens = nens;
     }
 
-    private List<Long> kumis;
+    private List<Integer> kumis;
 
-    public List<Long> getKumis() {
+    public List<Integer> getKumis() {
         return kumis;
     }
 
-    public void setKumis(List<Long> kumis) {
+    public void setKumis(List<Integer> kumis) {
         this.kumis = kumis;
     }
 
-    private List<Long> bans;
+    private List<Integer> bans;
 
-    public List<Long> getBans() {
+    public List<Integer> getBans() {
         return bans;
     }
 
-    public void setBans(List<Long> bans) {
+    public void setBans(List<Integer> bans) {
         this.bans = bans;
     }
 

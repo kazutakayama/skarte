@@ -15,11 +15,11 @@ import lombok.EqualsAndHashCode;
 public class ScheduleForm extends EntityBase {
 
     /** ID */
-    private Long scheduleId = null;
+    private Long scheduleId;
 
     /** 日付 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date = null;
+    private LocalDate date;
 
     /** 休日 */
     private Boolean holiday = false;

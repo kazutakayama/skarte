@@ -38,20 +38,19 @@ public class GradeService {
     }
 
     /** 年度でリストを取得 */
-    public List<Grade> year(Long year) {
+    public List<Grade> year(int year) {
         return gradeRepository.findAllByYear(year);
     }
 
     /** 生徒ごとの１年分の成績リストを取得 */
-    public List<Grade> studentGrade(String studentId, Long year) {
+    public List<Grade> studentGrade(String studentId, int year) {
         List<Grade> studentGrade = new ArrayList<Grade>();
         for (int i = 0; i < 27; i++) {
             studentGrade.add(null);
         }
-        long nendo = year; // 必須
         List<Grade> result = gradeRepository.findAllByStudentId(studentId);
         for (int i = 0; i < result.size(); i++) {
-            if (result.get(i).getYear() == nendo) {
+            if (result.get(i).getYear() == year) {
                 for (int j = 1; j < 4; j++) {
                     for (int k = 1; k < 10; k++) {
                         if (result.get(i).getTerm() == j && result.get(i).getSubject() == k) {
@@ -75,7 +74,7 @@ public class GradeService {
             for (int j = 0; j < 27; j++) {
                 studentGrade.add(null);
             }
-            long nendo = studentYear.get(i).getYear(); // これが必要
+            int nendo = studentYear.get(i).getYear(); // これが必要
             // 生徒IDから成績を検索
             List<Grade> result = gradeRepository.findAllByStudentId(studentId);
             for (int k = 0; k < result.size(); k++) {
@@ -98,21 +97,21 @@ public class GradeService {
     }
 
     /** 成績リスト（クラス（学年）ごとの1年分）を取得 */
-    public ArrayList<ArrayList<Grade>> gradeList(Long year, Long nen, Long kumi) {
+    public ArrayList<ArrayList<Grade>> gradeList(int year, int nen, int kumi) {
         ArrayList<ArrayList<Grade>> gradeList = new ArrayList<>();
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
         Specification<StudentYear> spec = (root, query, cb) -> null;
-        if (year != null && year != 0) {
+        if (year != 0) {
             spec = spec.and(StudentSpecification.year(year));
         }
-        if (nen != null && nen != 0) {
+        if (nen != 0) {
             spec = spec.and(StudentSpecification.nen(nen));
         }
-        if (kumi != null && kumi != 0) {
+        if (kumi != 0) {
             spec = spec.and(StudentSpecification.kumi(kumi));
         }
-        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
+        Sort sort = (kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
                 : Sort.by(Sort.Direction.ASC, "ban");
         result = studentYearRepository.findAll(spec, sort);
         for (int i = 0; i < result.size(); i++) {
@@ -121,12 +120,11 @@ public class GradeService {
             for (int j = 0; j < 27; j++) {
                 studentGrade.add(null);
             }
-            long nendo = year; // これが必要
             // 生徒IDから成績を検索
             List<Grade> resultGrade = gradeRepository.findAllByStudentId(result.get(i).getStudentId());
             for (int k = 0; k < resultGrade.size(); k++) {
                 // クラス登録年度から成績をしぼりこむ
-                if (resultGrade.get(k).getYear() == nendo) {
+                if (resultGrade.get(k).getYear() == year) {
                     for (int l = 1; l < 4; l++) { // 学期term
                         for (int m = 1; m < 10; m++) { // 教科subject
                             if (resultGrade.get(k).getTerm() == l && resultGrade.get(k).getSubject() == m) {
@@ -147,10 +145,10 @@ public class GradeService {
     public void update(String userId, GradeForm gradeForm) {
         List<Long> gradeIds = gradeForm.getGradeIds();
         List<String> studentIds = gradeForm.getStudentIds();
-        List<Long> years = gradeForm.getYears();
-        List<Long> terms = gradeForm.getTerms();
-        List<Long> subjects = gradeForm.getSubjects();
-        List<Long> ratings = gradeForm.getRatings();
+        List<Integer> years = gradeForm.getYears();
+        List<Integer> terms = gradeForm.getTerms();
+        List<Integer> subjects = gradeForm.getSubjects();
+        List<Integer> ratings = gradeForm.getRatings();
         for (int i = 0; i < studentIds.size(); i++) {
             // 新規登録
             if ((gradeIds.size() != 0 && ratings.size() != 0 && gradeIds.get(i) == null && ratings.get(i) != null)

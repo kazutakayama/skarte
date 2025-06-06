@@ -44,28 +44,19 @@ public class StudentYear extends EntityBase { // EntityBase
 
     /** 年度 */
     @Column
-    private Long year;
+    private int year;
 
     /** 年 */
     @Column
-    private Long nen;
-
-
-    public Long getNen() {
-        return nen;
-    }
-
-    public void setNens(Long nen) {
-        this.nen = nen;
-    }
+    private int nen;
 
     /** 組 */
     @Column
-    private Long kumi;
+    private int kumi;
 
     /** 番 */
     @Column
-    private Long ban;
+    private int ban;
 
     /** 画像 */
     @Column

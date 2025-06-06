@@ -44,18 +44,18 @@ public class Grade extends EntityBase { // EntityBase
 
     /** 年度 */
     @Column
-    private Long year;
+    private int year;
 
     /** 学期 */
     @Column
-    private Long term;
+    private int term;
 
     /** 教科 */
     @Column
-    private Long subject;
+    private int subject;
 
     /** 評定 */
     @Column
-    private Long rating;
+    private int rating;
 
 }
