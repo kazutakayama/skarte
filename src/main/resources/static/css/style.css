@@ -98,7 +98,7 @@ header {
 }
 
 .header-sub .nav-tabs {
-	align-self: flex-end;/*タブを下に揃える！ */
+	align-self: flex-end;/*タブを下に揃える */
 }
 
 /*生徒一覧のタブ*/

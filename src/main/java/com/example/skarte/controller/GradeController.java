@@ -40,8 +40,8 @@ public class GradeController {
     // path: /grade
     // 成績一覧検索
     @GetMapping("/search")
-    public String search(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi) {
+    public String search(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         model.addAttribute("resultSize", result.size());
@@ -53,8 +53,8 @@ public class GradeController {
     // path: /grade/edit
     // 成績一覧編集画面を表示
     @GetMapping("/edit")
-    public String edit(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi, @ModelAttribute("term") Long term,
+    public String edit(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi, @ModelAttribute("term") int term,
             @ModelAttribute("subject") Long subject) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);

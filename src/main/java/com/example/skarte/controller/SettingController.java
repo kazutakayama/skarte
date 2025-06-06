@@ -217,8 +217,8 @@ public class SettingController {
     // path: /setting/class/list
     // クラスを検索
     @GetMapping("/class/list")
-    public String classList(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi) {
+    public String classList(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         if (result.size() != 0) {
@@ -235,8 +235,8 @@ public class SettingController {
     // path: /setting/class/register
     // クラス一括登録画面を表示
     @GetMapping("/class/register")
-    public String registerClass(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi) {
+    public String registerClass(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         List<Student> studentsOption = studentsYearService.studentsOption(year, nen);
@@ -247,8 +247,8 @@ public class SettingController {
     // path: /setting/class/create
     // クラス一括登録画面から生徒一括追加
     @PostMapping("/class/create")
-    public String createClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
-            @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, StudentYearForm studentYearForm,
+    public String createClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") int year,
+            @ModelAttribute("nen") int nen, @ModelAttribute("kumi") int kumi, StudentYearForm studentYearForm,
             @AuthenticationPrincipal User user) {
         boolean isDuplicated = studentsYearService.isDuplicated(studentYearForm, year, nen, kumi);
         if (isDuplicated == false) {
@@ -277,8 +277,8 @@ public class SettingController {
     // path: /setting/class/new
     // クラス個別追加画面を表示
     @GetMapping("/class/new")
-    public String newClass(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi) {
+    public String newClass(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         List<Student> studentsOption = studentsYearService.studentsOption(year, nen);
@@ -289,8 +289,8 @@ public class SettingController {
     // path: /setting/class/add
     // クラス個別追加画面から生徒1名追加
     @PostMapping("/class/add")
-    public String addClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
-            @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, StudentYearForm studentYearForm,
+    public String addClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") int year,
+            @ModelAttribute("nen") int nen, @ModelAttribute("kumi") int kumi, StudentYearForm studentYearForm,
             @AuthenticationPrincipal User user) {
         boolean isDuplicated = studentsYearService.isDuplicated(studentYearForm, year, nen, kumi);
         if (isDuplicated == false) {
@@ -328,8 +328,8 @@ public class SettingController {
     // path: /setting/class/{studentYearId}/delete
     // クラス編集画面から生徒を削除
     @PostMapping("/class/{id}/delete")
-    public String deleteClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") Long year,
-            @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi, @PathVariable Long id,
+    public String deleteClass(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("year") int year,
+            @ModelAttribute("nen") int nen, @ModelAttribute("kumi") int kumi, @PathVariable Long id,
             @AuthenticationPrincipal User user) {
         boolean dataExists = studentsYearService.dataExists(id);
         if (dataExists == false) {
@@ -394,7 +394,7 @@ public class SettingController {
     // クラス管理から3年生クラスの生徒を卒業登録する
     @GetMapping("/class/graduated")
     public String graduated(Model model, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes,
-            @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen, @ModelAttribute("kumi") Long kumi) {
+            @ModelAttribute("year") int year, @ModelAttribute("nen") int nen, @ModelAttribute("kumi") int kumi) {
         // 現在の「年度」
         LocalDate date = LocalDate.now();
         int nendo;
@@ -425,7 +425,7 @@ public class SettingController {
     // path: /setting/schedule/year
     // 年度でスケジュール管理ページを表示
     @GetMapping("/schedule/year")
-    public String schedule(Model model, @ModelAttribute("year") Long year) {
+    public String schedule(Model model, @ModelAttribute("year") int year) {
         ArrayList<ArrayList<Schedule>> yearSchedule = scheduleService.yearSchedule(year);
         model.addAttribute("schedule", yearSchedule);
         // 月登校日数（1年分）
@@ -440,7 +440,7 @@ public class SettingController {
     // path: /setting/schedule/new
     // 初回スケジュール一括追加
     @PostMapping("/schedule/new")
-    public String newSchedule(RedirectAttributes redirectAttributes, @ModelAttribute("year") Long year,
+    public String newSchedule(RedirectAttributes redirectAttributes, @ModelAttribute("year") int year,
             @AuthenticationPrincipal User user) {
         scheduleService.newSchedule(year, user.getUserId());
         redirectAttributes.addFlashAttribute("year", year);
@@ -454,7 +454,7 @@ public class SettingController {
     // スケジュール更新
     @PostMapping("/schedule/update")
     public String updateSchedule(RedirectAttributes redirectAttributes, ScheduleForm scheduleForm,
-            @AuthenticationPrincipal User user, Model model, @ModelAttribute("year") Long year) {
+            @AuthenticationPrincipal User user, Model model, @ModelAttribute("year") int year) {
         scheduleService.update(user.getUserId(), scheduleForm);
         redirectAttributes.addFlashAttribute("year", year);
         redirectAttributes.addFlashAttribute("hasMessage", true);

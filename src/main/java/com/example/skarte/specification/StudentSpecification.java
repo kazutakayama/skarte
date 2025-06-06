@@ -34,27 +34,27 @@ public class StudentSpecification {
         };
     }
 
-    public static Specification<StudentYear> year(Long year) {
+    public static Specification<StudentYear> year(int year) {
         return (root, query, cb) -> {
-            if (year == null || year == 0) {
+            if (year == 0) {
                 return cb.conjunction();
             }
             return cb.equal(root.get("year"), year);
         };
     }
 
-    public static Specification<StudentYear> nen(Long nen) {
+    public static Specification<StudentYear> nen(int nen) {
         return (root, query, cb) -> {
-            if (nen == null || nen == 0) {
+            if (nen == 0) {
                 return cb.conjunction();
             }
             return cb.equal(root.get("nen"), nen);
         };
     }
 
-    public static Specification<StudentYear> kumi(Long kumi) {
+    public static Specification<StudentYear> kumi(int kumi) {
         return (root, query, cb) -> {
-            if (kumi == null || kumi == 0) {
+            if (kumi == 0) {
                 return cb.conjunction();
             }
             return cb.equal(root.get("kumi"), kumi);
@@ -70,9 +70,9 @@ public class StudentSpecification {
         };
     }
 
-    public static Specification<Grade> gradeYear(Long year) {
+    public static Specification<Grade> gradeYear(int year) {
         return (root, query, cb) -> {
-            if (year == null || year == 0) {
+            if (year == 0) {
                 return cb.conjunction();
             }
             return cb.equal(root.get("year"), year);

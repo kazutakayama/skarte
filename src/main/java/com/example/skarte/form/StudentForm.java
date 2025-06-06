@@ -58,7 +58,7 @@ public class StudentForm extends EntityBase { // EntityBase
     /** 性別 */
     @NotNull(message = "「性別」を入力してください")
     @Range(min = 1, max = 3, message = "1:男,2:女,3:他のいずれかの半角数字を入力してください")
-    private Integer gender;
+    private int gender;
 
     /** 保護者1 */
     @Size(max=30, message = "「保護者名」は30文字以内で入力してください")

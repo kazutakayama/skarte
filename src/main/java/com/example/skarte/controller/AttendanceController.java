@@ -44,8 +44,8 @@ public class AttendanceController {
     // path: /attendance
     // 出席簿一覧検索
     @GetMapping("/search")
-    public String search(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi, @ModelAttribute("month") Long month) {
+    public String search(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi, @ModelAttribute("month") int month) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         List<Schedule> monthSchedule = scheduleService.monthSchedule(year, month);
@@ -61,8 +61,8 @@ public class AttendanceController {
     // path: /attendance/edit
     // 出席簿編集画面を表示
     @GetMapping("/edit")
-    public String edit(Model model, @ModelAttribute("year") Long year, @ModelAttribute("nen") Long nen,
-            @ModelAttribute("kumi") Long kumi, @ModelAttribute("month") Long month, @ModelAttribute("day") Long day) {
+    public String edit(Model model, @ModelAttribute("year") int year, @ModelAttribute("nen") int nen,
+            @ModelAttribute("kumi") int kumi, @ModelAttribute("month") int month, @ModelAttribute("day") int day) {
         List<StudentYear> result = studentsYearService.search(year, nen, kumi);
         model.addAttribute("studentsYear", result);
         List<Schedule> monthSchedule = scheduleService.monthSchedule(year, month);

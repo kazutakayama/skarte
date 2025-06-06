@@ -33,7 +33,7 @@ public class Schedule extends EntityBase {
     /** 日付 */
     @Column
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date = null;
+    private LocalDate date;
     
     /** 休日 */
     private boolean holiday = false;

@@ -65,21 +65,20 @@ public class PagesController {
         } else {
             nendo = date.getYear() - 1;
         }
-        Long year = (long) nendo;
         // クラスのリスト
-        ArrayList<ArrayList<Long>> yearClassList = studentsYearService.yearClassList(year);
+        ArrayList<ArrayList<Integer>> yearClassList = studentsYearService.yearClassList(nendo);
         model.addAttribute("yearClassList", yearClassList);
         // クラスの登録人数
-        ArrayList<ArrayList<Long>> classStudentsRegistered = studentsYearService.classStudentsRegistered(year);
+        ArrayList<ArrayList<Integer>> classStudentsRegistered = studentsYearService.classStudentsRegistered(nendo);
         // クラスの在籍人数
         model.addAttribute("classStudentsRegistered", classStudentsRegistered);
-        ArrayList<ArrayList<Long>> classStudentsExists = studentsYearService.classStudentsExists(year);
+        ArrayList<ArrayList<Integer>> classStudentsExists = studentsYearService.classStudentsExists(nendo);
         model.addAttribute("classStudentsExists", classStudentsExists);
         // クラスの転出/卒業人数
-        ArrayList<ArrayList<Long>> classStudentsTransferred = studentsYearService.classStudentsTransferred(year);
+        ArrayList<ArrayList<Integer>> classStudentsTransferred = studentsYearService.classStudentsTransferred(nendo);
         model.addAttribute("classStudentsTransferred", classStudentsTransferred);
         // 合計数の計算
-        ArrayList<ArrayList<Long>> classSummary = studentsYearService.classSummary(year);
+        ArrayList<ArrayList<Integer>> classSummary = studentsYearService.classSummary(nendo);
         model.addAttribute("classSummary", classSummary);
         // 最近のカルテを取得
         List<Karte> recentKarte = karteService.recentKarte();
@@ -92,21 +91,21 @@ public class PagesController {
 
     // トップページ（年度でクラス一覧・生徒数表示）
     @GetMapping("/top/year")
-    public String year(Model model, @ModelAttribute("year") Long year) {
+    public String year(Model model, @ModelAttribute("year") int year) {
         // クラスのリスト
-        ArrayList<ArrayList<Long>> yearClassList = studentsYearService.yearClassList(year);
+        ArrayList<ArrayList<Integer>> yearClassList = studentsYearService.yearClassList(year);
         model.addAttribute("yearClassList", yearClassList);
         // クラスの登録人数
-        ArrayList<ArrayList<Long>> classStudentsRegistered = studentsYearService.classStudentsRegistered(year);
+        ArrayList<ArrayList<Integer>> classStudentsRegistered = studentsYearService.classStudentsRegistered(year);
         // クラスの在籍人数
         model.addAttribute("classStudentsRegistered", classStudentsRegistered);
-        ArrayList<ArrayList<Long>> classStudentsExists = studentsYearService.classStudentsExists(year);
+        ArrayList<ArrayList<Integer>> classStudentsExists = studentsYearService.classStudentsExists(year);
         model.addAttribute("classStudentsExists", classStudentsExists);
         // クラスの転出/卒業人数
-        ArrayList<ArrayList<Long>> classStudentsTransferred = studentsYearService.classStudentsTransferred(year);
+        ArrayList<ArrayList<Integer>> classStudentsTransferred = studentsYearService.classStudentsTransferred(year);
         model.addAttribute("classStudentsTransferred", classStudentsTransferred);
         // 合計数の計算
-        ArrayList<ArrayList<Long>> classSummary = studentsYearService.classSummary(year);
+        ArrayList<ArrayList<Integer>> classSummary = studentsYearService.classSummary(year);
         model.addAttribute("classSummary", classSummary);
         // 最近のカルテを取得
         List<Karte> recentKarte = karteService.recentKarte();

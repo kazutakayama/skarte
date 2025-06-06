@@ -43,29 +43,24 @@ public class AttendanceService {
     }
 
     /** year, month, dayから日付を取得 */
-    public Calendar editDate(Long year, Long month, Long day) {
+    public Calendar editDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
-        int nendo = Integer.valueOf(year.toString());
-        int tsuki = Integer.valueOf(month.toString());
-        int hi = Integer.valueOf(day.toString());
-        if (tsuki <= 2) {
-            nendo = nendo + 1;
+        if (month <= 2) {
+            year = year + 1;
         }
-        cal.set(nendo, tsuki, hi);
+        cal.set(year, month, day);
         return cal;
     }
 
     /** 生徒ごとの1か月分の出欠リストを取得 */
-    public List<Attendance> studentAttendanceMonth(String studentId, Long year, Long month) {
+    public List<Attendance> studentAttendanceMonth(String studentId, int year, int month) {
         List<Attendance> studentAttendanceMonth = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
-        int nendo = Integer.valueOf(year.toString());
-        int tsuki = Integer.valueOf(month.toString());
         // 年度の調整
-        if (tsuki <= 2) {
-            nendo = nendo + 1;
+        if (month <= 2) {
+            year = year + 1;
         }
-        cal.set(nendo, tsuki, 1);
+        cal.set(year, month, 1);
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         for (int i = 0; i < days; i++) {
@@ -74,7 +69,7 @@ public class AttendanceService {
         List<Attendance> result = attendanceRepository.findAllByStudentId(studentId);
         for (int i = 0; i < result.size(); i++) {
             LocalDate localDate = result.get(i).getDate();
-            if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki + 1) {
+            if (localDate.getYear() == year && localDate.getMonthValue() == month + 1) {
                 for (int j = 0; j < days; j++) {
                     if (localDate.getDayOfMonth() == j + 1) {
                         studentAttendanceMonth.set(j, result.get(i));
@@ -86,16 +81,14 @@ public class AttendanceService {
     }
 
     /** 生徒ごとの1か月分の出欠まとめを取得 [0]登校日数,[1]出席数,[2]欠席数,[3]遅刻数,[4]早退数,[5]出停/忌引数 */
-    public List<Integer> studentAttendanceMonthSummary(String studentId, Long year, Long month) {
+    public List<Integer> studentAttendanceMonthSummary(String studentId, int year, int month) {
         List<Integer> studentAttendanceMonthSummary = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             studentAttendanceMonthSummary.add(0);
         }
-        int nendo = Integer.valueOf(year.toString());
-        int tsuki = Integer.valueOf(month.toString());
         // 年度の調整
-        if (tsuki <= 2) {
-            nendo = nendo + 1;
+        if (month <= 2) {
+            year = year + 1;
         }
         List<Attendance> result = attendanceRepository.findAllByStudentId(studentId);
         List<Attendance> kesseki = new ArrayList<>();
@@ -104,7 +97,7 @@ public class AttendanceService {
         List<Attendance> syuttei = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
             LocalDate localDate = result.get(i).getDate();
-            if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki + 1) {
+            if (localDate.getYear() == year && localDate.getMonthValue() == month + 1) {
                 // 欠席
                 if (result.get(i).getKiroku() == 1) {
                     kesseki.add(result.get(i));
@@ -154,7 +147,7 @@ public class AttendanceService {
             int soutaiSum = 0;
             int syutteiSum = 0;
             for (int j = 0; j < 12; j++) {
-                int nendo = Integer.valueOf(resultYear.get(i).getYear().toString());
+                int nendo = resultYear.get(i).getYear();
                 int tsuki;
                 if (j >= 9) {
                     tsuki = j - 9;
@@ -197,11 +190,11 @@ public class AttendanceService {
                     }
                 }
                 // 0に登校日数をset
-                Long month;
+                int month;
                 if (j >= 9) {
-                    month = (long) (j - 9);
+                    month = j - 9;
                 } else {
-                    month = (long) (j + 3);
+                    month = j + 3;
                 }
                 int monthScheduleSize = scheduleService.monthScheduleSize(resultYear.get(i).getYear(), month);
                 studentAttendanceSummary.get(i).get(j).set(0, monthScheduleSize);
@@ -286,32 +279,29 @@ public class AttendanceService {
     }
 
     /** クラス（学年）全員の1か月分の出欠リストを取得 */
-    public ArrayList<ArrayList<Attendance>> attendanceMonth(Long year, Long nen, Long kumi, Long month) {
+    public ArrayList<ArrayList<Attendance>> attendanceMonth(int year, int nen, int kumi, int month) {
         ArrayList<ArrayList<Attendance>> attendanceMonth = new ArrayList<>();
         // 年・月
         Calendar cal = Calendar.getInstance();
-        int nendo = Integer.valueOf(year.toString());
-        int tsuki = Integer.valueOf(month.toString());
         // 年度の調整
-        if (tsuki <= 2) {
-            nendo = nendo + 1;
+        if (month <= 2) {
+            year = year + 1;
         }
-        cal.set(nendo, tsuki, 1);
+        cal.set(year, month, 1);
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
         Specification<StudentYear> spec = (root, query, cb) -> null;
-        if (year != null && year != 0) {
+        if (year != 0) {
             spec = spec.and(StudentSpecification.year(year));
         }
-        if (nen != null && nen != 0) {
+        if (nen != 0) {
             spec = spec.and(StudentSpecification.nen(nen));
         }
-        if (kumi != null && kumi != 0) {
+        if (kumi != 0) {
             spec = spec.and(StudentSpecification.kumi(kumi));
         }
-        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
-                : Sort.by(Sort.Direction.ASC, "ban");
+        Sort sort = (kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban") : Sort.by(Sort.Direction.ASC, "ban");
         result = studentYearRepository.findAll(spec, sort);
         for (int i = 0; i < result.size(); i++) {
             // 「生徒ごとの月の出欠リスト」
@@ -322,7 +312,7 @@ public class AttendanceService {
             List<Attendance> resultAttendance = attendanceRepository.findAllByStudentId(result.get(i).getStudentId());
             for (int k = 0; k < resultAttendance.size(); k++) {
                 LocalDate localDate = resultAttendance.get(k).getDate();
-                if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki + 1) {
+                if (localDate.getYear() == year && localDate.getMonthValue() == month + 1) {
                     for (int l = 0; l < days; l++) {
                         if (localDate.getDayOfMonth() == l + 1) {
                             studentAttendanceMonth.set(l, resultAttendance.get(k));
@@ -337,28 +327,25 @@ public class AttendanceService {
     }
 
     /** クラス（学年）全員の1か月分の出欠まとめを取得 [0]登校日数,[1]出席数,[2]欠席数,[3]遅刻数,[4]早退数,[5]出停/忌引数 */
-    public ArrayList<ArrayList<Integer>> attendanceMonthSummary(Long year, Long nen, Long kumi, Long month) {
+    public ArrayList<ArrayList<Integer>> attendanceMonthSummary(int year, int nen, int kumi, int month) {
         ArrayList<ArrayList<Integer>> attendanceMonthSummary = new ArrayList<>();
-        int nendo = Integer.valueOf(year.toString());
-        int tsuki = Integer.valueOf(month.toString());
         // 年度の調整
-        if (tsuki <= 2) {
-            nendo = nendo + 1;
+        if (month <= 2) {
+            year = year + 1;
         }
         // 年度、年、組からクラスの生徒リストを取得
         List<StudentYear> result;
         Specification<StudentYear> spec = (root, query, cb) -> null;
-        if (year != null && year != 0) {
+        if (year != 0) {
             spec = spec.and(StudentSpecification.year(year));
         }
-        if (nen != null && nen != 0) {
+        if (nen != 0) {
             spec = spec.and(StudentSpecification.nen(nen));
         }
-        if (kumi != null && kumi != 0) {
+        if (kumi != 0) {
             spec = spec.and(StudentSpecification.kumi(kumi));
         }
-        Sort sort = (kumi == null || kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban")
-                : Sort.by(Sort.Direction.ASC, "ban");
+        Sort sort = (kumi == 0) ? Sort.by(Sort.Direction.ASC, "kumi", "ban") : Sort.by(Sort.Direction.ASC, "ban");
         result = studentYearRepository.findAll(spec, sort);
         for (int i = 0; i < result.size(); i++) {
             // 「生徒ごとの月の出欠リスト」
@@ -373,7 +360,7 @@ public class AttendanceService {
             List<Attendance> syuttei = new ArrayList<>();
             for (int j = 0; j < resultAttendance.size(); j++) {
                 LocalDate localDate = resultAttendance.get(j).getDate();
-                if (localDate.getYear() == nendo && localDate.getMonthValue() == tsuki + 1) {
+                if (localDate.getYear() == year && localDate.getMonthValue() == month + 1) {
                     // 欠席
                     if (resultAttendance.get(j).getKiroku() == 1) {
                         kesseki.add(resultAttendance.get(j));

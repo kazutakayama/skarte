@@ -32,6 +32,6 @@ public class Notice extends EntityBase { // EntityBase
 
     /** 内容 */
     @Column
-    private String contents = null;
+    private String contents;
 
 }
